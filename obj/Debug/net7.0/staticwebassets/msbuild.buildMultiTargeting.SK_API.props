@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\SK_API.props" />
+</Project>
