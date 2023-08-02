@@ -48,3 +48,15 @@ c:\Users\elpip\Desktop\SK_API\obj\Debug\net7.0\refint\SK_API.dll
 c:\Users\elpip\Desktop\SK_API\obj\Debug\net7.0\SK_API.pdb
 c:\Users\elpip\Desktop\SK_API\obj\Debug\net7.0\SK_API.genruntimeconfig.cache
 c:\Users\elpip\Desktop\SK_API\obj\Debug\net7.0\ref\SK_API.dll
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\skills\BaseTextGeneration\config.json
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\microsoft-spark-2-4_2.11-2.1.1.jar
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\microsoft-spark-3-0_2.12-2.1.1.jar
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\microsoft-spark-3-1_2.12-2.1.1.jar
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\microsoft-spark-3-2_2.12-2.1.1.jar
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\Apache.Arrow.dll
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\Microsoft.Data.Analysis.dll
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\Microsoft.ML.DataView.dll
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\Microsoft.Spark.dll
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\Newtonsoft.Json.dll
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\Razorvine.Pyrolite.dll
+c:\Users\elpip\Desktop\SK_API\bin\Debug\net7.0\Razorvine.Serpent.dll

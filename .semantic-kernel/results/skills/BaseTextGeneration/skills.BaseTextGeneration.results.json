@@ -1,0 +1,331 @@
+{
+    "version": "1.0",
+    "skillName": "skills",
+    "functionName": "BaseTextGeneration",
+    "description": "function that generates base texts for fill the gap exercises",
+    "filePath": "skills\\BaseTextGeneration\\skprompt.txt",
+    "results": [
+        {
+            "completionConfig": {
+                "label": "polyglot_text_ada_001",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot_text_ada_001",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0.9,
+                "topP": 0,
+                "presencePenalty": 0.6,
+                "frequencyPenalty": 0,
+                "maxTokens": 150,
+                "stopSequences": [
+                    "[Done]"
+                ]
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "red"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color red\n",
+                "durationInMilliseconds": 735.8306,
+                "inputTokens": null,
+                "outputTokens": null,
+                "result": "\nThe complementary of the color red is orange.",
+                "textCompletionResult": "\nThe complementary of the color red is orange."
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0.9,
+                "topP": 0,
+                "presencePenalty": 0.6,
+                "frequencyPenalty": 0,
+                "maxTokens": 150,
+                "stopSequences": [
+                    "[Done]"
+                ]
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "red"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color red\n",
+                "durationInMilliseconds": 512.2888,
+                "inputTokens": null,
+                "outputTokens": null,
+                "result": "red",
+                "textCompletionResult": "red"
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0.9,
+                "topP": 0,
+                "presencePenalty": 0.6,
+                "frequencyPenalty": 0,
+                "maxTokens": 150,
+                "stopSequences": [
+                    "[Done]"
+                ]
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "red"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color red\n\n",
+                "durationInMilliseconds": 777.7456,
+                "inputTokens": null,
+                "outputTokens": null,
+                "result": "red",
+                "textCompletionResult": "red"
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0,
+                "topP": 0,
+                "presencePenalty": 0,
+                "frequencyPenalty": 0,
+                "maxTokens": 150,
+                "stopSequences": []
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "red"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color red\n\n",
+                "durationInMilliseconds": 1105.3179,
+                "inputTokens": null,
+                "outputTokens": null,
+                "result": "red",
+                "textCompletionResult": "red"
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0,
+                "topP": 0,
+                "presencePenalty": 0,
+                "frequencyPenalty": 0,
+                "maxTokens": 150,
+                "stopSequences": []
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "pink"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color pink\n\n",
+                "durationInMilliseconds": 815.9316,
+                "inputTokens": null,
+                "outputTokens": null,
+                "result": "pink",
+                "textCompletionResult": "pink"
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0,
+                "topP": 0,
+                "presencePenalty": 0,
+                "frequencyPenalty": 0,
+                "maxTokens": 150,
+                "stopSequences": []
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "purple"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color purple\n\n",
+                "durationInMilliseconds": 677.5438,
+                "inputTokens": null,
+                "outputTokens": null
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0,
+                "topP": 0,
+                "presencePenalty": 0,
+                "frequencyPenalty": 0,
+                "maxTokens": 256,
+                "stopSequences": []
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "yellow"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color yellow\n\n",
+                "durationInMilliseconds": 793.4796,
+                "inputTokens": null,
+                "outputTokens": null,
+                "result": "yellow",
+                "textCompletionResult": "yellow"
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0,
+                "topP": 0,
+                "presencePenalty": 0,
+                "frequencyPenalty": 0,
+                "maxTokens": 256,
+                "stopSequences": []
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "red"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color red\n\n",
+                "durationInMilliseconds": 734.9968,
+                "inputTokens": null,
+                "outputTokens": null,
+                "result": "red",
+                "textCompletionResult": "red"
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0,
+                "topP": 0,
+                "presencePenalty": 0,
+                "frequencyPenalty": 0,
+                "maxTokens": 256,
+                "stopSequences": []
+            },
+            "variables": [
+                {
+                    "key": "input",
+                    "value": "red"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color red\n\n",
+                "durationInMilliseconds": 785.3878,
+                "inputTokens": null,
+                "outputTokens": null,
+                "result": "red",
+                "textCompletionResult": "red"
+            }
+        },
+        {
+            "completionConfig": {
+                "label": "polyglot__gpt35",
+                "aiService": "AzureOpenAI",
+                "deploymentOrModelId": "polyglot__gpt35",
+                "endpoint": "https://polyglotai.openai.azure.com",
+                "useCustomEndpoint": false,
+                "endpointType": "text-completion"
+            },
+            "requestSettings": {
+                "temperature": 0,
+                "topP": 0,
+                "presencePenalty": 0,
+                "frequencyPenalty": 0,
+                "maxTokens": 256,
+                "stopSequences": []
+            },
+            "variables": [
+                {
+                    "key": "color",
+                    "value": "red"
+                }
+            ],
+            "output": {
+                "prompt": "Tell me the complementary of the color given as input\n\n[INPUT]\nred\n[END INPUT]\n",
+                "durationInMilliseconds": 1168.446,
+                "inputTokens": null,
+                "outputTokens": null
+            }
+        }
+    ]
+}
