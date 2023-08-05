@@ -9,9 +9,9 @@ namespace SK_API
         // The 'get' and 'set' accessors allow getting and setting the value of the 'Date' property
         public DateOnly Date { get; set; }
 
-        // Define a property 'Temperature' of type int
+        // Define a property 'Temperature' of type double
         // This property represents the temperature of the prompt
-        public int Temperature { get; set; }
+        public double Temperature { get; set; }
 
         // Define a property 'NoW' of type int
         // This property represents the number of words that the text should have.
@@ -38,6 +38,10 @@ namespace SK_API
         //This property represents the topic of the text.
         public string Topic { get; set; }
 
+        //Define a property 'Type_of_text' of type string
+        //This property represents the type of the text.
+        public string Type_of_text { get; set; }
+
         //Define a property 'Level' of type string
         //This property represents the level of the text.
         public string Level { get; set; }
@@ -47,11 +51,12 @@ namespace SK_API
         public string[] Words { get; set; }
 
         //Define a constructor for the Fill the Gaps class
-        public Fill_the_Gaps(string text, string t_w_g, string topic, string level, int n_o_w, int n_o_g, int n_o_d, int temperature, string[] words)
+        public Fill_the_Gaps(string text, string t_w_g, string topic, string type_of_text, string level, int n_o_w, int n_o_g, int n_o_d, double temperature, string[] words)
         {
             Text = text;
             TextWithGaps = t_w_g;
             Topic = topic;
+            Type_of_text = type_of_text;
             Level = level;
             NoW = n_o_w;
             NoG = n_o_g;
@@ -59,6 +64,10 @@ namespace SK_API
             Words = words;
             Temperature = temperature;
             Date = DateOnly.FromDateTime(DateTime.Now);
+        }
+        public override string ToString()
+        {
+            return $"{{ \"Date\": \"{Date}\", \"Temperature\": {Temperature}, \"NoW\": {NoW}, \"NoG\": {NoG}, \"NoD\": {NoD}, \"Text\": \"{Text}\", \"TextWithGaps\": \"{TextWithGaps}\", \"Topic\": \"{Topic}\", \"Type_of_text\": \"{Type_of_text}\", \"Level\": \"{Level}\", \"Words\": [\"{string.Join("\", \"", Words)}\"] }}";
         }
     }
 }
