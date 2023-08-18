@@ -232,19 +232,12 @@ namespace SK_API.Controllers
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level;
-            Console.WriteLine(requestModel.Level);
             context["type_of_text"] = requestModel.Type_of_text;
-            Console.WriteLine(requestModel.Type_of_text);
             context["topic"] = requestModel.Topic;
-            Console.WriteLine(requestModel.Topic);
             context["n_o_w"] = requestModel.N_o_w.ToString();
-            Console.WriteLine(requestModel.N_o_w);
             context["n_o_g"] = requestModel.N_o_g.ToString();
-            Console.WriteLine(requestModel.N_o_g);
             context["n_o_d"] = requestModel.N_o_d.ToString();
-            Console.WriteLine(requestModel.N_o_d);
             context["temperature"] = "0.0";
-            Console.WriteLine("0.0");
             var result = "";
             //generating the output using the LLM
             try
@@ -264,10 +257,10 @@ namespace SK_API.Controllers
             _logger.LogInformation("Prompt generation complete.");
 
             //parse the result to get the final result
-            //var final = GetFtG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text, requestModel.Level, requestModel.N_o_w, requestModel.Temperature);
+            var final = GetFtG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text, requestModel.Level, requestModel.N_o_w, requestModel.Temperature);
 
         // Return the JSON of the fill the gaps exercise as the response body
-            return Ok(result.ToString());
+            return Ok(final.ToString());
         }
 
 

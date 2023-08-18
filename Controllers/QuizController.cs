@@ -1,4 +1,5 @@
 // Import necessary namespaces from the ASP.NET Core framework
+using System.Text.RegularExpressions;
 using AspNetCore.Authentication.ApiKey;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ using Microsoft.SemanticKernel;
 namespace SK_API.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public class QuizExerciseController : ControllerBase
+    public partial class QuizExerciseController : ControllerBase
     {
         private readonly ILogger<QuizExerciseController> _logger;
         private readonly IConfiguration _configuration;
@@ -19,10 +20,70 @@ namespace SK_API.Controllers{
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
+        private Quiz GetFG(string result, string topic, string level, int nedd, int n_o_d, double temperature){
+            //parsing the output
+            // Find the start and end of the original text
+            int startIndex = result.ToString().IndexOf("Original text:") + "Original text:".Length;
+            int endIndex = result.ToString().IndexOf("Question:");
+            string original_text = result.ToString()[startIndex..endIndex].Trim();
+            //Console.WriteLine("Original text: \n"+original_text);
+
+            //extract the question
+            startIndex = endIndex + "Question:".Length;
+            endIndex = result.ToString().IndexOf("Correct answer:");
+            string question = result.ToString()[startIndex..endIndex].Trim();
+            //Console.WriteLine("Question:\n"+question);
+
+            //extract the correct answer
+            startIndex = endIndex + "Correct answer:".Length;
+            endIndex = result.ToString().IndexOf("Distractors:");
+            string correct_answer = result.ToString()[startIndex..endIndex].Trim();
+            //Console.WriteLine("Correct Answer:\n"+correct_answer);
+
+            //extract the distractors
+            startIndex = endIndex + "Distractors:".Length;
+            endIndex = result.ToString().IndexOf("Easily discard distractors:");
+            string distractors = result.ToString()[startIndex..endIndex].Trim();
+            //Console.WriteLine("Distractors:\n");
+            //split the distractors into individual items
+            string[] distractorsArray = MyRegex().Split(distractors);
+            for (int i = 0; i < distractorsArray.Length; i++)
+            {
+                distractorsArray[i] = distractorsArray[i].Trim();
+                //Console.WriteLine(i+") "+distractorsArray[i]);
+            }
+            distractorsArray = distractorsArray.Skip(1).ToArray();
+
+
+            //extract the easily discard distractors
+            startIndex = endIndex + "Easily discard distractors:".Length;
+            string easily_discard_distractors = result.ToString()[startIndex..].Trim();
+            //Console.WriteLine("Easily Discard Distractors:\n");
+            //split the easily discard distractors into individual items
+            string[] easily_discard_distractorsArray = MyRegex().Split(easily_discard_distractors);
+            for (int i = 0; i < easily_discard_distractorsArray.Length; i++)
+            {
+                easily_discard_distractorsArray[i] = easily_discard_distractorsArray[i].Trim();
+                //Console.WriteLine(i+") "+easily_discard_distractorsArray[i]);
+            }
+            easily_discard_distractorsArray = easily_discard_distractorsArray.Skip(1).ToArray();
+
+            //create an array with the correct answer and the distractors and the easily discard distractors
+            string[] answers = new string[] {correct_answer}.Concat(distractorsArray).Concat(easily_discard_distractorsArray).ToArray();
+            //shuffle the answers
+            Random rnd = new Random();
+            answers = answers.OrderBy(x => rnd.Next()).ToArray();            
+            //Console.WriteLine("Correct Answer Index: "+Array.IndexOf(answers, correct_answer));
+
+            //create the quiz object
+            Quiz quiz = new Quiz(topic, level, nedd, n_o_d, temperature, question, Array.IndexOf(answers, correct_answer), answers);
+            return quiz;
+        }
+
         // Define your QuizExercise POST action method here
         [HttpPost("generateexercise")]
         public async Task<IActionResult> GenerateQuizExercise([FromHeader(Name = "ApiKey")] string apiKey, [FromBody] QuizExerciseRequestModel requestModel)
-        {
+        { 
             var secretToken = _configuration["SECRET_TOKEN"];
             if (string.IsNullOrWhiteSpace(secretToken))
             {
@@ -87,12 +148,15 @@ namespace SK_API.Controllers{
             try
             {
                 var result = await generate.InvokeAsync(context);
-                return Ok(result.ToString());
+                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level, requestModel.Nedd, requestModel.N_o_d, requestModel.Temperature);
+                return Ok(final.ToString());
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
+        [GeneratedRegex("\\d+\\)")]
+        private static partial Regex MyRegex();
     }
 }
