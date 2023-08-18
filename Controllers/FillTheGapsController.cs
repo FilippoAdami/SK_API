@@ -13,16 +13,13 @@ namespace SK_API.Controllers
     [Route("[controller]")]
     public partial class FillTheGapsController : ControllerBase
     {
-        // Declare a private field to hold an instance of the ILogger interface
-        // ILogger allows logging of messages within the controller
         private readonly ILogger<FillTheGapsController> _logger;
+        private readonly IConfiguration _configuration;
 
-        // Constructor for the FillTheGapsController, which takes an instance of ILogger as a parameter
-        // ASP.NET Core automatically injects the appropriate ILogger instance when creating an instance of this controller
-        public FillTheGapsController(ILogger<FillTheGapsController> logger)
+        public FillTheGapsController(ILogger<FillTheGapsController> logger, IConfiguration configuration)
         {
-            // Store the injected ILogger instance in the private '_logger' field
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public override bool Equals(object? obj)
@@ -176,14 +173,30 @@ namespace SK_API.Controllers
         // The name of this action method is 'prompt', so the full route will be '/FillTheGaps/generatedexercise'
         [HttpPost("generatedexercise")]
         //the following function has to 
-        public async Task<IActionResult> GeneratePromptAsync([FromBody] FillTheGapsRequestModel requestModel)
+        public async Task<IActionResult> GeneratePromptAsync([FromHeader(Name = "ApiKey")] string apiKey, [FromBody] FillTheGapsRequestModel requestModel)
         {   
+            var secretToken = _configuration["SECRET_TOKEN"];
+            if (string.IsNullOrWhiteSpace(secretToken))
+            {
+                return BadRequest("Required configuration values are missing or empty.");
+            }
+            if (apiKey != secretToken)
+            {
+                return Unauthorized();
+            }
+            var secretKey = _configuration["OPEAPI_SECRET_KEY"];
+            var endpoint = _configuration["OPENAPI_ENDPOINT"];
+            var model = _configuration["GPT_35_TURBO_DN"];
+            
         //setting up the semantic kernel
+            if (string.IsNullOrWhiteSpace(secretKey) || string.IsNullOrWhiteSpace(endpoint) || string.IsNullOrWhiteSpace(model)){
+                return BadRequest("Required configuration values are missing or empty.");
+            }
             var SKbuilder = new KernelBuilder();
             SKbuilder.WithAzureChatCompletionService(
-            "polyglot__gpt35",                  // Azure OpenAI Deployment Name
-            "https://polyglotai.openai.azure.com", // Azure OpenAI Endpoint
-            "9487bd30fa27426b9b3ba61b8ef2fc96");      // Azure OpenAI Key
+            model,  // Azure OpenAI Deployment Name
+            endpoint, // Azure OpenAI Endpoint
+            secretKey); // Azure OpenAI Key
             var kernel = SKbuilder.Build();
 
         //defining the prompt & generating the semantic function
@@ -219,20 +232,42 @@ namespace SK_API.Controllers
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level;
+            Console.WriteLine(requestModel.Level);
             context["type_of_text"] = requestModel.Type_of_text;
+            Console.WriteLine(requestModel.Type_of_text);
             context["topic"] = requestModel.Topic;
+            Console.WriteLine(requestModel.Topic);
             context["n_o_w"] = requestModel.N_o_w.ToString();
+            Console.WriteLine(requestModel.N_o_w);
             context["n_o_g"] = requestModel.N_o_g.ToString();
+            Console.WriteLine(requestModel.N_o_g);
             context["n_o_d"] = requestModel.N_o_d.ToString();
+            Console.WriteLine(requestModel.N_o_d);
             context["temperature"] = "0.0";
+            Console.WriteLine("0.0");
+            var result = "";
             //generating the output using the LLM
-            var result = await generate.InvokeAsync(context);
+            try
+            {
+                _logger.LogInformation("Invoking semantic function...");
+                var output = await generate.InvokeAsync(context);
+                _logger.LogInformation("Semantic function invoked successfully.");
+
+                result = output.ToString();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error invoking semantic function:");
+                result = e.ToString();
+            }
+
+            _logger.LogInformation("Prompt generation complete.");
 
             //parse the result to get the final result
-            var final = GetFtG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text, requestModel.Level, requestModel.N_o_w, requestModel.Temperature);
+            //var final = GetFtG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text, requestModel.Level, requestModel.N_o_w, requestModel.Temperature);
 
         // Return the JSON of the fill the gaps exercise as the response body
-            return Ok(final.ToString());
+            return Ok(result.ToString());
         }
 
 

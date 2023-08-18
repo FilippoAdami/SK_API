@@ -1,5 +1,8 @@
+using AspNetCore.Authentication.ApiKey;
+using SK_API;
 // Create a new WebApplication builder by calling WebApplication.CreateBuilder(args)
 // 'args' is the command-line arguments passed to the application
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -17,6 +20,8 @@ builder.Services.AddEndpointsApiExplorer();
 // This document describes the API and its endpoints
 builder.Services.AddSwaggerGen();
 
+// Load secret variables from the secrest.json file
+builder.Configuration.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
 // Build the WebApplication instance based on the services and configuration defined in the builder
 var app = builder.Build();
 
