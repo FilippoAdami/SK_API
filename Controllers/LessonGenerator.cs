@@ -57,18 +57,17 @@ namespace SK_API.Controllers{
                             The final output of your answer must be in the format:
                             Original text:
                             ...text...";
-            var generate = kernel.CreateSemanticFunction(prompt);
+            var generate = kernel.CreateSemanticFunction(prompt, "generateLesson" ,"Lesson", "generate lesson", 1000 , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();
-            context["level"] = requestModel.Level;
+            context["level"] = requestModel.Level.ToString();
             context["topic"] = requestModel.Topic;
-            context["temperature"] = requestModel.Temperature.ToString();
             //generating the output using the LLM
             try
             {
                 var result = await generate.InvokeAsync(context);
                 var Date = DateOnly.FromDateTime(DateTime.Now);
-                return Ok($"Date: {Date}\nTopic: {requestModel.Topic}\nLevel: {requestModel.Level}\nTemperature: {requestModel.Temperature}\n{result.ToString()}");
+                return Ok($"Date: {Date}\nTopic: {requestModel.Topic}\nLevel: {requestModel.Level.ToString()}\nTemperature: {requestModel.Temperature}\n{result.ToString()}");
             }
             catch (Exception e)
             {

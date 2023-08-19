@@ -90,17 +90,16 @@ namespace SK_API.Controllers{
                             ...question...
                             Correct answer:
                             ...correct answer...";
-            var generate = kernel.CreateSemanticFunction(prompt);
+            var generate = kernel.CreateSemanticFunction(prompt, "generateQuestion" ,"Question", "generate exercise", 1000 , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();
-            context["level"] = requestModel.Level;
+            context["level"] = requestModel.Level.ToString();
             context["topic"] = requestModel.Topic;
-            context["temperature"] = requestModel.Temperature.ToString();
             //generating the output using the LLM
             try
             {
                 var result = await generate.InvokeAsync(context);
-                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level, requestModel.Temperature);
+                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level.ToString(), requestModel.Temperature);
                 return Ok(final.ToString());
             }
             catch (Exception e)

@@ -136,19 +136,18 @@ namespace SK_API.Controllers{
                             1)...list of {{$n_o_d}} distractors...
                             Easily discard distractors:
                             1)...list of {{$nedd}} easily discard distractors...";
-            var generate = kernel.CreateSemanticFunction(prompt);
+            var generate = kernel.CreateSemanticFunction(prompt, "generateQuiz" ,"Quiz", "generate exercise", 1000 , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();
-            context["level"] = requestModel.Level;
+            context["level"] = requestModel.Level.ToString();
             context["topic"] = requestModel.Topic;
             context["nedd"] = requestModel.Nedd.ToString();
             context["n_o_d"] = requestModel.N_o_d.ToString();
-            context["temperature"] = requestModel.Temperature.ToString();
             //generating the output using the LLM
             try
             {
                 var result = await generate.InvokeAsync(context);
-                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level, requestModel.Nedd, requestModel.N_o_d, requestModel.Temperature);
+                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level.ToString(), requestModel.Nedd, requestModel.N_o_d, requestModel.Temperature);
                 return Ok(final.ToString());
             }
             catch (Exception e)
