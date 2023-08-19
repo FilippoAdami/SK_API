@@ -171,7 +171,7 @@ namespace SK_API.Controllers
         // Define a new HTTP POST action method for the FillTheGaps controller
         // This action method will be accessible via a POST request to the route defined by the 'Route' attribute (in this case, '[controller]/prompt')
         // The name of this action method is 'prompt', so the full route will be '/FillTheGaps/generatedexercise'
-        [HttpPost("generatedexercise")]
+        [HttpPost("generateexercise")]
         //the following function has to 
         public async Task<IActionResult> GeneratePromptAsync([FromHeader(Name = "ApiKey")] string apiKey, [FromBody] FillTheGapsRequestModel requestModel)
         {   
@@ -237,7 +237,7 @@ namespace SK_API.Controllers
             context["n_o_w"] = requestModel.N_o_w.ToString();
             context["n_o_g"] = requestModel.N_o_g.ToString();
             context["n_o_d"] = requestModel.N_o_d.ToString();
-            context["temperature"] = "0.0";
+            context["temperature"] = requestModel.Temperature.ToString();
             var result = "";
             //generating the output using the LLM
             try

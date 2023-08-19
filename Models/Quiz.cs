@@ -22,18 +22,6 @@ namespace SK_API{
             Answers = answers;
             Date = DateOnly.FromDateTime(DateTime.Now);
         }
-
-        public Quiz(){
-            Topic = "";
-            Level = "";
-            Nedd = 0;
-            N_o_d = 0;
-            Temperature = 0.0;
-            Question = "";
-            CorrectAnswerIndex = 0;
-            Answers = new string[0];
-        }
-
         public override string ToString()
         {
             return $"Date: {Date}\n Topic: {Topic}\nLevel: {Level}\nTemperature: {Temperature}\nNedd: {Nedd}\nN_o_d: {N_o_d}\nQuestion: {Question}\nCorrectAnswerIndex: {CorrectAnswerIndex}\nAnswers:\n(A){string.Join("\n(A)", Answers)}";
