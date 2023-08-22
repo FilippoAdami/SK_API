@@ -9,8 +9,9 @@ namespace SK_API{
         public string Question { get; set; }
         public int CorrectAnswerIndex { get; set; }
         public string[] Answers { get; set; }
+        public string Solution { get; set; }
 
-        public Quiz(string topic, string level, int nedd, int n_o_d, double temperature, string question, int correctAnswerIndex, string[] answers)
+        public Quiz(string topic, string level, int nedd, int n_o_d, double temperature, string question, int correctAnswerIndex, string[] answers, string solution)
         {
             Topic = topic;
             Level = level;
@@ -20,11 +21,12 @@ namespace SK_API{
             Question = question;
             CorrectAnswerIndex = correctAnswerIndex;
             Answers = answers;
+            Solution = solution;
             Date = DateOnly.FromDateTime(DateTime.Now);
         }
         public override string ToString()
         {
-            return $"Date: {Date}\n Topic: {Topic}\nLevel: {Level}\nTemperature: {Temperature}\nNedd: {Nedd}\nN_o_d: {N_o_d}\nQuestion: {Question}\nCorrectAnswerIndex: {CorrectAnswerIndex}\nAnswers:\n(A){string.Join("\n(A)", Answers)}";
+            return $"Date: {Date}\nTopic: {Topic}\nLevel: {Level}\nTemperature: {Temperature}\nNedd: {Nedd}\nN_o_d: {N_o_d}\nQuestion: {Question}\nCorrectAnswerIndex: {CorrectAnswerIndex}\nAnswers:\n(A){string.Join("\n(A)", Answers)}\nSolution: {Solution}";
         }
         
     }

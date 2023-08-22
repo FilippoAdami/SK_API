@@ -20,22 +20,41 @@ namespace SK_API.Controllers{
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        private Quiz GetFG(string result, string topic, string level, int nedd, int n_o_d, double temperature){
+        private Quiz GetFG(string result, string topic, string level, int nedd, int n_o_d, double temperature, bool type){
             //parsing the output
-            // Find the start and end of the original text
-            int startIndex = result.ToString().IndexOf("Original text:") + "Original text:".Length;
-            int endIndex = result.ToString().IndexOf("Question:");
-            string original_text = result.ToString()[startIndex..endIndex].Trim();
-            //Console.WriteLine("Original text: \n"+original_text);
+            int startIndex = 0;
+            int endIndex = 0;
+            string solution = "";
+            string question = "";
+            if(type){
+                // Find the start and end of the original resolution
+                startIndex = result.ToString().IndexOf("Resolution:") + "Resolution:".Length;
+                endIndex = result.ToString().IndexOf("Correct answer:");
+                solution = result.ToString()[startIndex..endIndex].Trim();
+                //Console.WriteLine("Original text: \n"+solution);
 
-            //extract the question
-            startIndex = endIndex + "Question:".Length;
-            endIndex = result.ToString().IndexOf("Correct answer:");
-            string question = result.ToString()[startIndex..endIndex].Trim();
-            //Console.WriteLine("Question:\n"+question);
+                //extract the question
+                startIndex = result.ToString().IndexOf("Problem:") + "Problem:".Length;
+                endIndex = result.ToString().IndexOf("Resolution:");
+                question = result.ToString()[startIndex..endIndex].Trim();
+
+            }
+            else{
+                // Find the start and end of the original text
+                startIndex = result.ToString().IndexOf("Original text:") + "Original text:".Length;
+                endIndex = result.ToString().IndexOf("Question:");
+                solution = result.ToString()[startIndex..endIndex].Trim();
+                //Console.WriteLine("Original text: \n"+solution);
+
+                //extract the question
+                startIndex = endIndex + "Question:".Length;
+                endIndex = result.ToString().IndexOf("Correct answer:");
+                question = result.ToString()[startIndex..endIndex].Trim();
+                //Console.WriteLine("Question:\n"+question);
+            }
 
             //extract the correct answer
-            startIndex = endIndex + "Correct answer:".Length;
+            startIndex = result.ToString().IndexOf("Correct answer:") + "Correct answer:".Length;
             endIndex = result.ToString().IndexOf("Distractors:");
             string correct_answer = result.ToString()[startIndex..endIndex].Trim();
             //Console.WriteLine("Correct Answer:\n"+correct_answer);
@@ -76,7 +95,7 @@ namespace SK_API.Controllers{
             //Console.WriteLine("Correct Answer Index: "+Array.IndexOf(answers, correct_answer));
 
             //create the quiz object
-            Quiz quiz = new Quiz(topic, level, nedd, n_o_d, temperature, question, Array.IndexOf(answers, correct_answer), answers);
+            Quiz quiz = new Quiz(topic, level, nedd, n_o_d, temperature, question, Array.IndexOf(answers, correct_answer), answers, solution);
             return quiz;
         }
 
@@ -109,7 +128,7 @@ namespace SK_API.Controllers{
             var kernel = SKbuilder.Build();
 
             //defining the prompt & generating the semantic function
-            string prompt = @"You are a {{$level}} level professor that wants to create a quiz exercise for his students.
+            string prompt = @"You are a {{$level}} level professor that wants to create a theoretical quiz exercise for his students.
                             1) Generate a {{$level}} level informative text about {{$topic}}. 
                             The text must be 100 words long.
                             It has to be written using {{$level}} vocabulary. (we will call this text: 'OriginalText')
@@ -136,7 +155,37 @@ namespace SK_API.Controllers{
                             1)...list of {{$n_o_d}} distractors...
                             Easily discard distractors:
                             1)...list of {{$nedd}} easily discard distractors...";
-            var generate = kernel.CreateSemanticFunction(prompt, "generateQuiz" ,"Quiz", "generate exercise", 1000 , requestModel.Temperature);
+            string promptB = @"You are a {{$level}} level professor that wants to create a practical quiz exercise for his students.
+                            1) Generate a {{$level}} level problem with a numeric of formula solution about {{$topic}}.
+                            Output the problem.
+                            2) Solve the problem following a step by step approach.
+                            It has to be written using {{$level}} vocabulary and formulas. (we will call this text: 'Resolution')
+                            Output the step by step resolution
+                            3) Extract the numeric or formula solution from the resolution.
+                            Output the solution
+                            4) Generate {{$n_o_d}} distractors that are similar and in the same format and length as the correct answer. (If possible, avoid using multiples of 5).
+                            NB: if the correct answer contains formulas or specific terms also the distractors must contains formulas or specific terms.
+                            Output these distractors
+                            5) Generate {{$nedd}} distractor that could be easily discarded by students
+                            Output the distractors
+
+                            The final output of your answer must be in the format:
+
+                            Problem:
+                            ...text...
+                            Reolution:
+                            ...step by step resolution...
+                            Correct answer:
+                            ...number/formula...
+                            Distractors:
+                            1)...list of {{$n_o_d}} distractors...
+                            Easily discard distractors:
+                            1)...list of {{$nedd}} easily discard distractors...";
+            
+            var generate = kernel.CreateSemanticFunction(prompt, "generateQuiz" ,"Quiz", "generate exercise", 3000 , requestModel.Temperature);
+            if (requestModel.Type){
+                generate = kernel.CreateSemanticFunction(promptB, "generateQuizB" ,"QuizB", "generate exercise", 3000 , requestModel.Temperature);
+            }
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level.ToString();
@@ -147,7 +196,7 @@ namespace SK_API.Controllers{
             try
             {
                 var result = await generate.InvokeAsync(context);
-                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level.ToString(), requestModel.Nedd, requestModel.N_o_d, requestModel.Temperature);
+                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level.ToString(), requestModel.Nedd, requestModel.N_o_d, requestModel.Temperature, requestModel.Type);
                 return Ok(final.ToString());
             }
             catch (Exception e)
