@@ -116,7 +116,7 @@ namespace SK_API.Controllers{
                             Accuracy:
                             Correct answer:
                             What was wrong and why:";
-            var generate = kernel.CreateSemanticFunction(prompt, "correctAnswer" ,"Corrector", "correct answer to open question", 1800 , requestModel.Temperature);
+            var generate = kernel.CreateSemanticFunction(prompt, "correctAnswer" ,"Corrector", "correct answer to open question", null , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();
             context["question"] = requestModel.Question;

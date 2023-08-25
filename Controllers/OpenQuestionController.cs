@@ -90,7 +90,7 @@ namespace SK_API.Controllers{
                             ...question...
                             Correct answer:
                             ...correct answer...";
-            var generate = kernel.CreateSemanticFunction(prompt, "generateQuestion" ,"Question", "generate exercise", 1000 , requestModel.Temperature);
+            var generate = kernel.CreateSemanticFunction(prompt, "generateQuestion" ,"Question", "generate exercise", null , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level.ToString();

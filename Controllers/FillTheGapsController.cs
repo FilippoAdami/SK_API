@@ -228,7 +228,7 @@ namespace SK_API.Controllers
                             {{$n_o_w}}
                             {{$n_o_g}}
                             [END INPUT]";
-            var generate = kernel.CreateSemanticFunction(prompt, "generateFTG" ,"FillTheGaps", "generate exercise", 1000 , requestModel.Temperature);
+            var generate = kernel.CreateSemanticFunction(prompt, "generateFTG" ,"FillTheGaps", "generate exercise", null , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level.ToString();
