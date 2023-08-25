@@ -182,9 +182,9 @@ namespace SK_API.Controllers{
                             Easily discard distractors:
                             1)...list of {{$nedd}} easily discard distractors...";
             
-            var generate = kernel.CreateSemanticFunction(prompt, "generateQuiz" ,"Quiz", "generate exercise", 3000 , requestModel.Temperature);
+            var generate = kernel.CreateSemanticFunction(prompt, "generateQuiz" ,"Quiz", "generate exercise", null , requestModel.Temperature);
             if (requestModel.Type){
-                generate = kernel.CreateSemanticFunction(promptB, "generateQuizB" ,"QuizB", "generate exercise", 3000 , requestModel.Temperature);
+                generate = kernel.CreateSemanticFunction(promptB, "generateQuizB" ,"QuizB", "generate exercise", null , requestModel.Temperature);
             }
             //setting up the context
             var context = kernel.CreateNewContext();

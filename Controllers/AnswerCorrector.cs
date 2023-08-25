@@ -27,6 +27,13 @@ namespace SK_API.Controllers{
             int endIndex = result.ToString().IndexOf("Correct answer:");
             string acc = result.ToString()[startIndex..endIndex].Trim();
             double accuracy = Convert.ToDouble(acc);
+            if (accuracy == 0.2){
+                accuracy = 0.0;
+            } else if (accuracy == 0.4 || accuracy == 0.6){
+                accuracy = 0.5;
+            } else if (accuracy == 0.8){
+                accuracy = 1.0;
+            }
             //Console.WriteLine("Original text: \n"+accuracy);
 
             //extract the correct answer

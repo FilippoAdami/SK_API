@@ -67,7 +67,7 @@ namespace SK_API
         }
         public override string ToString()
         {
-            return $"{{ \"Date\": \"{Date}\", \"Temperature\": {Temperature}, \"NoW\": {NoW}, \"NoG\": {NoG}, \"NoD\": {NoD}, \"Text\": \"{Text}\", \"TextWithGaps\": \"{TextWithGaps}\", \"Topic\": \"{Topic}\", \"Type_of_text\": \"{Type_of_text}\", \"Level\": \"{Level}\", \"Words\": [\"{string.Join("\", \"", Words)}\"] }}";
+            return $"Date: {Date}\nTemperature: {Temperature}\nNoW: {NoW}\nNoG: {NoG}\nNoD: {NoD}\nText: {Text}\nTextWithGaps: {TextWithGaps}\nTopic: {Topic}\nType_of_text: {Type_of_text}\nLevel: {Level}\nWords: {Words}";
         }
     }
 }

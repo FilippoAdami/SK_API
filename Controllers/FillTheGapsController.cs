@@ -91,9 +91,9 @@ namespace SK_API.Controllers
             {
                 n_o_g = wordsArray.Length;
             } else {n_o_g = N_o_g;}
-            if(N_o_d > distractorsArray.Length)
+            if(N_o_d > n_o_g)
             {
-                n_o_d = distractorsArray.Length;
+                n_o_d = n_o_g;
             } else {n_o_d = N_o_d;}
             //Console.WriteLine(n_o_g);
             //Console.WriteLine(n_o_d);

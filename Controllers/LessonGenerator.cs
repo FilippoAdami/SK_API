@@ -50,14 +50,14 @@ namespace SK_API.Controllers{
 
             //defining the prompt & generating the semantic function
             string prompt = @"You are a {{$level}} level professor that wants to create a lesson for his students to teach them the main concepts about {{$topic}}.
-                            1) Generate a {{$level}} level academic text about {{$topic}}.
-                            It has to be written using {{$level}} vocabulary. (we will call this text: 'OriginalText')
+                            1) Generate a {{$level}} level academic lesson about {{$topic}}.
+                            It has to be written using {{$level}} vocabulary. (we will call this text: 'Lesson')
                             Output the text
 
                             The final output of your answer must be in the format:
-                            Original text:
+                            Lesson:
                             ...text...";
-            var generate = kernel.CreateSemanticFunction(prompt, "generateLesson" ,"Lesson", "generate lesson", 1000 , requestModel.Temperature);
+            var generate = kernel.CreateSemanticFunction(prompt, "generateLesson" ,"Lesson", "generate lesson", null , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level.ToString();

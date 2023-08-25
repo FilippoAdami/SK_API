@@ -62,7 +62,7 @@ namespace SK_API.Controllers{
             {
                 var result = await generate.InvokeAsync(context);
                 var Date = DateOnly.FromDateTime(DateTime.Now);
-                return Ok($"Date: {Date}\nSummary:\n{result.ToString()}");
+                return Ok($"Date: {Date}\nSummary: {result.ToString()}");
             }
             catch (Exception e)
             {
