@@ -30,7 +30,7 @@ namespace SK_API.Controllers
                    EqualityComparer<ILogger<FillTheGapsController>>.Default.Equals(_logger, controller._logger);
         }
 
-        private Fill_the_Gaps GetFtG(string result, int N_o_g, int N_o_d, string topic, string type_of_text, string level, int n_o_w, double temperature)
+        private Fill_the_Gaps GetFG(string result, int N_o_g, int N_o_d, string topic, string type_of_text, string level, int n_o_w, double temperature)
         {
             //parsing the output
             // Find the start and end of the original text
@@ -261,9 +261,9 @@ namespace SK_API.Controllers
             _logger.LogInformation("Prompt generation complete.");
 
             //parse the result to get the final result
-            var final = GetFtG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text.ToString(), requestModel.Level.ToString(), requestModel.N_o_w, requestModel.Temperature);
+            var final = GetFG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text.ToString(), requestModel.Level.ToString(), requestModel.N_o_w, requestModel.Temperature);
 
-        // Return the JSON of the fill the gaps exercise as the response body
+            // Return the JSON of the fill the gaps exercise as the response body
             return Ok(final.ToString());
         }
 

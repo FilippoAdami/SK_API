@@ -123,3 +123,4 @@ C:\Users\elpip\SK_API\obj\Debug\net7.0\refint\SK_API.dll
 C:\Users\elpip\SK_API\obj\Debug\net7.0\SK_API.pdb
 c:\Users\elpip\SK_API\obj\Debug\net7.0\SK_API.genruntimeconfig.cache
 c:\Users\elpip\SK_API\obj\Debug\net7.0\ref\SK_API.dll
+C:\Users\elpip\SK_API\bin\Debug\net7.0\secrets.json
