@@ -34,7 +34,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
 
     // Configures the Swagger UI to display the Swagger JSON document in a web-based UI
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SK_API V1");
+    });
 }
 
 // Redirect HTTP requests to HTTPS if the UseHttpsRedirection middleware is enabled
