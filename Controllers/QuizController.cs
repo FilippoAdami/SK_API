@@ -1,7 +1,5 @@
 // Import necessary namespaces from the ASP.NET Core framework
 using System.Text.RegularExpressions;
-using AspNetCore.Authentication.ApiKey;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 
@@ -22,7 +20,7 @@ namespace SK_API.Controllers{
             _auth = auth;
         }
 
-        private Quiz GetFG(string result, string topic, string level, int nedd, int n_o_d, double temperature, bool type){
+        private Quiz GetFG(string result, string level, int nedd, int n_o_d, double temperature, bool type){
             //parsing the output
             int startIndex = 0;
             int endIndex = 0;
@@ -97,7 +95,7 @@ namespace SK_API.Controllers{
             //Console.WriteLine("Correct Answer Index: "+Array.IndexOf(answers, correct_answer));
 
             //create the quiz object
-            Quiz quiz = new Quiz(topic, level, nedd, n_o_d, temperature, question, Array.IndexOf(answers, correct_answer), answers, solution);
+            Quiz quiz = new Quiz(level, nedd, n_o_d, temperature, question, Array.IndexOf(answers, correct_answer), answers, solution);
             return quiz;
         }
 
@@ -131,12 +129,25 @@ namespace SK_API.Controllers{
             endpoint, // Azure OpenAI Endpoint
             secretKey); // Azure OpenAI Key
             var kernel = SKbuilder.Build();
+        
+        //extracting and summarizing the text
+            // Create a FileOrUrl instance from the provided input.
+            FileOrUrl source = new FileOrUrl(requestModel.Text);
+
+            // Create an instance of the TextProcessor.
+            TextProcessor textProcessor = new TextProcessor();
+
+            // Create a Summarizer instance
+            Summarizer summarizer = new(_configuration, _auth);
+
+            // Call the method to extract text.
+            string extractedText = textProcessor.ExtractTextFromFileOrUrl(source);
+            
+            var finalText = await summarizer.Summarize(apiKey, extractedText);
 
             //defining the prompt & generating the semantic function
-            string prompt = @"You are a {{$level}} level professor that wants to create a theoretical quiz exercise for his students.
-                            1) Generate a {{$level}} level informative text about {{$topic}}. 
-                            The text must be 100 words long.
-                            It has to be written using {{$level}} vocabulary. (we will call this text: 'OriginalText')
+            string prompt = @"You are a {{$level}} level professor that just gave a lesson. You now want to create a theoretical quiz exercise for your students.
+                            1) The summary of your lesson is {{$lesson}} (we will call this text: 'OriginalText')
                             Output the text
                             2) Using Original text as context, extract from that text one important concept and generate 1 question about that topic.
                             Output the question.
@@ -160,8 +171,8 @@ namespace SK_API.Controllers{
                             1)...list of {{$n_o_d}} distractors...
                             Easily discard distractors:
                             1)...list of {{$nedd}} easily discard distractors...";
-            string promptB = @"You are a {{$level}} level professor that wants to create a practical quiz exercise for his students.
-                            1) Generate a {{$level}} level problem with a numeric of formula solution about {{$topic}}.
+            string promptB = @"You are a {{$level}} level professor that just gave the followiong lesson:{{$lesson}}. You now want to create a practical quiz exercise for your students.
+                            1) Generate a {{$level}} level problem with either a numeric or a formula solution where your students can apply what you just taught.
                             Output the problem.
                             2) Solve the problem following a step by step approach.
                             It has to be written using {{$level}} vocabulary and formulas. (we will call this text: 'Resolution')
@@ -194,14 +205,14 @@ namespace SK_API.Controllers{
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level.ToString();
-            context["topic"] = requestModel.Topic;
+            context["lesson"] = finalText;
             context["nedd"] = requestModel.Nedd.ToString();
             context["n_o_d"] = requestModel.N_o_d.ToString();
             //generating the output using the LLM
             try
             {
                 var result = await generate.InvokeAsync(context);
-                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level.ToString(), requestModel.Nedd, requestModel.N_o_d, requestModel.Temperature, requestModel.Type);
+                var final = GetFG(result.ToString(), requestModel.Level.ToString(), requestModel.Nedd, requestModel.N_o_d, requestModel.Temperature, requestModel.Type);
                 return Ok(final.ToString());
             }
             catch (Exception e)

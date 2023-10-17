@@ -22,7 +22,7 @@ namespace SK_API.Controllers{
             _auth = auth;
         }
 
-        private OpenQuestion GetFG(string result, string topic, string level, double temperature){
+        private OpenQuestion GetFG(string result, string level, double temperature){
             //parsing the output
             // Find the start and end of the original text
             int startIndex = result.ToString().IndexOf("Original text:") + "Original text:".Length;
@@ -42,7 +42,7 @@ namespace SK_API.Controllers{
             //Console.WriteLine("Correct Answer:\n"+correct_answer);
 
             //create the question object
-            OpenQuestion openQuestion = new OpenQuestion(topic, level, temperature, question, correct_answer);
+            OpenQuestion openQuestion = new OpenQuestion(level, temperature, question, correct_answer);
             return openQuestion;
         }
 
@@ -77,13 +77,26 @@ namespace SK_API.Controllers{
             secretKey); // Azure OpenAI Key
             var kernel = SKbuilder.Build();
 
+        //extracting and summarizing the text
+            // Create a FileOrUrl instance from the provided input.
+            FileOrUrl source = new FileOrUrl(requestModel.Text);
+
+            // Create an instance of the TextProcessor.
+            TextProcessor textProcessor = new TextProcessor();
+
+            // Create a Summarizer instance
+            Summarizer summarizer = new(_configuration, _auth);
+
+            // Call the method to extract text.
+            string extractedText = textProcessor.ExtractTextFromFileOrUrl(source);
+            
+            var finalText = await summarizer.Summarize(apiKey, extractedText);
+
             //defining the prompt & generating the semantic function
-            string prompt = @"You are a {{$level}} level professor that wants to create a question for his students to see if they have learned the main concepts of {{$topic}}.
-                            1) Generate a {{$level}} level informative text about {{$topic}}. 
-                            The text must be 100 words long.
-                            It has to be written using {{$level}} vocabulary. (we will call this text: 'OriginalText')
+            string prompt = @"You are a {{$level}} level professor that just gave a lecture. Now you want to create a question for your students about your lesson.
+                            1) The summary of your lesson is {{$text}} (we will call this text: 'OriginalText')
                             Output the text
-                            2) Using Original text as context, extract from that text one important concept and generate 1 question about that topic.
+                            2) Using 'Original text' as context, extract from that text one important concept and generate 1 question about that topic.
                             Output the question.
                             3) Generate one possible correct answers for the question.
                             Output the answers
@@ -99,12 +112,12 @@ namespace SK_API.Controllers{
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level.ToString();
-            context["topic"] = requestModel.Topic;
+            context["text"] = finalText;
             //generating the output using the LLM
             try
             {
                 var result = await generate.InvokeAsync(context);
-                var final = GetFG(result.ToString(), requestModel.Topic, requestModel.Level.ToString(), requestModel.Temperature);
+                var final = GetFG(result.ToString(), requestModel.Level.ToString(), requestModel.Temperature);
                 return Ok(final.ToString());
             }
             catch (Exception e)

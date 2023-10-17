@@ -7170,24 +7170,33 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\elpip\\.nuget\\packages\\": {}
+    "C:\\Users\\elpip\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\elpip\\SK_API\\SK_API.csproj",
+      "projectUniqueName": "C:\\Users\\elpip\\Desktop\\SK_API\\SK_API.csproj",
       "projectName": "SK_API",
-      "projectPath": "c:\\Users\\elpip\\SK_API\\SK_API.csproj",
+      "projectPath": "C:\\Users\\elpip\\Desktop\\SK_API\\SK_API.csproj",
       "packagesPath": "C:\\Users\\elpip\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\elpip\\SK_API\\obj\\",
+      "outputPath": "C:\\Users\\elpip\\Desktop\\SK_API\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\elpip\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\elpip\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -7278,11 +7287,17 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
       }
     }
   },
   "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\elpip\\Desktop\\SK_API\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    },
     {
       "code": "NU1701",
       "level": "Warning",

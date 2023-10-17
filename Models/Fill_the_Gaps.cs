@@ -34,14 +34,6 @@ namespace SK_API
         // This property represents the text with the gaps in it.
         public string TextWithGaps { get; set; }
 
-        //Define a property 'Topic' of type string
-        //This property represents the topic of the text.
-        public string Topic { get; set; }
-
-        //Define a property 'Type_of_text' of type string
-        //This property represents the type of the text.
-        public string Type_of_text { get; set; }
-
         //Define a property 'Level' of type string
         //This property represents the level of the text.
         public string Level { get; set; }
@@ -51,12 +43,10 @@ namespace SK_API
         public string[] Words { get; set; }
 
         //Define a constructor for the Fill the Gaps class
-        public Fill_the_Gaps(string text, string t_w_g, string topic, string type_of_text, string level, int n_o_w, int n_o_g, int n_o_d, double temperature, string[] words)
+        public Fill_the_Gaps(string text, string t_w_g, string level, int n_o_w, int n_o_g, int n_o_d, double temperature, string[] words)
         {
             Text = text;
             TextWithGaps = t_w_g;
-            Topic = topic;
-            Type_of_text = type_of_text;
             Level = level;
             NoW = n_o_w;
             NoG = n_o_g;
@@ -67,7 +57,7 @@ namespace SK_API
         }
         public override string ToString()
         {
-            return $"Date: {Date}\nTemperature: {Temperature}\nNoW: {NoW}\nNoG: {NoG}\nNoD: {NoD}\nText: {Text}\nTextWithGaps: {TextWithGaps}\nTopic: {Topic}\nType_of_text: {Type_of_text}\nLevel: {Level}\nWords:\n(A){string.Join("\n(A)", Words)}";
+            return $"Date: {Date}\nTemperature: {Temperature}\nNoW: {NoW}\nNoG: {NoG}\nNoD: {NoD}\nText: {Text}\nTextWithGaps: {TextWithGaps}\nLevel: {Level}\nWords:\n(A){string.Join("\n(A)", Words)}";
         }
     }
 }

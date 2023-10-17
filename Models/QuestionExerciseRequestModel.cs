@@ -1,12 +1,12 @@
 namespace SK_API{
     public class QuestionExcerciseRequestModel{
-        public string Topic { get; set; }
+        public string Text { get; set; }
         public TextLevel Level { get; set; }
         public double Temperature { get; set; }
 
-        public QuestionExcerciseRequestModel(string topic, TextLevel level, double temperature)
+        public QuestionExcerciseRequestModel(string text, TextLevel level, double temperature)
         {
-            Topic = topic;
+            Text = text;
             Level = level;
             Temperature = temperature;
         }

@@ -30,7 +30,7 @@ namespace SK_API.Controllers
                    EqualityComparer<ILogger<FillTheGapsController>>.Default.Equals(_logger, controller._logger);
         }
 
-        private Fill_the_Gaps GetFG(string result, int N_o_g, int N_o_d, string topic, string type_of_text, string level, int n_o_w, double temperature)
+        private Fill_the_Gaps GetFG(string result, int N_o_g, int N_o_d, string level, int n_o_w, double temperature)
         {
             //parsing the output
             // Find the start and end of the original text
@@ -67,7 +67,7 @@ namespace SK_API.Controllers
             // Find the start and end points of the "Distractors:" list
             int distractorsStartIndex = result.IndexOf("Distractors:") + "Distractors:".Length;
             Console.WriteLine(distractorsStartIndex);
-            Console.WriteLine("Distractors:".Length);
+            //Console.WriteLine("Distractors:".Length);
             int distractorsEndIndex = result.IndexOf("[END OUTPUT]");
             Console.WriteLine(distractorsEndIndex);
             // Extract the "Distractors:" list
@@ -156,8 +156,6 @@ namespace SK_API.Controllers
             Fill_the_Gaps ftg = new(
                 original_text,
                 t_w_g,
-                topic,
-                type_of_text,
                 level,
                 n_o_w,
                 n_o_g,
@@ -204,12 +202,24 @@ namespace SK_API.Controllers
             secretKey); // Azure OpenAI Key
             var kernel = SKbuilder.Build();
 
+        //extracting and summarizing the text
+            // Create a FileOrUrl instance from the provided input.
+            FileOrUrl source = new FileOrUrl(requestModel.Text);
+
+            // Create an instance of the TextProcessor.
+            TextProcessor textProcessor = new TextProcessor();
+
+            // Create a Summarizer instance
+            Summarizer summarizer = new(_configuration, _auth);
+
+            // Call the method to extract text.
+            string extractedText = textProcessor.ExtractTextFromFileOrUrl(source);
+            
+            var finalText = await summarizer.Summarize(apiKey, extractedText, requestModel.N_o_w);
+
         //defining the prompt & generating the semantic function
-            string prompt = @"You are a {{$level}} professor that wants to create a fill the gaps exercise for his students.
-                            1) Generate a {{$level}} level {{$type_of_text}} text about {{$topic}}. 
-                            The text must be {{$n_o_w}} words long. 
-                            It has to be written using {{$level}} vocabulary. (we will call this text: 'OriginalText')
-                            Output the text
+            string prompt = @"You are a {{$level}} professor. You have just given a lesson and now you want to create a fill the gaps exercise for your students about the lecture.
+                            1) The summart of your lesson is {{$text}}; output it. (we will call this text: 'OriginalText')
                             2) Extract from the text 'OriginalText' all the proper nouns, dates/numbers  and all the scientific/specific terminology).  (we will call this list: 'Words')
                             Output the list 'Words'
                             3) For each word in the list 'Words' generate one similar word that can be proposed as a distractor in a fill the gaps exercise.  (we will call this list: 'Distractors') 
@@ -225,6 +235,7 @@ namespace SK_API.Controllers
                             1)distractor1
                             2)distractor2
                             3)...
+                            [END OUTPUT]
 
                             [INPUT]
                             {{$level}}
@@ -233,15 +244,14 @@ namespace SK_API.Controllers
                             {{$n_o_w}}
                             {{$n_o_g}}
                             [END INPUT]";
+
             var generate = kernel.CreateSemanticFunction(prompt, "generateFTG" ,"FillTheGaps", "generate exercise", null , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level.ToString();
-            context["type_of_text"] = requestModel.Type_of_text.ToString();
-            context["topic"] = requestModel.Topic;
+            context["text"]  = finalText;
             context["n_o_w"] = requestModel.N_o_w.ToString();
             context["n_o_g"] = requestModel.N_o_g.ToString();
-            context["n_o_d"] = requestModel.N_o_d.ToString();
             var result = "";
             //generating the output using the LLM
             try
@@ -249,8 +259,8 @@ namespace SK_API.Controllers
                 _logger.LogInformation("Invoking semantic function...");
                 var output = await generate.InvokeAsync(context);
                 _logger.LogInformation("Semantic function invoked successfully.");
-
                 result = output.ToString();
+                Console.WriteLine(result);
             }
             catch (Exception e)
             {
@@ -261,7 +271,7 @@ namespace SK_API.Controllers
             _logger.LogInformation("Prompt generation complete.");
 
             //parse the result to get the final result
-            var final = GetFG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text.ToString(), requestModel.Level.ToString(), requestModel.N_o_w, requestModel.Temperature);
+            var final = GetFG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Level.ToString(), requestModel.N_o_w, requestModel.Temperature);
 
             // Return the JSON of the fill the gaps exercise as the response body
             return Ok(final.ToString());
