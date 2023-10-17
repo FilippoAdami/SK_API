@@ -1,9 +1,13 @@
 // Create a new WebApplication builder by calling WebApplication.CreateBuilder(args)
 // 'args' is the command-line arguments passed to the application
+using SK_API.Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // The 'Services' property of the builder is an instance of IServiceCollection
+
+builder.Services.AddTransient<Auth>();
 // 'AddControllers()' method registers the controllers in the application's dependency injection container
 builder.Services.AddControllers();
 

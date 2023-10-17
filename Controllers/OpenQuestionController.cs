@@ -13,11 +13,13 @@ namespace SK_API.Controllers{
     {
         private readonly ILogger<QuestionExerciseController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly Auth _auth;
 
-        public QuestionExerciseController(ILogger<QuestionExerciseController> logger, IConfiguration configuration)
+        public QuestionExerciseController(ILogger<QuestionExerciseController> logger, IConfiguration configuration, Auth auth)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _auth = auth;
         }
 
         private OpenQuestion GetFG(string result, string topic, string level, double temperature){
@@ -48,14 +50,17 @@ namespace SK_API.Controllers{
         [HttpPost("generateexercise")]
         public async Task<IActionResult> GenerateQuestionExcercise([FromHeader(Name = "ApiKey")] string apiKey, [FromBody] QuestionExcerciseRequestModel requestModel)
         { 
-            var secretToken = _configuration["SECRET_TOKEN"];
-            if (string.IsNullOrWhiteSpace(secretToken))
+            int authenticated = _auth.Authenticate(apiKey);
+            if (authenticated == 400)
             {
                 return BadRequest("Required configuration values are missing or empty.");
             }
-            if (apiKey != secretToken)
+            else if (authenticated == 403)
             {
                 return Unauthorized();
+            }
+            else if(authenticated==200){
+                Console.WriteLine("Authenticated successfully");
             }
             var secretKey = _configuration["OPEAPI_SECRET_KEY"];
             var endpoint = _configuration["OPENAPI_ENDPOINT"];

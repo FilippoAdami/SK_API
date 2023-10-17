@@ -15,11 +15,13 @@ namespace SK_API.Controllers
     {
         private readonly ILogger<FillTheGapsController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly Auth _auth;
 
-        public FillTheGapsController(ILogger<FillTheGapsController> logger, IConfiguration configuration)
+        public FillTheGapsController(ILogger<FillTheGapsController> logger, IConfiguration configuration, Auth auth)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _auth = auth;
         }
 
         public override bool Equals(object? obj)
@@ -28,7 +30,7 @@ namespace SK_API.Controllers
                    EqualityComparer<ILogger<FillTheGapsController>>.Default.Equals(_logger, controller._logger);
         }
 
-        private Fill_the_Gaps GetFtG(string result, int N_o_g, int N_o_d, string topic, string type_of_text, string level, int n_o_w, double temperature)
+        private Fill_the_Gaps GetFG(string result, int N_o_g, int N_o_d, string topic, string type_of_text, string level, int n_o_w, double temperature)
         {
             //parsing the output
             // Find the start and end of the original text
@@ -175,14 +177,17 @@ namespace SK_API.Controllers
         //the following function has to 
         public async Task<IActionResult> GeneratePromptAsync([FromHeader(Name = "ApiKey")] string apiKey, [FromBody] FillTheGapsRequestModel requestModel)
         {   
-            var secretToken = _configuration["SECRET_TOKEN"];
-            if (string.IsNullOrWhiteSpace(secretToken))
+            int authenticated = _auth.Authenticate(apiKey);
+            if (authenticated == 400)
             {
                 return BadRequest("Required configuration values are missing or empty.");
             }
-            if (apiKey != secretToken)
+            else if (authenticated == 403)
             {
                 return Unauthorized();
+            }
+            else if(authenticated==200){
+                Console.WriteLine("Authenticated successfully");
             }
             var secretKey = _configuration["OPEAPI_SECRET_KEY"];
             var endpoint = _configuration["OPENAPI_ENDPOINT"];
@@ -256,9 +261,9 @@ namespace SK_API.Controllers
             _logger.LogInformation("Prompt generation complete.");
 
             //parse the result to get the final result
-            var final = GetFtG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text.ToString(), requestModel.Level.ToString(), requestModel.N_o_w, requestModel.Temperature);
+            var final = GetFG(result.ToString(), requestModel.N_o_g, requestModel.N_o_d, requestModel.Topic, requestModel.Type_of_text.ToString(), requestModel.Level.ToString(), requestModel.N_o_w, requestModel.Temperature);
 
-        // Return the JSON of the fill the gaps exercise as the response body
+            // Return the JSON of the fill the gaps exercise as the response body
             return Ok(final.ToString());
         }
 
