@@ -5,12 +5,12 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+  repository: docker.polyglot-edu.com/polyglot-edu/sk_api
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "latest"
 
-imagePullSecrets: []
+imagePullSecrets: [{ name: docker-secret }]
 nameOverride: ""
 fullnameOverride: ""
 
