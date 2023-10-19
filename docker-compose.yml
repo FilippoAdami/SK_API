@@ -1,0 +1,9 @@
+version: "3.3"
+
+services:
+  backend:
+    build: .
+    ports:
+      - 80:80
+    environment:
+      - DOTNET_ENVIRONMENT=development
