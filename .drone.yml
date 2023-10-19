@@ -42,7 +42,7 @@ steps:
       <<: *env
     settings:
       mode: upgrade
-      chart: ./charts
+      chart: ./helm/skapi
       release: skapi-${DRONE_BRANCH}
       namespace: skapi-${DRONE_BRANCH}
       debug: true
