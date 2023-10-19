@@ -1,0 +1,70 @@
+kind: pipeline
+type: docker
+name: skapi
+
+globals:
+  - &docker_creds
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+  - &env
+    OPENAPI_SECRET_KEY: 
+      from_secret: openapi_secret
+    OPENAPI_ENDPOINT: 
+      from_secret: openapi_endpoint
+    GPT_35_TURBO_DN: 
+      from_secret: openapi_gpt35_dn
+    SECRET_TOKEN:
+      from_secret: secret_token
+  - &condition
+    event:
+      - push
+
+steps:
+  - name: Build and push image to Docker # building the encore docker image
+    image: plugins/docker
+    settings:
+      repo: docker.polyglot-edu.com/polyglot-edu/sk_api # must be lowercase
+      registry: docker.polyglot-edu.com
+      dockerfile: ./Dockerfile
+      tags: ["${DRONE_BRANCH}"]
+      <<: *docker_creds
+    when:
+      <<: *condition
+  - name: Deploy # deploy to kubernetes using a Helm chart
+    image: pelotech/drone-helm3
+    environment:
+      CFORIGIN:
+        from_secret: cf_origin
+      DOCKERCONFIG:
+        from_secret: dockerconfigjson
+      <<: *env
+    settings:
+      mode: upgrade
+      chart: ./charts
+      release: skapi-${DRONE_BRANCH}
+      namespace: skapi-${DRONE_BRANCH}
+      debug: true
+      kube_service_account: admin-user
+      kube_api_server: "https://131.114.23.149:6443"
+      kube_token:
+        from_secret: kube_token
+      values:
+        - "url=skapi.polyglot-edu.com"
+        - "cfOriginKey=$CFORIGIN"
+        - "dockerconfigjson=$DOCKERCONFIG"
+        - "image.repository=docker.polyglot-edu.com/polyglot-edu/sk_api"
+        - "image.tag=${DRONE_BRANCH}"
+        - "env.openAiSecret=$OPENAI_SECRET_KEY"
+        - "env.openAiEndpoint=$OPENAI_ENDPOINT"
+        - "env.openAiGpt35Dn=$GPT_35_TURBO_DN"
+        - "env.secretToken=$SECRET_TOKEN"
+      cleanup_failed_upgrade: true
+      force_upgrade: true
+      skip_tls_verify: true
+      create_namespace: true
+    depends_on:
+      - Build and push image to Docker
+    when:
+      <<: *condition
