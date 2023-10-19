@@ -15,7 +15,7 @@ spec:
     metadata:
       {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
+        timestamp: "{{ now | date "20060102150405" }}"
       {{- end }}
       labels:
         {{- include "skapi.selectorLabels" . | nindent 8 }}
