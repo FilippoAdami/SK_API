@@ -29,20 +29,21 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 // The HTTP request pipeline is a series of middleware components that process incoming HTTP requests and generate HTTP responses
 
+// TODO: fix this, enable swagger for testing even in production
 // Check if the application is running in the Development environment
-if (app.Environment.IsDevelopment())
+// if (app.Environment.IsDevelopment())
+// {
+// If the application is in Development environment, enable Swagger and SwaggerUI
+
+// Add the Swagger JSON endpoint and Swagger UI to the request pipeline
+app.UseSwagger();
+
+// Configures the Swagger UI to display the Swagger JSON document in a web-based UI
+app.UseSwaggerUI(c =>
 {
-    // If the application is in Development environment, enable Swagger and SwaggerUI
-
-    // Add the Swagger JSON endpoint and Swagger UI to the request pipeline
-    app.UseSwagger();
-
-    // Configures the Swagger UI to display the Swagger JSON document in a web-based UI
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SK_API V1");
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SK_API V1");
+});
+// }
 
 // Redirect HTTP requests to HTTPS if the UseHttpsRedirection middleware is enabled
 app.UseHttpsRedirection();
