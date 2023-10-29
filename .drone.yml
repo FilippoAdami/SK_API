@@ -56,8 +56,8 @@ steps:
         - "dockerconfigjson=$DOCKERCONFIG"
         - "image.repository=docker.polyglot-edu.com/polyglot-edu/sk_api"
         - "image.tag=${DRONE_BRANCH}"
-        - "env.openAiSecret=$OPENAI_SECRET_KEY"
-        - "env.openAiEndpoint=$OPENAI_ENDPOINT"
+        - "env.openAiSecret=$OPENAPI_SECRET_KEY"
+        - "env.openAiEndpoint=$OPENAPI_ENDPOINT"
         - "env.openAiGpt35Dn=$GPT_35_TURBO_DN"
         - "env.secretToken=$SECRET_TOKEN"
       cleanup_failed_upgrade: true

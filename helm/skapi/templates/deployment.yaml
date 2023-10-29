@@ -34,9 +34,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: OPENAI_SECRET_KEY
+            - name: OPENAPI_SECRET_KEY
               value: {{ .Values.env.openAiSecret }}
-            - name: OPENAI_ENDPOINT
+            - name: OPENAPI_ENDPOINT
               value: {{ .Values.env.openAiEndpoint }}
             - name: GPT_35_TURBO_DN
               value: {{ .Values.env.openAiGpt35Dn }}
