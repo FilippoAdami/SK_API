@@ -22,7 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Load secret variables from the secrest.json file
-builder.Configuration.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddEnvironmentVariables(); //AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
 // Build the WebApplication instance based on the services and configuration defined in the builder
 var app = builder.Build();
 

@@ -15,11 +15,4 @@ WORKDIR /App
 
 COPY --from=build-env /App/out .
 
-RUN echo "{ \
-    \"OPENAPI_SECRET_KEY\": \"$OPENAPI_SECRET_KEY\", \
-    \"OPENAPI_ENDPOINT\": \"$OPENAPI_ENDPOINT\", \
-    \"GPT_35_TURBO_DN\": \"$GPT_35_TURBO_DN\", \
-    \"SECRET_TOKEN\": \"$SECRET_TOKEN\" \
-}" > secrets.json
-
 ENTRYPOINT ["dotnet", "SK_API.dll"]
