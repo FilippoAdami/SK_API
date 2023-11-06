@@ -13,10 +13,8 @@ spec:
       {{- include "skapi.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
         timestamp: "{{ now | date "20060102150405" }}"
-      {{- end }}
       labels:
         {{- include "skapi.selectorLabels" . | nindent 8 }}
     spec:
