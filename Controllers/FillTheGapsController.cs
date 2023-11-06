@@ -68,10 +68,9 @@ namespace SK_API.Controllers
             int distractorsStartIndex = result.IndexOf("Distractors:") + "Distractors:".Length;
             Console.WriteLine(distractorsStartIndex);
             //Console.WriteLine("Distractors:".Length);
-            int distractorsEndIndex = result.IndexOf("[END OUTPUT]");
-            Console.WriteLine(distractorsEndIndex);
+        
             // Extract the "Distractors:" list
-            string distractorsList = result[distractorsStartIndex..distractorsEndIndex].Trim();
+            string distractorsList = result[distractorsStartIndex..].Trim();
             Console.WriteLine(distractorsList);
             // Split the "Distractors:" list into individual items
             string[] distractorsArray = MyRegex().Split(distractorsList);
@@ -234,16 +233,7 @@ namespace SK_API.Controllers
                             Distractors:
                             1)distractor1
                             2)distractor2
-                            3)...
-                            [END OUTPUT]
-
-                            [INPUT]
-                            {{$level}}
-                            {{$type_of_text}}
-                            {{$topic}}
-                            {{$n_o_w}}
-                            {{$n_o_g}}
-                            [END INPUT]";
+                            3)...";
 
             var generate = kernel.CreateSemanticFunction(prompt, "generateFTG" ,"FillTheGaps", "generate exercise", null , requestModel.Temperature);
             //setting up the context
