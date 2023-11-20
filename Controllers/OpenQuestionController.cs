@@ -70,7 +70,7 @@ namespace SK_API.Controllers{
             else if(authenticated==200){
                 Console.WriteLine("Authenticated successfully");
             }
-            var secretKey = _configuration["OPEAPI_SECRET_KEY"];
+            var secretKey = _configuration["OPENAPI_SECRET_KEY"];
             var endpoint = _configuration["OPENAPI_ENDPOINT"];
             var model = _configuration["GPT_35_TURBO_DN"];
             
