@@ -7,6 +7,7 @@ namespace SK_API
 {
     public class FillTheGapsRequestModel
     {
+        public string Language { get; set; }
         public string Text { get; set; }
         public TextLevel Level { get; set; }
         public int N_o_w { get; set; }
@@ -14,8 +15,9 @@ namespace SK_API
         public int N_o_d { get; set; }
         public double Temperature { get; set; }
 
-        public FillTheGapsRequestModel(string text, TextLevel level, int n_o_w, int n_o_g, int n_o_d, double temperature)
+        public FillTheGapsRequestModel(string language, string text, TextLevel level, int n_o_w, int n_o_g, int n_o_d, double temperature)
         {
+            Language = language;
             Text = text;
             Level = level;
             N_o_w = n_o_w;

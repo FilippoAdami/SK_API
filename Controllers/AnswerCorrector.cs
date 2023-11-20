@@ -22,7 +22,7 @@ namespace SK_API.Controllers{
             _auth = auth;
         }
 
-        private CorrectedAnswer GetFG(string result, string topic, string level, double temperature){
+        private CorrectedAnswer GetFG(string language, string result, string topic, string level, double temperature){
             //parsing the output
             // Find the accuracy
             int startIndex = result.ToString().IndexOf("Accuracy:") + "Accuracy:".Length;
@@ -50,7 +50,7 @@ namespace SK_API.Controllers{
             //Console.WriteLine("Correct Answer:\n"+correction);
 
             //create the question object
-            CorrectedAnswer correctedAnswer = new CorrectedAnswer(accuracy, correct_answer, correction, temperature);
+            CorrectedAnswer correctedAnswer = new CorrectedAnswer(language, accuracy, correct_answer, correction, temperature);
             return correctedAnswer;
         }
 
@@ -58,6 +58,8 @@ namespace SK_API.Controllers{
         [HttpPost("correctanswer")]
         public async Task<IActionResult> GenerateQuestionExcercise([FromHeader(Name = "ApiKey")] string apiKey, [FromBody] CorrectorRequestModel requestModel)
         { 
+            int try_count = 0;
+            string error = "";
             int authenticated = _auth.Authenticate(apiKey);
             if (authenticated == 400)
             {
@@ -70,7 +72,7 @@ namespace SK_API.Controllers{
             else if(authenticated==200){
                 Console.WriteLine("Authenticated successfully");
             }
-            var secretKey = _configuration["OPENAPI_SECRET_KEY"];
+            var secretKey = _configuration["OPEAPI_SECRET_KEY"];
             var endpoint = _configuration["OPENAPI_ENDPOINT"];
             var model = _configuration["GPT_35_TURBO_DN"];
             
@@ -92,7 +94,8 @@ namespace SK_API.Controllers{
                             Accuracy: from 0 (if completely wrong) to 1 (if completely correct) with 0.2 intervals
                             Correct answer: null if accuracy < 0.8
                             What was wrong in the answer and why: null if accuracy <0.8
-
+                            
+                            Here are some examples:
                             Question: What is quantum entanglement, and how does it impact the state description of particles?
                             Answer: Quantum entanglement is a quantum mechanical phenomenon where particles, even when separated by distance, become interdependent in a manner that the state of one particle is inseparable from the state of another. 
                             Accuracy: 0.8 
@@ -126,17 +129,29 @@ namespace SK_API.Controllers{
             var context = kernel.CreateNewContext();
             context["question"] = requestModel.Question;
             context["answer"] = requestModel.Answer;
+            //instanciating the summarizer
+            var summarizer = new Summarizer(_configuration, _auth);
             //generating the output using the LLM
-            try
-            {
-                var result = await generate.InvokeAsync(context);
-                var final = GetFG(result.ToString(), requestModel.Question, requestModel.Answer, requestModel.Temperature);
-                return Ok(final.ToString());
+            while(try_count < 3){
+                try
+                {
+                    var result = await generate.InvokeAsync(context);
+                    var final = GetFG(requestModel.Language, result.ToString(), requestModel.Question, requestModel.Answer, requestModel.Temperature);
+                    if (requestModel.Language=="English"){
+                        return Ok(final.ToString());
+                    }
+                    else{
+                        var translated = await summarizer.Translate(apiKey, final.ToString(), requestModel.Language);
+                        return Ok(translated);
+                    }
+                }
+                catch (Exception e)
+                {
+                    error = e.Message;
+                    try_count++;
+                }
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            return BadRequest(error);
         }
         [GeneratedRegex("\\d+\\)")]
         private static partial Regex MyRegex();

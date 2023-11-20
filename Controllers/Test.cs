@@ -30,7 +30,7 @@ namespace SK_API.Controllers{
                 }
 
                 // Create a FileOrUrl instance from the provided input.
-                FileOrUrl source = new FileOrUrl(input.PathOrUrl);
+                string source = input.PathOrUrl;
 
                 // Create an instance of the TextProcessor.
                 TextProcessor textProcessor = new TextProcessor();
@@ -41,7 +41,7 @@ namespace SK_API.Controllers{
                 // Call the method to extract text.
                 string extractedText = textProcessor.ExtractTextFromFileOrUrl(source);
                 
-                var finalText = await summarizer.Summarize(apiKey, extractedText, input.NoW);
+                var finalText = await summarizer.Summarize(apiKey, extractedText, "test" , input.NoW);
 
                 if (!string.IsNullOrEmpty(finalText))
                 {

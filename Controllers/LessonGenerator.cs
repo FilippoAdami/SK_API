@@ -26,6 +26,8 @@ namespace SK_API.Controllers{
         [HttpPost("generatelesson")]
         public async Task<IActionResult> GenerateLesson([FromHeader(Name = "ApiKey")] string apiKey, [FromBody] LessonRequestModel requestModel)
         { 
+            int try_count = 0;
+            string error = "";
             int authenticated = _auth.Authenticate(apiKey);
             if (authenticated == 400)
             {
@@ -38,7 +40,7 @@ namespace SK_API.Controllers{
             else if(authenticated==200){
                 Console.WriteLine("Authenticated successfully");
             }
-            var secretKey = _configuration["OPENAPI_SECRET_KEY"];
+            var secretKey = _configuration["OPEAPI_SECRET_KEY"];
             var endpoint = _configuration["OPENAPI_ENDPOINT"];
             var model = _configuration["GPT_35_TURBO_DN"];
             
@@ -67,17 +69,30 @@ namespace SK_API.Controllers{
             var context = kernel.CreateNewContext();
             context["level"] = requestModel.Level.ToString();
             context["topic"] = requestModel.Topic;
+            //instanciating the summarizer
+            var summarizer = new Summarizer(_configuration, _auth);
             //generating the output using the LLM
-            try
-            {
-                var result = await generate.InvokeAsync(context);
-                var Date = DateOnly.FromDateTime(DateTime.Now);
-                return Ok($"Date: {Date}\nTopic: {requestModel.Topic}\nLevel: {requestModel.Level.ToString()}\nTemperature: {requestModel.Temperature}\n{result.ToString()}");
+            while (try_count < 3){
+                try
+                {
+                    var result = await generate.InvokeAsync(context);
+                    var Date = DateOnly.FromDateTime(DateTime.Now);
+                    var final = $"Date: {Date}\nTopic: {requestModel.Topic}\nLevel: {requestModel.Level.ToString()}\nTemperature: {requestModel.Temperature}\n{result.ToString()}";
+                    if (requestModel.Language=="English"){
+                        return Ok(final.ToString());
+                    }
+                    else{
+                        var translated = await summarizer.Translate(apiKey, final.ToString(), requestModel.Language);
+                        return Ok(translated);
+                    }
+                }
+                catch (Exception e)
+                {
+                    error = e.Message;
+                    try_count++;                    
+                }
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            return BadRequest(error);
         }
     }
 }

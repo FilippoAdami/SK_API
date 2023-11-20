@@ -26,6 +26,8 @@ namespace SK_API.Controllers{
         [HttpPost("summarizelesson")]
         public async Task<IActionResult> SummarizeLesson([FromHeader(Name = "ApiKey")] string apiKey, [FromBody] SummarizerRequestModel requestModel)
         { 
+            int try_count = 0;
+            string error = "";
             int authenticated = _auth.Authenticate(apiKey);
             if (authenticated == 400)
             {
@@ -38,7 +40,7 @@ namespace SK_API.Controllers{
             else if(authenticated==200){
                 Console.WriteLine("Authenticated successfully");
             }
-            var secretKey = _configuration["OPENAPI_SECRET_KEY"];
+            var secretKey = _configuration["OPEAPI_SECRET_KEY"];
             var endpoint = _configuration["OPENAPI_ENDPOINT"];
             var model = _configuration["GPT_35_TURBO_DN"];
             
@@ -63,16 +65,20 @@ namespace SK_API.Controllers{
             var context = kernel.CreateNewContext();
             context["lesson"] = requestModel.Lesson;
             //generating the output using the LLM
-            try
-            {
-                var result = await generate.InvokeAsync(context);
-                var Date = DateOnly.FromDateTime(DateTime.Now);
-                return Ok($"Date: {Date}\nSummary: {result.ToString()}");
+            while (try_count < 3){
+                try
+                {
+                    var result = await generate.InvokeAsync(context);
+                    var Date = DateOnly.FromDateTime(DateTime.Now);
+                    return Ok($"Date: {Date}\nSummary: {result.ToString()}");
+                }
+                catch (Exception e)
+                {
+                    error = e.Message;
+                    try_count++;
+                }
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            return BadRequest(error);
         }
     }
 }

@@ -2,11 +2,11 @@ namespace SK_API
 {
     public enum TextLevel
     {
-        academic,
-        pre_k,
-        primary,
+        primary_school,
         middle_school,
-        high_school
+        high_school,
+        college,
+        academy
     }
 
     public enum TextType
@@ -19,6 +19,21 @@ namespace SK_API
         descriptive, 
         scientific, 
         scientific_with_formulas_and_theorems
+    }
+
+    public enum QuestionCategory
+    {
+        FactualKnowledge,
+        Understanding_of_concepts,
+        Application_of_skills,
+        Analysys_and_evaluation
+    }
+
+    public enum TypeOfQuestion
+    {
+        Open,
+        ShortAnswer,
+        TrueFalse
     }
 
     // Add more enums as needed

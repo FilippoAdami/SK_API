@@ -4,6 +4,7 @@ namespace SK_API
     // Define the Fill the Gaps class and its constructor with all the properties
     public class Fill_the_Gaps
     {
+        public string Language { get; set; }
         // Define a property 'Date' of type DateOnly
         // 'DateOnly' is a struct in .NET that represents a date without a time component
         // The 'get' and 'set' accessors allow getting and setting the value of the 'Date' property
@@ -43,8 +44,9 @@ namespace SK_API
         public string[] Words { get; set; }
 
         //Define a constructor for the Fill the Gaps class
-        public Fill_the_Gaps(string text, string t_w_g, string level, int n_o_w, int n_o_g, int n_o_d, double temperature, string[] words)
+        public Fill_the_Gaps(string language, string text, string t_w_g, string level, int n_o_w, int n_o_g, int n_o_d, double temperature, string[] words)
         {
+            Language = language;
             Text = text;
             TextWithGaps = t_w_g;
             Level = level;
@@ -57,7 +59,7 @@ namespace SK_API
         }
         public override string ToString()
         {
-            return $"Date: {Date}\nTemperature: {Temperature}\nNoW: {NoW}\nNoG: {NoG}\nNoD: {NoD}\nText: {Text}\nTextWithGaps: {TextWithGaps}\nLevel: {Level}\nWords:\n(A){string.Join("\n(A)", Words)}";
+            return $"Language: {Language}\nDate: {Date}\nTemperature: {Temperature}\nNoW: {NoW}\nNoG: {NoG}\nNoD: {NoD}\nText: {Text}\nTextWithGaps: {TextWithGaps}\nLevel: {Level}\nWords:\n(A){string.Join("\n(A)", Words)}";
         }
     }
 }
