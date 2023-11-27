@@ -28,10 +28,10 @@ Output the text";
 string examples =
 @$"2) Now consider this {Type_of_exercise} examples to understand the typology of exercise and the format:\n{Example}";
 string extraction =
-@$"3) Extract from Original text one important concept and generate one {{{{$level}}}} {Type_of_exercise} about that topic following the examples format.
+@$"3) Extract from your lesson one important concept and generate one {{{{$level}}}} {Type_of_exercise} about that topic following the examples format.
 Output the {Type_of_exercise}";
 string words =
-@"3) Extract from OriginalText all the proper nouns, dates/numbers and all the scientific/specific terminology.  (we will call this list: 'Words')
+@"3) Extract from your lesson all the proper nouns, dates/numbers and all the scientific/specific terminology.  (we will call this list: 'Words')
 Output the list Words";
 string distractors_list =
 @"4) For each word in the list 'Words' generate one similar word that can be proposed as a distractor in a fill in the blanks exercise.  (we will call this list: 'Distractors') 
@@ -53,7 +53,7 @@ string final_format =
 {Format}";
         if (Type_of_exercise.Equals("fill in the blanks"))
         {
-            return $"" + personification + "\n" + examples + "\n" + words + "\n" + distractors_list + "\n" + final_format + "";
+            return $"" + personification + "\n" + words + "\n" + distractors_list + "\n" + final_format + "";
         }
         else if (Type_of_exercise.StartsWith("theoretical") || Type_of_exercise.StartsWith("problem"))
         {

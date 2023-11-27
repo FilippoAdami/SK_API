@@ -49,6 +49,7 @@ namespace SK_API.Controllers{
             }
             //create the question object
             OpenQuestion openQuestion = new OpenQuestion(language, type, level, category, temperature, question, correct_answer);
+
             return openQuestion;
         }
 
@@ -168,10 +169,10 @@ namespace SK_API.Controllers{
             if (requestModel.Type == TypeOfQuestion.Open){
                 type_of_exercise = "open question";
                 type_of_answer = "answer";
-                example = @"-Factual Knowledge: Question: Which year did World War II end? a) 1940 b) 1945 c) 1939 d) 1950 Correct Answer: b) 1945 
-                            -Understanding of Concepts: Question: Which of the following best describes the impact of World War II on global geopolitics? a) It led to the emergence of the United States and the Soviet Union as superpowers. b) It resulted in the dominance of colonial empires. c) It had no significant impact on global geopolitics. d) It led to the unification of Europe. Correct Answer: a) It led to the emergence of the United States and the Soviet Union as superpowers. 
-                            -Application of Skills: Question: If you were a historian researching the social impact of World War II, which of the following sources would be most relevant? a) Military strategy documents b) Letters from soldiers to their families c) Modern movies about World War II d) Fiction books set during World War II Correct Answer: b) Letters from soldiers to their families 
-                            -Analysis and Evaluation: Question: Which of the following arguments is best supported by historical evidence? a) World War II had no significant impact on women\'s roles in society. b) World War II was solely caused by Germany. c) World War II led to significant advancements in military technology. d) World War II was avoidable. Correct Answer: c) World War II led to significant advancements in military technology.";
+                example = @"-Factual Knowledge: Question: Which year did World War II end? Correct Answer: World War II ended in 1945. The war in Europe concluded with the unconditional surrender of Nazi Germany on May 7, 1945, which was officially ratified on May 8, 1945, known as Victory in Europe (VE) Day. The war in the Pacific ended later, after the United States dropped atomic bombs on the Japanese cities of Hiroshima on August 6, 1945, and Nagasaki on August 9, 1945. The Japanese government announced its surrender on August 15, 1945, and the formal signing of the Instrument of Surrender took place on September 2, 1945, aboard the USS Missouri, officially marking the end of World War II.
+                            -Understanding of Concepts: Question: What impact did World War II on global geopolitics? Correct Answer: World War II had a profound and far-reaching impact on global geopolitics, reshaping the political, economic, and social landscape in numerous ways such as superpower emergence: the U.S. and Soviet Union became superpowers, defining post-war geopolitics; cold war division: ideological differences led to the Cold War, influencing global politics; decolonization and Global Shifts: economic changes, decolonization, and new alliances reshaped the geopolitical landscape.
+                            -Application of Skills: Question: If you were a historian researching the social impact of World War II, what source would be most relevant? Correct Answer: The personal diaries of civilians and soldiers from diverse backgrounds offer invaluable insights into the social impact of World War II. These primary sources provide raw, unfiltered perspectives on daily life, emotions, and societal changes, offering a nuanced understanding of the war's profound effects on individuals and communities.
+                            -Analysis and Evaluation: Question: How did the global economic and political landscape transform in the aftermath of World War II, and to what extent did these changes contribute to shaping the post-war world order? Correct Answer: The aftermath of World War II reshaped the global order. The rise of superpowers, decolonization, and the establishment of international institutions were pivotal. This transformative era laid the foundation for Cold War dynamics and defined the geopolitical landscape of the second half of the 20th century.";
                 format = @"Original text:
                             ...text...
                             {{$type}} Question:
@@ -249,7 +250,7 @@ Correct answer:";
                 Console.WriteLine(result);
                 var final = GetFG(requestModel.Language, result.ToString(), requestModel.Type.ToString(), requestModel.Level.ToString(), requestModel.Category.ToString(), requestModel.Temperature);
                 if (requestModel.Language=="English"){
-                    return Ok(final);
+                    return Ok(final.ToString());
                 }
                 else{
                     var translated = await summarizer.Translate(apiKey, final.ToString(), requestModel.Language);

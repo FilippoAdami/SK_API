@@ -42,7 +42,7 @@ namespace SK_API.Controllers
             if (language!="English"){
                 original_text = await summarizer.Translate(apiKey, original_text, language);
             }
-            Console.WriteLine(original_text);
+            //Console.WriteLine(original_text);
             
             //initialize n_o_g and n_o_d
             int n_o_g;
@@ -53,7 +53,7 @@ namespace SK_API.Controllers
             int wordsEndIndex = result.IndexOf("Distractors:");
             // Extract the "Words:" list
             string wordsList = result[wordsStartIndex..wordsEndIndex].Trim();
-            Console.WriteLine(wordsList);
+            Console.WriteLine("words: "+wordsList);
             // Split the "Words:" list into individual items
             string[] wordsArray = MyRegex().Split(wordsList);
             for (int i = 0; i < wordsArray.Length; i++)
@@ -65,18 +65,18 @@ namespace SK_API.Controllers
             // Print the items in the array
             foreach (string item in wordsArray)
             {
-                Console.WriteLine(item );
+                //Console.WriteLine(item );
             }
-            Console.WriteLine(wordsArray.Length);
+            //Console.WriteLine(wordsArray.Length);
 
             // Find the start and end points of the "Distractors:" list
             int distractorsStartIndex = result.IndexOf("Distractors:") + "Distractors:".Length;
-            Console.WriteLine(distractorsStartIndex);
-            Console.WriteLine("Distractors:".Length);
+            //Console.WriteLine(distractorsStartIndex);
+            //Console.WriteLine("Distractors:".Length);
         
             // Extract the "Distractors:" list
-            string distractorsList = result[distractorsStartIndex..].Trim();
-            Console.WriteLine(distractorsList);
+            string distractorsList = result[distractorsStartIndex..result.IndexOf("[end of answer]")].Trim();
+            Console.WriteLine("Distractors: "+distractorsList);
             // Split the "Distractors:" list into individual items
             string[] distractorsArray = MyRegex().Split(distractorsList);
             for (int i = 0; i < distractorsArray.Length; i++)
@@ -88,9 +88,9 @@ namespace SK_API.Controllers
             // Print the items in the array
             foreach (string item in distractorsArray)
             {
-                Console.WriteLine(item);
+                //Console.WriteLine(item);
             }
-            Console.WriteLine(distractorsArray.Length);
+            //Console.WriteLine(distractorsArray.Length);
             
             // Ensure that there are enough candidate gaps & distractors to satisfy the request
             if(N_o_g > wordsArray.Length)
@@ -101,8 +101,8 @@ namespace SK_API.Controllers
             {
                 n_o_d = n_o_g;
             } else {n_o_d = N_o_d;}
-            Console.WriteLine(n_o_g);
-            Console.WriteLine(n_o_d);
+            //Console.WriteLine(n_o_g);
+            //Console.WriteLine(n_o_d);
 
             // Randomly choose n_o_g words from the 'gaps' array
             Random random = new();
@@ -123,7 +123,7 @@ namespace SK_API.Controllers
             //print the words
             foreach (string item in words)
             {
-                Console.WriteLine(item);
+                //Console.WriteLine(item);
             } 
 
             // Choose n_o_d words from the 'distractors' array
@@ -131,7 +131,7 @@ namespace SK_API.Controllers
             //print the distractors
             foreach (string item in distractors)
             {
-                Console.WriteLine(item);
+                //Console.WriteLine(item);
             }
             if (language != "English")
             {
@@ -155,25 +155,25 @@ namespace SK_API.Controllers
                 //remove the first element of the array
                 translatedArray = translatedArray.Skip(1).ToArray();
                 //trim the words to remove new lines and spaces
-                Console.WriteLine("Translated array:");
+                //Console.WriteLine("Translated array:");
                 for (int i = 0; i < translatedArray.Length; i++)
                 {
                     translatedArray[i] = translatedArray[i].Trim();
-                    Console.WriteLine(translatedArray[i]);
+                    //Console.WriteLine(translatedArray[i]);
                 }
                 
                 // Update the words and distractors arrays
                 words = translatedArray.Take(words.Count).ToList();
                 distractors = translatedArray.Skip(words.Count).ToList();
-                Console.WriteLine("Translated words:");
+                //Console.WriteLine("Translated words:");
                 foreach (string item in words)
                 {
-                    Console.WriteLine(item);
+                    //Console.WriteLine(item);
                 }
-                Console.WriteLine("Translated distractors:");
+                //Console.WriteLine("Translated distractors:");
                 foreach (string item in distractors)
                 {
-                    Console.WriteLine(item);
+                    //Console.WriteLine(item);
                 }
             }
 
@@ -223,7 +223,7 @@ namespace SK_API.Controllers
                 return Unauthorized();
             }
             else if(authenticated==200){
-                Console.WriteLine("Authenticated successfully");
+                //Console.WriteLine("Authenticated successfully");
             }
             var secretKey = _configuration["OPENAPI_SECRET_KEY"];
             var endpoint = _configuration["OPENAPI_ENDPOINT"];
@@ -254,7 +254,7 @@ namespace SK_API.Controllers
             string extractedText = textProcessor.ExtractTextFromFileOrUrl(source);
             
             var finalText = await summarizer.Summarize(apiKey, extractedText, requestModel.Level.ToString());
-
+            
         //defining the prompt & generating the semantic function
             /*string prompt = @"You are a {{$level}} professor. You have just given a lesson and now you want to create a fill the gaps exercise for your students about the lecture.
                             1) The summary of your lesson is {{$text}}; output it. (we will call this text: 'OriginalText')
@@ -323,9 +323,53 @@ namespace SK_API.Controllers
             18) nationalism
             19) aristocracy
             20) obedience
-            21) political influence";
+            21) political influence
+            
+            Original text:
+            Ancient Egypt was a civilization in northeastern Africa that dates back to the 4th millennium BCE. Its chief wealth came from the fertile floodplain of the Nile valley, where the river flows between bands of limestone hills and the Nile delta. The Nile was Egypt's sole transportation artery, and agriculture centered on the cultivation of cereal crops, chiefly emmer wheat and barley. The Egyptians optimized agricultural production with simple means, and multiple cropping was not feasible until much later times. The construction of the great pyramids of the 4th dynasty has yet to be fully explained and would be a major challenge to this day. Egyptians were monogamous, and women had a legal status only marginally inferior to that of men. The uneven distribution of wealth, labor, and technology was related to the only partly urban character of society, especially in the 3rd millennium BCE. The country's resources were concentrated around the capital and focused on the central figure in society, the king.
+            Words:
+            1) Ancient Egypt
+            2) 4th millennium BCE
+            3) Nile valley
+            4) Nile delta
+            5) emmer wheat
+            6) barley
+            7) agricultural production
+            8) multiple cropping
+            9) great pyramids
+            10) 4th dynasty
+            11) monogamous
+            12) women
+            13) legal status
+            14) wealth
+            15) labor
+            16) technology
+            17) urban character
+            18) capital
+            19) king
+            Distractors:
+            1) Modern Egypt
+            2) 3rd millennium BCE
+            3) Amazon river
+            4) Sahara desert
+            5) rice
+            6) corn
+            7) industrial production
+            8) single cropping
+            9) sphinx
+            10) 5th dynasty
+            11) polygamous
+            12) men
+            13) illegal status
+            14) poverty
+            15) leisure
+            16) tradition
+            17) rural character
+            18) province
+            19) queen";
             string final_format = 
-            @"Original text:
+            @"[start of answer]
+            Original text:
             text...
             Words:
             1)word1
@@ -334,10 +378,11 @@ namespace SK_API.Controllers
             Distractors:
             1)distractor1
             2)distractor2
-            3)...";
+            3)...
+            [end of answer]";
             var p = new Prompt("", type_of_exercise, example, final_format);
             string prompt = p.ToString();
-            Console.WriteLine(prompt);
+            //Console.WriteLine(prompt);
             var generate = kernel.CreateSemanticFunction(prompt, "generateFTG" ,"FillTheGaps", "generate exercise", null , requestModel.Temperature);
             //setting up the context
             var context = kernel.CreateNewContext();

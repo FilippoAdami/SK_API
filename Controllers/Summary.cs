@@ -52,9 +52,8 @@ public class Summarizer
         var kernel = SKbuilder.Build();
 
         // Defining the prompt & generating the semantic function
-        string prompt = @"You are a {{$level}} teacher that wants to do an end of chapter recap.
-            Summarize in {{$n_o_w}} words the provided lesson for people that are attending your {{$level}} course keeping every important concept and every eventual formula:
-            Lesson:
+        string prompt = @"Summarize in {{$n_o_w}} words the main concepts of the provided text for people that are attending a {{$level}} course. You need to keep every important concept and every eventual formula and to develop the summary in an informative way; avoid any reference to the fact that your output is a summary.
+            Text:
             {{$lesson}}
             You should return just the summary.";
         var generate = kernel.CreateSemanticFunction(prompt);
@@ -70,7 +69,6 @@ public class Summarizer
             try
             {
                 var result = await generate.InvokeAsync(context);
-                Console.WriteLine("summary: " + result);
                 return $"{result}";
             }
             catch (Exception e)
