@@ -67,14 +67,14 @@ jobs:
         chart: 'helm/skapi'
         token: '${{ github.token }}'
         values: |
-          url: skapi.polyglot-edu.com
+          url: test-skapi.polyglot-edu.com
           cfOriginKey: ${{ secrets.CFORIGIN }}
           dockerconfigjson: ${{ secrets.DOCKERCONFIG }}
-          image.repository=ghcr.io/${{ github.repository }}
-          image.tag=${{ steps.meta.outputs.tags }}
-          env.openAiSecret=${{ secrets.OPENAPI_SECRET_KEY }}
-          env.openAiEndpoint=${{ secrets.OPENAPI_ENDPOINT }}
-          env.openAiGpt35Dn=${{ secrets.GPT_35_TURBO_DN }}
-          env.secretToken=${{ secrets.SECRET_TOKEN }}
+          image.repository: ghcr.io/${{ github.repository }}
+          image.tag: ${{ steps.meta.outputs.tags }}
+          env.openAiSecret: ${{ secrets.OPENAPI_SECRET_KEY }}
+          env.openAiEndpoint: ${{ secrets.OPENAPI_ENDPOINT }}
+          env.openAiGpt35Dn: ${{ secrets.GPT_35_TURBO_DN }}
+          env.secretToken: ${{ secrets.SECRET_TOKEN }}
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
