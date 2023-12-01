@@ -71,8 +71,7 @@ jobs:
           cfOriginKey: ${{ secrets.CFORIGIN }}
           dockerconfigjson: ${{ secrets.DOCKERCONFIG }}
           image:
-            repository: ghcr.io/${{ github.repository }}
-            tag: ${{ steps.meta.outputs.tags }}
+            repository: ${{ steps.meta.outputs.tags }}
           env:
             openAiSecret: ${{ secrets.OPENAPI_SECRET_KEY }}
             openAiEndpoint: ${{ secrets.OPENAPI_ENDPOINT }}
