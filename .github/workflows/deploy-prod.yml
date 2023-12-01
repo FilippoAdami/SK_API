@@ -59,6 +59,9 @@ jobs:
         timeout_minutes: 5
         max_attempts: 5
         command: echo "${{ steps.meta.outputs.tags }}" | while IFS= read -r i; do echo "Pushing $i"; docker push $i; done
+    - name: Echo docker config
+      run: |
+        cat $DOCKER_CONFIG/config.json
     - name: Deploy to Kubernetes cluster
       uses: daviFrag/helm@master
       with:
