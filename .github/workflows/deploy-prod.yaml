@@ -68,7 +68,7 @@ jobs:
         values: |
           url: skapi.polyglot-edu.com
           cfOriginKey: ${{ secrets.CFORIGIN }}
-          dockerconfigjson: ${{ secrets.DOCKERCONFIG }}"
+          dockerconfigjson: ${{ secrets.DOCKERCONFIG }}
           image.repository=ghcr.io/${{ github.repository }}
           image.tag=${{ steps.meta.outputs.tags }}
           env.openAiSecret=${{ secrets.OPENAPI_SECRET_KEY }}
