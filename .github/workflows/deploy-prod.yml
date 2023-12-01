@@ -69,7 +69,7 @@ jobs:
         values: |
           url: test-skapi.polyglot-edu.com
           cfOriginKey: ${{ secrets.CFORIGIN }}
-          dockerconfigjson: ${{ $DOCKER_CONFIG }}
+          dockerconfigjson: $DOCKER_CONFIG
           image:
             repository: ${{ steps.meta.outputs.tags }}
           env:
