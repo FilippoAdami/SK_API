@@ -74,6 +74,6 @@ jobs:
           env.openAiSecret=${{ secrets.OPENAPI_SECRET_KEY }}
           env.openAiEndpoint=${{ secrets.OPENAPI_ENDPOINT }}
           env.openAiGpt35Dn=${{ secrets.GPT_35_TURBO_DN }}
-          env.secretToken=${{ SECRET_TOKEN }}
+          env.secretToken=${{ secrets.SECRET_TOKEN }}
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
