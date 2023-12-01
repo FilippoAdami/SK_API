@@ -59,7 +59,7 @@ jobs:
         max_attempts: 5
         command: echo "${{ steps.meta.outputs.tags }}" | while IFS= read -r i; do echo "Pushing $i"; docker push $i; done
     - name: Deploy to Kubernetes cluster
-      uses: vimeda/helm@v1
+      uses: daviFrag/helm@v1
       with:
         release: 'skapi-prod'
         namespace: 'skapi-prod'
