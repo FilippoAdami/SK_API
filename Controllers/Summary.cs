@@ -100,7 +100,7 @@ public class Summarizer
         int try_count = 0;
         string error = "";
 
-        var secretKey = _configuration["OPEAPI_SECRET_KEY"];
+        var secretKey = _configuration["OPENAPI_SECRET_KEY"];
         var endpoint = _configuration["OPENAPI_ENDPOINT"];
         var model = _configuration["GPT_35_TURBO_DN"];
 
