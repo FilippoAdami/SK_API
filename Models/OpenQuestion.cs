@@ -22,7 +22,7 @@ namespace SK_API{
         }
         public override string ToString()
         {
-            return $"Language: {Language}\nDate: {Date}\nLevel: {Level}\nType of question: {Type}\nCategory: {Category}\nTemperature: {Temperature}\nQuestion: {Question}\nCorrectAnswer: {CorrectAnswer}";
+            return $"1.)Language: {Language}\n2.)Date: {Date}\n3.)Level: {Level}\n4.)Type of question: {Type}\n5.)Category: {Category}\n6.)Temperature: {Temperature}\n7.)Question: {Question}\n8.)CorrectAnswer: {CorrectAnswer}";
         }
         
     }

@@ -19,7 +19,7 @@ namespace SK_API{
 
         public override string ToString()
         {
-            return $"Language: {Language}\nDate: {Date}\nAccuracy: {Accuracy}\nCorrect_answer: {Correct_answer}\nCorrection: {Correction}\nTemperature: {Temperature}";
+            return $"1.)Language: {Language}\n2.)Date: {Date}\n3.)Accuracy: {Accuracy}\n4.)Correct_answer: {Correct_answer}\n5.)Correction: {Correction}\n6.)Temperature: {Temperature}";
         }
         
     }
