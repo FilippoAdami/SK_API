@@ -11,7 +11,9 @@ builder.Services.AddCors(options =>
       {
           policy.WithOrigins("http://localhost:3000",
                               "https://staging.polyglot-edu.com",
-                              "https://polyglot-edu.com");
+                              "https://polyglot-edu.com")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
       });
 });
 
