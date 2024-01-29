@@ -4,6 +4,17 @@ using SK_API.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+      policy  =>
+      {
+          policy.WithOrigins("http://localhost:3000",
+                              "https://staging.polyglot-edu.com"
+                              "https://polyglot-edu.com");
+      });
+});
+
 // Add services to the container.
 // The 'Services' property of the builder is an instance of IServiceCollection
 
@@ -55,6 +66,9 @@ app.UseAuthorization();
 // Map the controllers to the request pipeline.
 // 'MapControllers()' maps the ASP.NET Core controller routes to the request pipeline
 app.MapControllers();
+
+// add cors
+app.UseCors();
 
 // The final middleware, 'app.Run()', is responsible for handling the request and generating the response
 // It will be reached if none of the previous middleware components generate a response
