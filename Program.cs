@@ -59,6 +59,9 @@ app.UseSwaggerUI(c =>
 // Redirect HTTP requests to HTTPS if the UseHttpsRedirection middleware is enabled
 app.UseHttpsRedirection();
 
+// add cors
+app.UseCors();
+
 // Add authorization middleware to the pipeline.
 // This middleware checks if the incoming request is authorized to access the requested resources
 app.UseAuthorization();
@@ -66,9 +69,6 @@ app.UseAuthorization();
 // Map the controllers to the request pipeline.
 // 'MapControllers()' maps the ASP.NET Core controller routes to the request pipeline
 app.MapControllers();
-
-// add cors
-app.UseCors();
 
 // The final middleware, 'app.Run()', is responsible for handling the request and generating the response
 // It will be reached if none of the previous middleware components generate a response
