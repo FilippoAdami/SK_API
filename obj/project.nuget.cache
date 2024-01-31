@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/YOsRvlPQZ8NAgfJ6/KG3EIYN/upJOFcRX59ywHGS/o/Pt7Ydl+6nt8fwESIGNNaV7j2kjbEa4zaYlqJ2pIlwA==",
+  "dgSpecHash": "/zI4E0rERqnLi2V9RKvIkCd1QzX72fh0uwLzS2aMt2BldedB7viTXjMn38oHYmLcUkzRdCLNWQdY5bIBT4Bp/A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\elpip\\Desktop\\SK_API\\SK_API.csproj",
+  "projectFilePath": "C:\\Users\\elpip\\Desktop\\uni\\TESI\\SK_API\\SK_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\elpip\\.nuget\\packages\\apache.arrow\\2.0.0\\apache.arrow.2.0.0.nupkg.sha512",
     "C:\\Users\\elpip\\.nuget\\packages\\aspnetcore.authentication.apikey\\7.0.0\\aspnetcore.authentication.apikey.7.0.0.nupkg.sha512",
@@ -135,15 +135,13 @@
     "C:\\Users\\elpip\\.nuget\\packages\\system.threading.thread\\4.3.0\\system.threading.thread.4.3.0.nupkg.sha512",
     "C:\\Users\\elpip\\.nuget\\packages\\system.threading.threadpool\\4.3.0\\system.threading.threadpool.4.3.0.nupkg.sha512",
     "C:\\Users\\elpip\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
-    "C:\\Users\\elpip\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
+    "C:\\Users\\elpip\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
+    "C:\\Users\\elpip\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.15\\microsoft.netcore.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\elpip\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.15\\microsoft.windowsdesktop.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\elpip\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.15\\microsoft.aspnetcore.app.ref.7.0.15.nupkg.sha512",
+    "C:\\Users\\elpip\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.15\\microsoft.netcore.app.host.win-x64.7.0.15.nupkg.sha512"
   ],
   "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\elpip\\Desktop\\SK_API\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    },
     {
       "code": "NU1701",
       "level": "Warning",

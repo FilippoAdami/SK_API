@@ -36,5 +36,27 @@ namespace SK_API
         TrueFalse
     }
 
-    // Add more enums as needed
+    public enum ExperienceLevel
+    {
+        Beginner,
+        Intermediate,
+        Advanced
+    }
+
+    public enum Dimension
+    {
+        Small,
+        Medium,
+        Large
+    }
+
+    public enum BloomLevel
+    {
+        Remember,
+        Understand,
+        Apply,
+        Analyze,
+        Evaluate,
+        Create
+    }
 }
