@@ -4,6 +4,19 @@ using SK_API.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+      policy  =>
+      {
+          policy.WithOrigins("http://localhost:3000",
+                              "https://staging.polyglot-edu.com",
+                              "https://polyglot-edu.com")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+      });
+});
+
 // Add services to the container.
 // The 'Services' property of the builder is an instance of IServiceCollection
 
@@ -47,6 +60,9 @@ app.UseSwaggerUI(c =>
 
 // Redirect HTTP requests to HTTPS if the UseHttpsRedirection middleware is enabled
 app.UseHttpsRedirection();
+
+// add cors
+app.UseCors();
 
 // Add authorization middleware to the pipeline.
 // This middleware checks if the incoming request is authorized to access the requested resources
