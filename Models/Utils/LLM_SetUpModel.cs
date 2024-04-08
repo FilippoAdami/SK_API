@@ -13,13 +13,6 @@ public class LLM_SetupModel
         Endpoint = endpoint;
     }
 
-    public LLM_SetupModel()
-    {
-        SecretKey = "72ad445a32ad4b899c9a90cb496aae20";
-        ModelName = "gpt35Turbo";
-        Endpoint = "https://ai4edu.openai.azure.com/";
-    }
-
     public IKernel Validate()
     {
         Console.WriteLine("Validating the setup model");
