@@ -9,7 +9,7 @@ using Xceed.Words.NET;
 using System.Text.RegularExpressions;
 using System.Net;
 
-public class TextProcessor
+public class TextExtractor
 {
     // This method extracts text from either a file or a URL.
     public string ExtractTextFromFileOrUrl(string source)
@@ -259,7 +259,6 @@ public class TextProcessor
             return $"Failed to extract text from DocX stream. Error: {ex.Message}";
         }
     }
-
     public async Task<string> ExtractTextFromTxtStream(MemoryStream stream)
     {
         try

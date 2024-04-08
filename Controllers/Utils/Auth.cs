@@ -1,7 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
-
 namespace SK_API.Controllers
 {
     public class Auth
@@ -15,22 +11,17 @@ namespace SK_API.Controllers
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public int Authenticate(string secretToken)
+        public bool Authenticate(string secretToken)
         {
             var secretKey = _configuration["SECRET_TOKEN"];
 
-            if (string.IsNullOrWhiteSpace(secretToken))
-            {
-                return 400; // Bad Request
-            }
-
             if (secretKey != secretToken)
             {
-                return 403; // Forbidden
+                return false; // Forbidden
             }
             else
             {
-                return 200; // OK
+                return true; // OK
             }
         }
     }

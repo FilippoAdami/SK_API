@@ -1,0 +1,948 @@
+namespace SK_API
+{
+    public class TextAnalyserPrompt {
+        public static string TextAnalysisPrompt = @"
+Please write **everything** in your answer in English and organize the outputs in the following format (correct formatting is crucial for post-processing):{{$format}}
+Here are some valid examples: {{$examples}}
+Given the provided material: '{{$material}}', please analyze it and generate the output in the correct format like the provided examples.
+Ensure the topics are ordered by their appearance in the material and provide concise, two-line descriptions (in English) of how each topic is explained. Also the Title must be in English like in the examples.
+The type must be either 'theoretical', 'code' or 'problem_resolution', where 'code' has to be returned for all the topics that talk about programming,  'problem_resolution' for all scientific topics and 'theoretical' has to be returned only if neither 'code' nor 'problem_resolution' are applicable.
+Provide **ONLY** the JSON."; 
+    }
+    public class ExercisesGenerationPrompt {
+        public static string Examples(string examples) {
+            return @$"Hello! Here are some approved examples of valid outputs for your reference. Please utilize these examples to guide the generation of your final answer, ensuring consistency and quality. Examples: {examples}";
+        }
+        public static string Format(string format){
+            return @$"Here's the skeleton structure for formatting the output. Please use this format to organize your final answer consistently. Format: {format}";
+        }
+        public static string Personification(){
+            return @"You are a {{$difficulty_level}} level {{$domain_of_expertise}} professor who just gave a lecture on {{$lesson_title}}. This is a summary of your lesson: {{$material}}.
+Now, your objective is to assess the level of comprehension of your students about your last lesson. Drawing from your {{$domain_of_expertise}} expertise, your aim is to craft one {{$type_of_exercise}} exercise that aims to {{$learning_objective}}.";
+        }
+        
+        public static string A_Description(){
+            return @"Now, generate a {{$type_of_assignment}} {{$type_of_exercise}} for {{$difficulty_level}} level {{$domain_of_expertise}} students. Ensure that the exercise aligns with '{{$bloom_level}}' Bloom's taxonomy level and pertains to the topic of {{$topic}}.";
+        }
+        public static string A_Resolution(string description, string type_of_solution, string number_of_solutions) {
+            return @$"Please consider that the assignment request must be designed to allow {number_of_solutions} {type_of_solution} correct solution/solutions. The assignment should be clear on the instructions and {description}.";
+        }
+
+        public static string S_Solution(string type_of_solution, string indications, string number_of_solutions){
+            return @$"Now you need to define {number_of_solutions} {type_of_solution} correct solution/solutions for the assignment. To generate the solution/solutions you need to {indications}";
+        }
+        public static string S_Distractors(){
+            return @"Generate {{$number_of_distractors}} distractors for each solution, designed to challenge students by closely resembling the correct solution, while maintaining similarity in style and format. ";
+        }
+        public static string S_EasilyDiscardableDistractors(){
+            return "Now generate {{$number_of_easily_discardable_distractors}} easily discardable distractor for each solution, clearly distinguishable as incorrect, while maintaining similarity in style and format to the correct solution.";
+        }
+        
+        public static string Ending(){
+            return "Now output your final response in the format provided at the beginning, just like the provided examples";
+        }
+    }
+    public class LearningObjectivePrompts{
+        public static string LearningObjectiveAnalysis = @"Given a learning objective, determine the Bloom's Taxonomy level , the macro subject, the level and the topic associated with it. Please specify the Bloom's level as one of the following: Remembering, Understanding, Applying, Analyzing, Evaluating, or Creating.
+
+            Learning Objective: {{$learningObjective}}
+
+            Bloom's Taxonomy Levels:
+            0. Remembering: Recalling or recognizing information.
+            1. Understanding: Demonstrating comprehension of concepts or ideas.
+            2. Applying: Using knowledge or understanding in new situations.
+            3. Analyzing: Breaking down information into parts and examining relationships.
+            4. Evaluating: Making judgments based on criteria and evidence.
+            5. Creating: Generating new ideas, products, or solutions.
+
+            Levels:
+            0. primary_school
+            1. middle_school
+            2. high_school
+            3. college
+            4. academy
+
+            Examples:
+            {{$examples}}
+            ---
+
+            Instructions for GPT-3.5:
+            1. Read the provided learning objective and understand the language it is written in.
+            2. Determine the primary cognitive process or skill required by the objective and select the appropriate Bloom's Taxonomy level based on the cognitive process (in the answer you have to put the corresponding number).
+            4. Select the appropriate Level from the list for the learning objective based on the context (in the answer you have to put the corresponding number).
+            5. Include, **in the same language of the provided learning objective, like the examples**, the macro-subject, and the topic associated with the learning objective.
+            6. Format the answer in JSON format as shown in the examples.";
+       
+        public static string LearningObjectiveGenerator = @"You're a {{$level}} teacher that wants to give a lesson to your {{$level}} level students about the topic of: ' {{$topic}} '. You need to choose the learning objective of the lesson. To do so, you need to generate between two suitable learning objectives for each Bloom's Taxonomy level; each of them should be concise, specific, and aligned with the requested topic. {{$context}}
+        Examples: {{$examples}}
+        ---
+        Instructions for the generation of the learning objectives:
+        1. Understand the language of the provided topic. Your learning objectives must be in the same language.
+        2. Generate the learning objectives for each Bloom's Taxonomy level: Remembering, Understanding, Applying, Analyzing, Evaluating, and Creating.
+        3. Translate those learning objectives into the topic's language.
+        4. Return the learning objectives in JSON format as shown below (Keep the keys in English and the learning objectives in topic's language). Provide **ONLY** the JSON. 
+        Format: {{$format}}
+    }";
+    }
+    public class ExerciseCorrectorPrompt{
+      public static string ExerciseCorrector = @"The output should fit the format: {{$format}}
+Here are some examples: {{$examples}}
+You are a teacher and you need to evaluate your students. You asked them: Question:'{{$question}}'. To that question they answered with: Answer:'{{$answer}}'.
+Considering that you expected an answer like: Expected answer: '{{$expected_answer}}', evaluate the accuracy of your students' answer and, eventually, give them a feedback about what they did wrong, why it is wrong and how they should correct their answer.
+Keep in mind that the accuracy value must range from 0 (if the answer is completely wrong) to 1 (if the answer is completely correct) with 0.2 intervals, where 0.0 and 0.2 are for a wrong answer, 0.4 and 0.6 are for a partially correct answer, 0.8 and 1.0 are for a correct answer.
+Keep in mind that the language of the eventual correction must match the language of the question and answer.
+Provide **ONLY** the JSON with accuracy and correction.
+";
+    }
+    public class InternalPrompts {
+        public static string TextSummarizationPrompt = @"Distill {{$lesson}} into {{$n_o_w}} words for {{$level}} level learners, incorporating essential concepts and formulas seamlessly. 
+Omit any explicit mention of summarization. 
+Provide ONLY the synthesized content.";
+        public static string TextTranslationPrompt = @"As a native {{$language}} speaker fluent in both {{$language}} and English languages, translate the following JSON's values in {{$language}} while keeping the keys in English: JSON:
+{{$json}}
+Provide ONLY translated JSON.";
+        public static string MaterialGenerationPrompt = @"As a {{$level}} level professor, create a {{$level}} level lesson on {{$topic}} for your {{$level}} level students. 
+Craft a {{$number_of_words}}-words lesson with the aim of {{$learning_objective}} and utilizing appropriate {{$level}} vocabulary.
+Provide ONLY the generated lesson; no title needed.";  
+    }
+    public class FormatStrings{
+        public static string MM_FillInTheBlanks = @"
+{
+    ""Assignment"": ""assignment phrase"",
+    ""Plus"": ""complete original text about the requested topic, the text MUST be complete with all the words. Just like the examples, the text has no gap in it"",
+    ""Solutions"": [
+        ""solution 1"",
+        ""solution 2"",
+        ...
+        ""solution n""
+    ],
+    ""Distractors"": [
+        ""distractor 1"",
+        ""distractor 2"",
+        ...
+        ""distractor n""
+    ],
+    ""EasilyDiscardableDistractors"": [
+        ""easily discardable distractor 1"",
+        ""easily discardable distractor 2"",
+        ...
+        ""easily discardable distractor n""
+    ]
+}";
+        public static string MM_Question = @"
+{
+    ""Assignment"": ""assignment of the question exercise, it contains the assignment phrase/question"",
+    ""Solutions"": ""solution of the question exercise, it contains the correct response to the assignment """"
+}";
+        public static string MM_Choice = @"
+{
+    ""Assignment"": ""assignment phrase/question"",
+    ""Plus"": ""explanation of the correct answer/answers'"",
+    ""Solutions"": [
+        ""solution 1"",
+        ""solution 2"",
+        ...
+        ""solution n""
+    ],
+    ""Distractors"": [
+        ""distractor 1"",
+        ""distractor 2"",
+        ...
+        ""distractor n""
+    ],
+    ""EasilyDiscardableDistractors"": [
+        ""easily discardable distractor 1"",
+        ""easily discardable distractor 2"",
+        ...
+        ""easily discardable distractor n""
+    ]
+}";
+        public static string MM_Conceptual = @"
+{
+    ""Assignment"": ""assignment of the conceptual exercise, it contains the assignment phrase"",""
+}";
+        public static string MM_Practical = @"
+{
+    ""Assignment"": ""assignment of the practical exercise, it contains the assignment phrase"",""
+}";
+  
+        public static string LO_Format = @"
+""{
+  ""Remembering"": [],
+  ""Understanding"": [],
+  ""Applying"": [],
+  ""Analyzing"": [],
+  ""Evaluating"": [],
+  ""Creating"": []
+}""";
+    
+        public static string ExerciseCorrectionsFormat = @"
+{
+""Accuracy"": double value that represents the accuracy of the answer ,
+""Correction"": ""explanation (in question's and answer's language) of what was wrong with the answer and why it was wrong. Write 'null' if accuracy < 0.8""
+}";
+    
+        public static string AnalyserFormat = @"
+{
+  ""Language"": ""try to understand the language in which the material is written"",
+  ""MacroSubject"": ""extract the macro-subject of the material, such as history, math, literature, etc.."",
+  ""Title"": ""generate a title that best summarizes the material and reflects its main focus and content"",
+  ""PerceivedDifficulty"": ""assess the perceived level of difficulty of the material and provide a rating or description indicating its complexity.The perceived level should fit one of the following categories: primary_school, middle_school, high_school, college, or academy"",
+  ""MainTopics"": [  extract all the N main micro-topics covered in the material, provide a list of triplets containing
+    {
+      ""Topic"": ""first topic"",
+      ""Type"": ""type of the first topic"",
+      ""Description"": ""description of the first topic""
+    },
+    {
+      ""Topic"": ""second topic"",
+      ""Type"": ""type of the second topic"",
+      ""Description"": ""description of the second topic""
+    },
+    ....
+    {
+      ""Topic"": ""nth topic"",
+      ""Type"": ""type of the nth topic"",
+      ""Description"": ""description of the nth topic""
+    }
+  ]
+}";
+    }
+    public class ExamplesStrings{
+        public static string FillInTheBlanks = @"Example of a high school theoretical exercise about Pearl Harbour:
+{
+  ""Assignment"": ""Pearl Harbor, one of the most significant events of World War II, is often remembered for its surprise attack on the United States. Test your understanding of this historical event by filling in the blanks with the correct words."",
+  ""Plus"": ""On December 7, 1941, the Imperial Japanese Navy launched a surprise attack on the United States naval base at Pearl Harbour, Hawaii. The attack took place early in the morning and targeted the American Pacific Fleet. This event led to the United States' entry into World War II. The Japanese launched their attack with aircraft carriers and struck multiple ships, including the USS Arizona, which sank with a great loss of life. The attack was a devastating blow to the US Navy and caught the American military completely off guard. The following day, President Franklin D. Roosevelt famously declared that day as 'a date which will live in infamy.'"",
+  ""Solutions"": [
+    ""December 7"",
+    ""1941"",
+    ""Hawaii"",
+    ""World War II"",
+    ""USS Arizona"",
+    ""Franklin D. Roosevelt"",
+    ""infamy""
+  ],
+  ""Distractors"": [
+    ""July 12"",
+    ""1942"",
+    ""Utah"",
+    ""World War I"",
+    ""USS Carrier"",
+    ""Kennedy"",
+    ""shame""
+  ],
+  ""EasilyDiscardableDistractors"": [
+    ""February 29"",
+    ""1965"",
+    ""Germany"",
+    ""cold war"",
+    ""Titanic"",
+    ""Lincoln"",
+    ""peace""
+  ]
+}
+
+Example of a college level code exercise about Java abstract classes and interfaces:
+{
+""Assignment"": ""Test your understanding of abstract classes and interfaces by filling in the blanks with the correct Java terms."",
+""Plus"": ""abstract class Shape {\n    private String color;\n\n    public Shape(String color) {\n        this.color = color;\n    }\n\n    public abstract double area();\n\n    public String getColor() {\n        return color;\n    }\n}\n\ninterface Drawable {\n    void draw();\n}\n\nclass Circle extends Shape implements Drawable {\n    private double radius;\n\n    public Circle(String color, double radius) {\n        super(color);\n        this.radius = radius;\n    }\n\n    @Override\n    public double area() {\n        return Math.PI * radius * radius;\n    }\n\n    @Override\n    public void draw() {\n        System.out.println(''Drawing Circle with color: '' + getColor());\n    }\n}"",
+""Solutions"": [
+    ""abstract class"",
+    ""extends"",
+    ""implements"",
+    ""@Override"",
+    ""double"",
+    ""@Override""
+],
+""Distractors"": [
+    ""class"",
+    ""implement"",
+    ""uses"",
+    ""@Redefine"",
+    ""abstract double"",
+    ""@Redefine""
+],
+""EasilyDiscardableDistractors"": [
+    ""object"",
+    ""ofClass"",
+    ""interfaces"",
+    ""@Nullable"",
+    ""int"",
+    ""@Nullable""
+]
+}
+        
+Example of a high school level problem exercise about parabolic motion:
+{
+""Assignment"": ""A projectile is launched from the ground with an initial velocity of v0 at an angle of theta degrees above the horizontal. During its flight, the projectile follows a path described by a parabola. Consider friction null."",
+""Plus"": ""To analyze its motion, we can utilize the equations derived from the equations of motion. The horizontal and vertical components of the projectile's motion can be determined separately. The horizontal motion is uniform, with the velocity v0x remaining constant. The horizontal distance traveled (x) can be calculated using the equation x = v0x * t, where v0x = v0 * cos(theta) is the initial horizontal velocity. The vertical motion is influenced by gravity, causing the projectile's vertical velocity vy to change over time. The vertical position (y) at any time t can be determined using the equation y = v0y * t - 0.5 * g * t^2, where v0y = v0 * sin(theta) is the initial vertical velocity and g is the acceleration due to gravity. The maximum height (H) reached by the projectile can be found by setting the vertical velocity (vy) to zero, resulting in the equation H = v0y^2 / (2 * g). Finally, the time of flight (T) for the projectile can be calculated using the equation T = 2 * v0y / g, where v0y is the initial vertical velocity and g is the acceleration due to gravity."",
+""Solutions"": [
+    ""uniform"",
+    ""remaining constant"",
+    ""x = v0x * t"",
+    ""v0x = v0 * cos(theta)"",
+    ""gravity"",
+    ""y = v0y * t - 0.5 * g * t^2"",
+    ""v0y = v0 * sin(theta)"",
+    ""H = v0y^2 / (2 * g)"",
+    ""T = 2 * v0y / g""
+],
+""Distractors"": [
+    ""varible"",
+    ""decreasing over time"",
+    ""x = 1/2 * v0x * t^2"",
+    ""v0x = v0 * sin(theta)"",
+    ""wheight force"",
+    ""y = 1/2 * v0y * t - * g * t^2"",
+    ""v0y = v0y * cos(theta)"",
+    ""H = v0y / (2 * g)"",
+    ""T = v0y / g""
+],
+""EasilyDiscardableDistractors"": [
+    ""unpredictable"",
+    ""change randomly over time"",
+    ""x = random"",
+    ""v0x = v0 * tan^2(theta)"",
+    ""wind"",
+    ""y = 1/2 * v0y^2 * t + * g * t^4"",
+    ""v0y = v0y * tan^3(theta)"",
+    ""H = v0x / g"",
+    ""T = v0y / v0x""
+]
+}
+
+Example of a high school level theoretical/problem resolution exercise about Bernoulli's principle and the formula for fluids:
+{
+""Assignment"": ""Test your understanding of Bernoulli's principle and the formula for fluids by filling in the blanks with the correct terms."",
+""Plus"": ""Bernoulli's principle states that in a flowing fluid, an increase in the speed of the fluid occurs simultaneously with a decrease in pressure or a decrease in the fluid's potential energy. This principle finds application in various fluid dynamics scenarios, such as in the airflow around an aircraft wing or in the flow of water through a pipe. The mathematical expression of Bernoulli's principle is given by the equation: P + 0.5 * ρ * v^2 + ρ * g * h = constant, where P is the pressure, ρ is the density of the fluid, v is the velocity of the fluid, g is the acceleration due to gravity, and h is the height of the fluid above a reference point."",
+""Solutions"": [
+    ""Bernoulli's principle"",
+    ""fluids"",
+    ""P + 0.5 * ρ * v^2 + ρ * g * h = constant""
+],
+""Distractors"": [
+    ""Pascal's theorem"",
+    ""gases"",
+    ""P + ρ * g * h = constant""
+],
+""EasilyDiscardableDistractors"": [
+    ""Archimedes' principle"",
+    ""solids"",
+    ""P + v^2 + g * h = constant""
+]
+}";
+        public static string SingleChoice= @"Example about a high school level problem solving exercise about parabolic motion:
+{
+""Assignment"": ""A ball is launched vertically upward with an initial velocity of 15 m/s. Neglecting air resistance, calculate the maximum height reached by the ball using the parabolic motion formula."",
+""Plus"": ""To find the maximum height reached by the ball, we need to determine the vertical position \( y \) when the velocity \( v \) is 0. We can use the parabolic motion formula to calculate this. \n Given: Initial velocity, \( v_0 = 15 \) m/s \n Acceleration due to gravity, \( g = 9.8 \) m/s\(^2\) \n Using the parabolic motion formula \( y = v_0 t - \frac{1}{2}gt^2 \), where \( v = 0 \) at maximum height, we have:\n \[ 0 = 15t - \frac{1}{2}(9.8)t^2 \] \n Solving this quadratic equation will give us the time \( t \) it takes for the ball to reach its maximum height. Once we find \( t \), we can substitute it back into the formula to find the maximum height \( y \)."",
+""Solutions"": [
+    ""11.53 m""
+],
+""Distractors"": [
+    ""10.35 m"",
+    ""12.34 m""
+],
+""EasilyDiscardableDistractors"": [
+    ""9.8 m"",
+    ""13.5 m""
+]
+}
+
+Example of a high school level code exercise about dictionaries in Python:""
+{
+""Assignment"": ""Given the Python code below, which of the following is the correct output? \n student_grades = {''John'': 85, ''Emily'': 92, ''Michael'': 78}\n print(student_grades[''John''])"",
+""Plus"": ""The provided code defines a dictionary student_grades with students' names as keys and their corresponding grades as values. It then prints the grade of the student named ''John'' using square brackets notation to access the value associated with the key ''John''."",
+""Solutions"": [
+    ""85""
+],
+""Distractors"": [
+    ""92"",
+    ""''John''""
+],
+""EasilyDiscardableDistractors"": [
+    ""78"",
+    ""''Michael''""
+]
+}
+
+Example of a middle school level theoretical exercise about Shakespeare's Hamlet:
+{
+""Assignment"": ""What is the famous opening line of William Shakespeare's play, Hamlet?"",
+""Plus"": ""The famous opening line of Hamlet is ''To be, or not to be?'' It is one of the most iconic lines in English literature, encapsulating the central theme of existentialism and the internal conflict faced by the protagonist, Prince Hamlet."",
+""Solutions"": [
+    ""''To be, or not to be?''""
+],
+""Distractors"": [
+    ""''To live, or to die?''"",
+    ""''To exist, or not?''"",
+    ""''To be, or to die?""''
+],
+""EasilyDiscardableDistractors"": [
+    ""''To love, or to hate?''""
+]
+}
+
+Example of a college level code exercise about error recognition in C++ linked lists:
+{
+""Assignment"": ""Identify the error in the following C++ code snippet related to linked lists:\n\n#include <iostream>\n\nstruct Node {\n    int data;\n    Node* next;\n};\n\nNode* createNode(int value) {\n    Node* newNode = new Node;\n    newNode->data = value;\n    newNode->next = nullptr;\n    return newNode;\n}\n\nvoid insertNode(Node*& head, int value) {\n    Node* newNode = createNode(value);\n    if (head == nullptr) {\n        head = newNode;\n        return;\n    }\n    Node* temp = head;\n    while (temp->next != nullptr) {\n        temp = temp->next;\n    }\n    temp->next = newNode;\n}\n\nvoid displayList(Node* head) {\n    Node* temp = head;\n    while (temp != nullptr) {\n        std::cout << temp->data << ' ';\n        temp = temp->next;\n    }\n    std::cout << std::endl;\n}\n\nint main() {\n    Node* head = nullptr;\n    insertNode(head, 10);\n    insertNode(head, 20);\n    insertNode(head, 30);\n    displayList(head);\n    return 0;\n}"",
+""Plus"": ""The error in the code is in the insertNode function. After creating a new node, the function is not properly updating the next pointer of the last node in the linked list to point to the newly created node. This results in the insertion of new nodes always at the end of the linked list, instead of correctly linking them in order."",
+""Solutions"": [
+    ""Modify insertNode function to correctly update next pointer of the last node.""
+],
+""Distractors"": [
+    ""Add head->next = newNode; after head = newNode;"",
+    ""Change temp->next = newNode; to temp = newNode;"",
+    ""Insert return; after temp->next = newNode;""
+],
+""EasilyDiscardableDistractors"": [
+    ""Remove temp->next = newNode; from insertNode function.""
+]
+}";
+        public static string MultipleChoice = @"Example about a middle school level exercise about ancient Egypt social structure:
+{
+  ""Assignment"": ""What were the two highest social classes in ancient Egypt called?"",
+  ""Plus"": ""The highest social classes in ancient Egypt were the 'royals' and the 'priests,' who held significant religious and administrative power and wealth in society."",
+  ""Solutions"": [
+    ""Royals"",
+    ""Priests""
+  ],
+  ""Distractors"": [
+    ""Pharaohs"",
+    ""Scribes""
+  ],
+  ""EasilyDiscardableDistractors"": [
+    ""Farmers"",
+    ""Artisans""
+  ]
+}
+
+Example of a high school level problem solving exercise about quadratic equations resolution:
+{
+  ""Assignment"": ""Solve the quadratic equation x^2 - 5x + 6 = 0 to find the zeros of the corresponding parabola."",
+  ""Plus"": ""To find the zeros of the quadratic equation x^2 - 5x + 6 = 0, we can use the quadratic formula, x = (-b ± √(b^2 - 4ac)) / (2a), where a = 1, b = -5, and c = 6."",
+  ""Solutions"": [
+    ""x = 2"",
+    ""x = 3""
+  ],
+  ""Distractors"": [
+    ""x = 4"",
+    ""x = 1""
+  ],
+  ""EasilyDiscardableDistractors"": [
+    ""x = -2"",
+    ""x = 5""
+  ]
+}
+
+Example of a college level code exercise about polymorphism in C#:
+{
+  ""Assignment"": ""Identify the errors in the following C# code snippet related to polymorphism:\n\nclass Animal {\n    public virtual void MakeSound() {\n        Console.WriteLine(''Some generic sound'');\n    }\n}\n\nclass Dog : Animal {\n    public override void MakeSound() {\n        Console.WriteLine(''Woof'');\n    }\n}\n\nclass Cat : Animal {\n    public override void MakeSound() {\n        Console.WriteLine(''Meow'');\n    }\n}\n\nclass Program {\n    static void Main(string[] args) {\n        animal1 = new Dog();\n        Animal animal2 = new Cat();\n        \n        animal1.Bark(); \n   animal1.MakeSound();\n        animal2.MakeSound()\n    }\n}"",
+  ""Plus"": ""Error: animal1 = newDog(); //type of animal1 is not defined\nError:  animal1.Bark(); // animal1 does not have a method Bark()\nError: animal2.MakeSound() // missing ; at the end of the line"",
+  ""Solutions"": [
+    ""animal1 = newDog();"",
+    ""animal1.Bark();"",
+    ""animal2.MakeSound()""
+  ],
+  ""Distractors"": [
+    ""animal1.MakeSound();"",
+    ""public virtual void MakeSound() {"",
+    ""Animal animal2 = new Cat();""
+  ],
+  ""EasilyDiscardableDistractors"": [
+    ""class Program {"",
+    ""static void Main(string[] args) {"",
+    "" public override void MakeSound() {"" 
+  ]
+}
+
+Example of a college level code exercise about dictionaries in Python:
+{
+  ""Assignment"": ""Consider the following Python code snippet. What do the two outputs at the end represent?\n\nmy_dict = {''a'': 1, ''b'': 2, ''c'': 3}\n\nprint(my_dict[''a''])\n\nprint(my_dict.get(''d''))"",
+  ""Plus"": ""The first output represents the value associated with the key ''a'' in the dictionary my_dict, which is 1. The second output represents the value associated with the key ''d'' in the dictionary my_dict, which does not exist, hence None is returned."",
+  ""Solutions"": [
+    ""1"",
+    ""None""
+  ],
+  ""Distractors"": [
+    ""''a'':1"",
+    ""KeyError: 'd'""
+  ],
+  ""EasilyDiscardableDistractors"": [
+    ""3"",
+    ""''d''""
+  ]
+}";
+        public static string ShortAnswerQuestion = @"Example of a high school level theoretical exercise about fluid dynamics: 
+{
+  ""Assignment"": ""What is the formula for calculating pressure in a fluid?"",
+  ""Solution"": ""P = ρgh""
+}
+
+Example of a high school level problem solving exercise about fluid dynamics: 
+{
+""Assignment"": ""A cylindrical tank with a diameter of 2 meters is filled with water to a height of 3 meters. Calculate the pressure at the bottom of the tank due to the weight of the water."",
+""Solution"": ""29400 Pa""
+}
+
+Example about a high school level problem solving exercise about parabolic motion:
+{
+""Assignment: A ball is launched vertically upward with an initial velocity of 15 m/s. Neglecting air resistance, calculate the maximum height reached by the ball using the parabolic motion formula."",
+""Solution"": ""11.53 m""
+}
+
+Example of a high school level code exercise about dictionaries in Python:
+{
+""Assignment"": ""Given the Python code below, which of the following is the correct output? \nstudent_grades = {''John'': 85, ''Emily'': 92, ''Michael'': 78}"",
+""Solution"": ""85""
+}
+
+Example of a high school level theoretical exercise about Nietzsche:
+{
+""Assignment"": ""What was Nietzsche's first book?"",
+""Solution"": ""''The Birth of Tragedy''""
+}";
+        public static string OpenQuestion = @" Example of a college level theoretical exercise about the fall of the roman empire:
+{
+  ""Assignment"": ""Explain the factors that contributed to the fall of the Roman Empire."",
+  ""Solution"": ""The fall of the Roman Empire was a complex process that took place over several centuries. There were many factors that contributed to its decline and eventual collapse. One major factor was economic instability. The empire had become too large to be effectively governed, and as a result, corruption and inefficiency became rampant. This led to high taxes, inflation, and a decline in trade, which further weakened the economy. Another factor was military overspending. The empire's military campaigns were expensive, and as the empire expanded, it became increasingly difficult to maintain control over its vast territories. This led to a drain on resources and a decline in military effectiveness. Internal political instability also played a role in the fall of Rome. As the empire grew larger, it became more difficult to govern effectively. Political infighting and corruption weakened the government, making it less able to respond to external threats. External threats also contributed to Rome's decline. Barbarian invasions from Germanic tribes put pressure on the empire's borders, while attacks from Persians and other enemies weakened Rome's military power. Finally, cultural decay also played a role in Rome's fall. As Christianity spread throughout the empire, traditional Roman values began to erode. This led to a decline in civic virtue and patriotism, which further weakened the social fabric of the empire. In summary, the fall of Rome was caused by a combination of economic instability, military overspending, political instability, external threats, and cultural decay. These factors worked together over several centuries to weaken the empire until it eventually collapsed under its own weight.""
+}
+
+Example of a college level code exercise about linked lists creation in C++:
+{
+  ""Assignment"": ""Write a C++ program to create a linked list."",
+  ""Solution"": ""#include <iostream>\n\nstruct Node {\n    int data;\n    Node* next;\n};\n\nclass LinkedList {\nprivate:\n    Node* head;\npublic:\n    LinkedList() {\n        head = nullptr;\n    }\n\n    // Function to insert a new node at the beginning of the list\n    void insert(int value) {\n        Node* newNode = new Node;\n        newNode->data = value;\n        newNode->next = head;\n        head = newNode;\n    }\n\n    // Function to display the linked list\n    void display() {\n        Node* temp = head;\n        while (temp != nullptr) {\n            std::cout << temp->data << ' ';\n            temp = temp->next;\n        }\n        std::cout << std::endl;\n    }\n};\n\nint main() {\n    LinkedList list;\n    list.insert(5);\n    list.insert(10);\n    list.insert(15);\n\n    std::cout << 'Linked List: ';\n    list.display();\n\n    return 0;\n}""
+}
+
+Example of a high school level problem solving exercise about fluid dynamics: 
+{
+  ""Assignment"": ""A cylindrical tank with a diameter of 2 meters is filled with water to a height of 3 meters. Calculate the pressure at the bottom of the tank due to the weight of the water."",
+  ""Solution"": ""To calculate the pressure at the bottom of the tank, we'll use the formula for pressure due to the weight of a fluid: P = ρgh. Where: P is the pressure at the bottom of the tank, ρ is the density of the fluid (in this case, water), g is the acceleration due to gravity, and h is the height of the fluid column. First, let's find the density of water. At room temperature, the density of water is approximately 1000 kg/m^3. Given: Diameter of the tank, D = 2 m, Height of the water column, h = 3 m, Density of water, ρ = 1000 kg/m^3, and Acceleration due to gravity, g = 9.8 m/s^2. We need to find the pressure at the bottom of the tank, so we'll use the full height of the water column, h = 3 m. P = (1000 kg/m^3) × (9.8 m/s^2) × (3 m) = 29400 Pa. So, the pressure at the bottom of the tank due to the weight of the water is 29400 Pa.""
+}
+
+
+Example of a high school level theoretical exercise about fluid dynamics:
+{
+  ""Assignment"": ""Explain the concept of buoyancy and how it relates to the behavior of objects submerged in fluids."",
+  ""Solution"": ""Buoyancy is the upward force exerted by a fluid on an object immersed in it. It is governed by Archimedes' principle, which states that the buoyant force acting on an object is equal to the weight of the fluid displaced by the object. When an object is placed in a fluid, it displaces some of the fluid, causing an upward force equal to the weight of the displaced fluid to act on the object. This buoyant force counteracts the weight of the object, causing it to feel lighter or even float if the buoyant force exceeds the weight of the object. Therefore, objects with a density greater than the fluid will sink, while those with a density less than the fluid will float.""
+}
+";
+        public static string TrueOrFalse = @"Example of a college level exercise about Nietzsche:
+{
+  ""Assignment"": ""According to Nietzsche, the concept of the 'Übermensch' advocates for the superiority of a select group of individuals over others."",
+  ""Solution"": ""False, Nietzsche's concept of the 'Übermensch' or 'Overman' does not promote the superiority of a select group of individuals over others. Instead, it emphasizes the idea of self-overcoming and the transcendence of conventional moral values and societal norms. The Übermensch represents the individual who can create their own values and live authentically, beyond the constraints of herd mentality or traditional morality. It is not about one group being superior to others, but rather about individual self-realization and autonomy.""
+}
+
+Example of a college level code exercise about queues and buffers in C++:
+{
+  ""Assignment"": ""In the following C++ code snippet, a queue is used to implement a buffer. Determine if the code will behave like a typical buffer. \n#include <iostream>\n#include <queue>\n\nusing namespace std;\n\nint main() {\n    queue<int> buffer;\n\n    // Adding data to the buffer\n    for (int i = 1; i <= 5; ++i) {\n        buffer.push(i);\n        cout << ''Added '' << i << '' to buffer.'' << endl;\n    }\n\n    // Removing data from the buffer\n    while (!buffer.empty()) {\n        int data = buffer.front();\n        buffer.pop();\n        cout << ''Removed '' << data << '' from buffer.'' << endl;\n    }\n\n    return 0;\n}"",
+  ""Solution"": ""True, the provided code snippet demonstrates the use of a queue (std::queue) to implement a buffer in C++. The code adds data to the buffer using the push function and removes data from the buffer using the pop function, which follows the First In First Out (FIFO) order, typical of buffer behavior. Therefore, the code will behave like a typical buffer.""
+}
+
+Example of a high school level problem solving exercise about fluid dynamics:
+{
+  ""Assignment"": ""A ball is dropped into a container filled with water. As the ball sinks deeper into the water, the pressure it experiences increases."",
+  ""Solution"": ""True, as the ball sinks deeper into the water, it experiences an increase in pressure due to the increasing weight of the water above it. This increase in pressure can be calculated using the hydrostatic pressure formula: P = ρgh, where P is the pressure, ρ is the density of the fluid (water in this case), g is the acceleration due to gravity, and h is the depth of the fluid. As the ball sinks deeper, the value of h increases, resulting in a higher pressure experienced by the ball. Therefore, the statement is true.""
+}
+";
+        public static string Debate = @"Example of a college level debate exercise about ethics in AI:
+{
+  ""Assignment"": ""Debate on the Ethical Implications of AI in Autonomous Vehicles\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the ethical implications of AI in autonomous vehicles.\nTeam A will argue in favor of the statement: 'The benefits of AI in autonomous vehicles outweigh the ethical concerns.'\nTeam B will argue against the statement: 'The ethical concerns of AI in autonomous vehicles outweigh the benefits.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the nuances of the topic.\n\nDebate Points:\nTeam A (In favor of the benefits of AI in autonomous vehicles):\n- Safety: Argue that AI technology can significantly reduce the number of accidents caused by human error, thereby saving lives.\n- Efficiency: Highlight the potential for AI to optimize traffic flow, reduce congestion, and improve transportation systems overall.\n- Accessibility: Emphasize how autonomous vehicles can enhance mobility for individuals with disabilities and elderly populations.\n- Innovation: Discuss the role of AI in driving technological advancement and fostering economic growth in the automotive industry.\n\nTeam B (Against the ethical concerns of AI in autonomous vehicles):\n- Moral Dilemmas: Raise concerns about the ethical challenges surrounding AI decision-making in life-and-death situations, such as the 'trolley problem.'\n- Liability and Accountability: Address the complex legal and ethical issues related to assigning responsibility in the event of accidents or failures of autonomous vehicles.\n- Privacy: Explore the implications of AI surveillance in autonomous vehicles, including the collection and potential misuse of personal data.\n- Job Displacement: Discuss the socioeconomic impacts of AI-driven automation on employment in the transportation sector and the broader economy. \n- Objective: The objective of this debate exercise is to encourage students to critically analyze the ethical implications of AI in autonomous vehicles from multiple perspectives. By engaging in thoughtful discourse and considering both the benefits and concerns associated with this technology, students will develop a deeper understanding of the complex ethical dilemmas inherent in AI development and deployment.""
+}
+
+Example of a high school level exercise about impact of social media on teenagers:
+{
+  ""Assignment"": ""Debate on the Impact of Social Media Use on Teenagers\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the impact of social media use on teenagers.\nTeam A will argue in favor of the statement: 'Social media has a positive impact on teenagers' lives.'\nTeam B will argue against the statement: 'Social media has a negative impact on teenagers' lives.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the complexities of social media's impact on teenagers.\n\nDebate Points:\nTeam A (In favor of the positive impact of social media on teenagers):\n- Connectivity: Argue that social media platforms facilitate communication and connection with peers, family members, and communities, fostering a sense of belonging and support.\n- Information Access: Highlight how social media provides teenagers with access to diverse perspectives, educational resources, and opportunities for self-expression and learning.\n- Networking: Discuss the role of social media in helping teenagers build professional networks, discover career opportunities, and develop essential digital skills for the modern workforce.\n- Empowerment: Emphasize the ability of social media to amplify teenagers' voices, promote activism, and catalyze social change by mobilizing youth-led movements.\n\nTeam B (Against the negative impact of social media on teenagers):\n- Mental Health: Raise concerns about the detrimental effects of excessive social media use on teenagers' mental well-being, including increased rates of anxiety, depression, and social comparison.\n- Cyberbullying: Address the prevalence of cyberbullying on social media platforms and its harmful consequences for victims, such as psychological distress, academic difficulties, and even suicide.\n- Addiction: Discuss the addictive nature of social media platforms, leading to decreased productivity, disrupted sleep patterns, and diminished real-life social interactions among teenagers.\n- Privacy and Security: Explore the risks of privacy breaches, online harassment, and exploitation of personal data on social media, posing threats to teenagers' safety and digital privacy rights.\n\nObjective:\nThe objective of this debate exercise is to encourage students to critically evaluate the impact of social media use on teenagers' lives from different perspectives. By engaging in informed discourse and considering both the positive and negative aspects of social media, students will develop a nuanced understanding of the complex dynamics shaping adolescents' digital experiences and well-being in the digital age.""
+}
+";
+        public static string Essay = @"Example of an academic level exercise about AI ethics in healthcare:
+{
+""Assignment"": ""Write an essay discussing the ethical considerations surrounding the use of artificial intelligence (AI) in healthcare.""
+}
+
+Example of an high school level exercise about AI impact:
+{
+""Assignment"": ""Write an essay discussing the impact of social media on middle school students.""
+}
+
+Example of an college level exercise about implications of climate change on global food security:
+{
+""Assignment"": ""Write an essay exploring the implications of climate change on global food security."" 
+}
+
+Example of an academic level exercise about AI impact:
+{
+""Assignment"": ""Write an essay analyzing the impact of artificial intelligence on employment trends in the 21st century.""
+}
+
+Example of a middle school level exercise about enviromental conservation:
+{
+""Assignment"": ""Write an essay discussing the importance of environmental conservation in your community.""
+}
+
+Example of a primary school exercise about favourite animals:
+{
+""Assignment"": ""Write a short essay describing your favorite animal and why you admire it.""
+}
+";
+        public static string Brainstorming = @"Example of a college level exercise about contemporary ethical dilemmas:
+{
+""Assignment"": ""Brainstorming Session on Contemporary Ethical Dilemmas.\n What are some contemporary ethical dilemmas related to emerging technologies, such as artificial intelligence, genetic engineering, or biotechnology?\n How do cultural differences and moral relativism impact our understanding of ethics and moral decision-making in a globalized world? \n What are the ethical implications of environmental degradation and climate change, and how should societies address these challenges?\n How should we balance individual rights and societal interests in areas such as privacy, surveillance, and national security?\n What are the ethical considerations surrounding issues of social justice, inequality, and discrimination, and how can philosophy inform our responses to these challenges?\n How should we approach ethical dilemmas in healthcare, including topics such as end-of-life care, access to healthcare, and medical experimentation?\n What are the moral responsibilities of businesses and corporations in today's society, particularly concerning issues such as corporate social responsibility, environmental sustainability, and fair labor practices?\n How do ethical theories such as utilitarianism, deontology, virtue ethics, and existentialism inform our understanding of contemporary ethical dilemmas? \n What role should empathy, compassion, and moral imagination play in ethical decision-making and social change? \n How can philosophical reflection and ethical reasoning contribute to personal growth, moral development, and responsible citizenship in a complex and rapidly changing world?""
+}
+
+Example of an academic level exercise about AI robotics:
+{
+""Assignment"": ""Research Proposal on Ethical Considerations in AI Robotics.\n What are the key ethical considerations in the development and deployment of AI robotics?\n How do ethical frameworks such as utilitarianism, deontology, and virtue ethics apply to AI robotics?\n What are the potential risks and benefits of AI robotics in various domains, such as healthcare, transportation, and military applications?\n How should society address issues of accountability, transparency, and bias in AI robotics systems?\n What ethical guidelines and regulations exist for governing the use of AI robotics, and how effective are they?\n How can AI robotics contribute to addressing societal challenges, such as aging populations, environmental sustainability, and disaster response?\n What are the moral implications of AI robotics replacing human labor in the workforce, and how should societies mitigate potential socioeconomic impacts?\n What role should interdisciplinary collaboration play in addressing ethical concerns in AI robotics, involving fields such as philosophy, law, sociology, and computer science?\n How can AI robotics research and development incorporate principles of responsible innovation and ethical design?\n What are the ethical considerations surrounding autonomous decision-making by AI robotics systems, particularly in high-stakes situations where human lives may be at risk?""
+}
+
+Example of a middle school level exercise about endangered species conservation:
+{
+""Assignment"": ""Research Project on Endangered Species Conservation.\n What are endangered species, and why is it important to protect them?\n What are the main factors contributing to the decline of endangered species?\n Can you identify three endangered species and describe their habitats, behaviors, and unique characteristics?\n How do human activities, such as habitat destruction, pollution, and climate change, impact endangered species?\n What are some conservation efforts and initiatives aimed at protecting endangered species and their habitats?\n How can individuals contribute to endangered species conservation in their communities?\n What role do zoos, wildlife sanctuaries, and national parks play in endangered species conservation?\n How does biodiversity loss affect ecosystems and the balance of nature?\n Can you discuss the ethical considerations surrounding endangered species conservation, including conflicts between human development and wildlife conservation?\n What are the potential consequences of not taking action to protect endangered species for future generations?""
+}
+";
+        public static string KnowledgeExposition = @"Example of a high school level exercise about civil war:
+{
+""Assignment"": ""Prepare a knowledge exposition on the causes, events, and consequences of the American Civil War. Consider the following requirements: \n 1) Your exposition should be well-organized and comprehensive, covering key aspects of the Civil War period.\n 2) Utilize a variety of sources, including primary documents, scholarly articles, and historical narratives, to support your exposition.\n 3) Present your findings in a clear and engaging manner, using visual aids such as maps, timelines, and images to enhance understanding.\n 4) Address the following aspects of the Civil War in your exposition: \n    a. Background and Context: Provide an overview of the political, economic, and social factors leading to the outbreak of the Civil War, including sectionalism, slavery, and states' rights.\n  b. Key Events and Battles: Discuss significant events and battles of the Civil War, highlighting their strategic importance and impact on the course of the conflict.\n     c. Leadership and Figures: Examine the leadership of key figures such as Abraham Lincoln, Jefferson Davis, Ulysses S. Grant, and Robert E. Lee, and their roles in shaping the outcome of the war.\n    d. Home Front and Society: Explore the experiences of civilians, soldiers, and marginalized groups during the Civil War, including the role of women, African Americans, and immigrants.\n  e. Legacy and Consequences: Analyze the long-term effects of the Civil War on American society, politics, and culture, including Reconstruction, the abolition of slavery, and the process of national reconciliation.\n    f. Historical Interpretations: Compare and contrast different historical interpretations of the Civil War, examining how perspectives on the conflict have evolved over time.\n 5) Conclude your exposition with a reflection on the enduring significance of the Civil War and its relevance to contemporary issues and challenges.""
+}
+
+Example of a college level exercise about statics:
+{
+""Assignment"": ""Demonstrate your knowledge on the topic of Statics by completing the following steps:\n 1) Select a set of statics problems covering topics such as equilibrium of particles and rigid bodies, moments, forces, and trusses. \n 2) Solve each problem analytically using appropriate mathematical techniques and principles of static equilibrium.\n 3) Present your solutions in a clear and organized format, including diagrams, free-body diagrams, and step-by-step calculations.\n 4) Discuss the physical significance of your results, including the implications for structural stability, load-bearing capacity, and engineering design.\n 5) Reflect on the broader applications of statics principles in engineering practice and real-world scenarios, highlighting their importance in ensuring the safety and reliability of structures and mechanical systems.""
+}
+";
+        public static string NonWrittenMaterialAnalysis = @"Example of a middle school level exercise about arwork analysis:
+{
+""Assignment"": ""Analyze the given Artwork by following these steps:\n 1)Observe and describe the visual elements of the artwork, including color, composition, form, and texture. \n 2)Consider the mood or message conveyed by the artwork and how it makes you feel.\n 3)Research the artist and the historical context in which the artwork was created.\n Write a short comment discussing your interpretation of the artwork, its artistic techniques, and its significance in art history.""
+}
+
+Example of a high school level exercise about historical photograph interpretation:
+{
+""Assignment"": ""Interpret the given historical photograph by following these steps: \n 1)Examine the composition, subject matter, and context of the photograph.\n 2)Analyze the historical significance of the photograph, considering its impact on society and culture at the time of its creation. \n 3) Research the background information related to the photograph, including the photographer, location, and historical context.\n 4) Write a detailed interpretation of the photograph, discussing its symbolism, cultural relevance, and broader historical implications.""
+}
+
+Example of a college level exercise about sales dashboard analysis:
+{
+""Assignment"": ""Analyze the provided sales dashboard. Based on your analysis, formulate strategic recommendations for optimizing sales performance and achieving business objectives. Present your analysis and recommendations in a professional report format, addressing key stakeholders within the company and providing supporting evidence and rationale for your suggestions.""
+}
+
+Example of a college level exercise about financial statement analysis:
+{
+""Assignment"": ""Conduct a comprehensive analysis of the provided financial statements for a company. Follow these steps:\n 1) Review the balance sheet, income statement, and cash flow statement, examining key financial metrics such as revenue, expenses, assets, liabilities, and cash flow. \n 2) Evaluate the financial performance and position of the company, comparing current data to historical trends and industry benchmarks. \n 3) Identify strengths, weaknesses, opportunities, and threats (SWOT analysis) based on the financial data and market conditions.\n 4) Assess the company's profitability, liquidity, solvency, and efficiency ratios to gauge its financial health and operational effectiveness.\n 5) Formulate strategic recommendations for improving financial performance, managing risks, and achieving long-term growth objectives.\n 6) Present your analysis and recommendations in a professional report format, targeting key stakeholders such as investors, executives, and board members. Provide clear, concise explanations and supporting evidence to justify your conclusions.""
+}
+";
+        public static string NonWrittenMaterialProduction = @"Example of a middle school level exercise about landscape painting:
+{
+""Assignment"": ""Using tempera paints, create a landscape painting depicting a scene of nature such as a forest, mountain range, or beach.""
+}
+
+Example of a high school level exercise about WWII concept map:
+{
+""Assignment"": ""Create a concept map illustrating the key events, causes, and consequences of World War II. Organize the concept map into main branches representing major themes such as political, military, social, and economic aspects of the war. Include sub-branches to further elaborate on specific events, battles, leaders, and countries involved in the conflict. Use arrows, connectors, and labels to demonstrate relationships and connections between different elements of the concept map.""
+}
+
+Example of a college level exercise about business plan creation:
+{
+""Assignment"": ""Create a comprehensive business plan PDF for a hypothetical business venture of your choice. Include sections such as executive summary, business description, market analysis, marketing and sales strategies, operations plan, and financial projections. \n Research industry trends, target market demographics, competitors, and regulatory requirements to inform your business plan. Use professional design software or templates to layout and format your business plan PDF for readability and visual appeal. Incorporate charts, graphs, and visual elements to illustrate key data and metrics supporting your business plan.""
+}
+";
+    
+        public static string LearningObjective = @"Learning Objective: Students will identify the main themes in a Shakespeare's poem.
+Response: 
+{
+  ""BloomLevel"": 1,
+  ""MacroSubject"": ""Literature"",
+  ""Level"": 3,
+  ""Topic"": ""Shakespeare's poem""
+}
+
+Learning Objective: Given a mathematical problem about parabolic motion, students will apply appropriate problem-solving strategies to find the solution.
+Response: 
+{
+  ""BloomLevel"": 2,
+  ""MacroSubject"": ""Mathematics"",
+  ""Level"": 2,
+  ""Topic"": ""Parabolic Motion""
+}
+
+Learning Objective: Students will create a multimedia presentation to demonstrate their understanding of Pearl Harbour's events.
+Response: 
+{
+  ""BloomLevel"": 5,
+  ""MacroSubject"": ""History"",
+  ""Level"": 3,
+  ""Topic"": ""Pearl Harbour""
+}
+
+Learning Objective: Gli studenti dovranno valutare differenti tecniche di studio per riconoscere punti di forza e di debolezza di ciascuna.
+Response: 
+{
+  ""BloomLevel"": 4,
+  ""MacroSubject"": ""Educazione"",
+  ""Level"": 4,
+  ""Topic"": ""Tecniche di studio""
+}
+
+Learning Objective: Given a scientific experiment of a redox reaction, students will analyze the data to draw conclusions.
+Response: 
+{
+  ""BloomLevel"": 3,
+  ""MacroSubject"": ""Chemistry"",
+  ""Level"": 2,
+  ""Topic"": ""Redox Reaction""
+}
+
+Learning Objective: Los estudiantes deberán comprender los conceptos básicos de la teoría de la relatividad de Einstein.
+Response: 
+{
+  ""BloomLevel"": 1,
+  ""MacroSubject"": ""Física"",
+  ""Level"": 2,
+  ""Topic"": ""Teoría de la relatividad""
+}
+
+Leraning Objective: Les élèves seront capables d'analyser les causes et les effets de la déforestation en Amazonie, y compris son impact sur la biodiversité, les communautés autochtones et les modèles climatiques mondiaux.
+Response:
+{
+  ""BloomLevel"": 3,
+  ""MacroSubject"": ""Sciences de la Terre"",
+  ""Level"": 3,
+  ""Topic"": ""Déforestation en Amazonie""
+}";
+        public static string LearningObjectives = @"
+Example in English:""{
+  ""Remembering"":[
+    ""Recall the definition of uniform acceleration motion."",
+    ""List the equations that describe uniform acceleration motion.""
+  ],
+  ""Understanding"":[
+    ""Explain the concept of uniform acceleration motion in your own words."",
+    ""Interpret graphs depicting uniform acceleration motion.""
+  ],
+  ""Applying"":[
+    ""Solve problems involving uniform acceleration motion using the appropriate equations."",
+    ""Design an experiment to measure the acceleration of an object in uniform motion.""
+  ],
+  ""Analyzing"":[
+    ""Compare and contrast uniform acceleration motion with il moto uniforme."",
+    ""Analyze real-life examples of uniform acceleration motion and identify the factors affecting acceleration.""
+  ],
+  ""Evaluating"":[
+    ""Critique the validity of experimental procedures used to measure acceleration in various scenarios."",
+    ""Evaluate the efficiency of different methods for calculating acceleration in uniform acceleration motion.""
+  ],
+  ""Creating"":[
+    ""Develop a scenario involving uniform acceleration motion and solve related problems."",
+    ""Construct a model or simulation to demonstrate uniform acceleration motion.""
+  ]
+}""
+
+Example in Italian:""{
+  ""Remembering"":[
+    ""Ricordare la definizione di il moto uniformemente accelerato."",
+    ""Ricordare le equazioni che descrivono il moto uniformemente accelerato.""
+  ],
+  ""Understanding"":[
+    ""Spiegare il concetto di il moto uniformemente accelerato con parole proprie."",
+    ""Interpretare i grafici che rappresentano il moto uniformemente accelerato.""
+  ],
+  ""Applying"":[
+    ""Risolvere problemi che coinvolgono il moto uniformemente accelerato utilizzando le equazioni appropriate."",
+    ""Progettare un esperimento per misurare l'accelerazione di un oggetto in moto uniformemente accelerato.""
+  ],
+  ""Analyzing"":[
+    ""Confrontare e mettere in contrasto il moto uniformemente accelerato con il moto uniforme."",
+    ""Analizzare esempi della vita reale di moto uniformemente accelerato e identificare i fattori che influenzano l'accelerazione.""
+  ],
+  ""Evaluating"":[
+    ""Criticare la validità delle procedure sperimentali utilizzate per misurare l'accelerazione in diversi scenari."",
+    ""Valutare l'efficienza di diversi metodi per calcolare l'accelerazione nel moto uniformemente accelerato.""
+  ],
+  ""Creating"":[
+    ""Sviluppare uno scenario che coinvolge il moto uniformemente accelerato e risolvere problemi correlati."",
+    ""Costruire un modello o una simulazione per dimostrare il moto uniformemente accelerato.""
+  ]
+}""
+
+Example in French:""{
+  ""Remembering"":[
+    ""Se souvenir de la définition de il moto uniformemente accelerato."",
+    ""Énumérer les équations qui décrivent il moto uniformemente accelerato.""
+  ],
+  ""Understanding"":[
+    ""Expliquer le concept de il moto uniformemente accelerato avec ses propres mots."",
+    ""Interpréter les graphiques représentant il moto uniformemente accelerato.""
+  ],
+  ""Applying"":[
+    ""Résoudre des problèmes impliquant il moto uniformemente accelerato en utilisant les équations appropriées."",
+    ""Concevoir une expérience pour mesurer l'accélération d'un objet en mouvement uniformément accéléré.""
+  ],
+  ""Analyzing"":[
+    ""Comparer et mettre en contraste il moto uniformemente accelerato avec il moto uniforme."",
+    ""Analyser des exemples de la vie réelle de il moto uniformemente accelerato et identifier les facteurs affectant l'accélération.""
+  ],
+  ""Evaluating"":[
+    ""Critiquer la validité des procédures expérimentales utilisées pour mesurer l'accélération dans différents scénarios."",
+    ""Évaluer l'efficacité de différentes méthodes pour calculer l'accélération dans il moto uniformemente accelerato.""
+  ],
+  ""Creating"":[
+    ""Développer un scénario impliquant il moto uniformemente accelerato et résoudre des problèmes associés."",
+    ""Construire un modèle ou une simulation pour démontrer il moto uniformemente accelerato.""
+  ]
+}""
+
+Example in German:""{
+  ""Remembering"":[
+    ""Erinnern Sie sich an die Definition von il moto uniformemente accelerato."",
+    ""Auflisten der Gleichungen, die il moto uniformemente accelerato beschreiben.""
+  ],
+  ""Understanding"":[
+    ""Erklären Sie das Konzept von il moto uniformemente accelerato in eigenen Worten."",
+    ""Interpretieren von Grafiken, die il moto uniformemente accelerato darstellen.""
+  ],
+  ""Applying"":[
+    ""Lösen von Problemen, die il moto uniformemente accelerato unter Verwendung der entsprechenden Gleichungen betreffen."",
+    ""Entwerfen eines Experiments zur Messung der Beschleunigung eines Objekts in gleichmäßiger Bewegung.""
+  ],
+  ""Analyzing"":[
+    ""Vergleichen und kontrastieren Sie il moto uniformemente accelerato mit il moto uniforme."",
+    ""Analysieren von Beispielen aus dem wirklichen Leben von il moto uniformemente accelerato und Identifizieren der Faktoren, die die Beschleunigung beeinflussen.""
+  ],
+  ""Evaluating"":[
+    ""Kritisieren Sie die Gültigkeit experimenteller Verfahren zur Messung der Beschleunigung in verschiedenen Szenarien."",
+    ""Bewerten Sie die Effizienz verschiedener Methoden zur Berechnung der Beschleunigung in il moto uniformemente accelerato.""
+  ],
+  ""Creating"":[
+    ""Entwickeln Sie ein Szenario, das il moto uniformemente accelerato einbezieht, und lösen Sie damit verbundene Probleme."",
+    ""Erstellen Sie ein Modell oder eine Simulation, um il moto uniformemente accelerato zu demonstrieren.""
+  ]
+}""
+
+Example in Spanish:""{
+  ""Remembering"":[
+    ""Recordar la definición de il moto uniformemente accelerato."",
+    ""Enumerar las ecuaciones que describen il moto uniformemente accelerato.""
+  ],
+  ""Understanding"":[
+    ""Explicar el concepto de il moto uniformemente accelerato con sus propias palabras."",
+    ""Interpretar gráficos que representen il moto uniformemente accelerato.""
+  ],
+  ""Applying"":[
+    ""Resolver problemas que involucren il moto uniformemente accelerato utilizando las ecuaciones apropiadas."",
+    ""Diseñar un experimento para medir la aceleración de un objeto en movimiento uniformemente acelerado.""
+  ],
+  ""Analyzing"":[
+    ""Comparar y contrastar il moto uniformemente accelerato con il moto uniforme."",
+    ""Analizar ejemplos de la vida real de il moto uniformemente accelerato e identificar los factores que afectan la aceleración.""
+  ],
+  ""Evaluating"":[
+    ""Critique la validez de los procedimientos experimentales utilizados para medir la aceleración en diferentes escenarios."",
+    ""Evaluar la eficacia de diferentes métodos para calcular la aceleración en il moto uniformemente accelerato.""
+  ],
+  ""Creating"":[
+    ""Desarrollar un escenario que involucre il moto uniformemente accelerato y resolver problemas relacionados."",
+    ""Construir un modelo o simulación para demostrar il moto uniformemente accelerato.""
+  ]
+}""";
+
+        public static string ExerciseCorrections = @"
+Question: What is quantum entanglement, and how does it impact the state description of particles?
+Answer: Quantum entanglement is a quantum mechanical phenomenon where particles, even when separated by distance, become interdependent in a manner that the state of one particle is inseparable from the state of another. 
+{
+""Accuracy"": 0.8, 
+""Correction"": null
+}
+
+Question: Secondo le leggi della termodinamica, quale principio afferma che l'energia non può essere creata né distrutta, ma solo trasformata da una forma all'altra?
+Answer: La prima legge della termodinamica, ovvero la 'legge di conservazione dell'energia'.
+{
+""Accuracy"": 1.0,
+""Correction"": ""null""
+}
+
+Question: Qu'est-ce que l'entrelacement quantique, et comment cela impacte-t-il la description de l'état des particules?
+Answer: L'entrelacement quantique est un phénomène rare qui s'applique uniquement aux particules en laboratoire.
+{
+""Accuracy"": 0.0,
+""Correction"": ""La réponse fournie est incorrecte car elle affirme que l'entrelacement quantique est un phénomène rare qui ne s'applique qu'aux particules en laboratoire. Ceci est incorrect car l'entrelacement quantique est un aspect fondamental de la mécanique quantique et a été démontré dans de nombreuses expériences impliquant un large éventail de particules et de conditions. Il n'est pas limité aux paramètres de laboratoire et est un phénomène bien établi dans le domaine de la physique quantique.""
+}
+
+Question: Was ist Quantenverschränkung, und wie beeinflusst sie die Zustandsbeschreibung von Teilchen?
+Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, die über eine Entfernung hinweg ohne Einfluss auf ihre individuellen Zustände stattfindet.
+{
+""Accuracy"": 0.4,
+""Correction"": ""Die gegebene Antwort ist inkorrekt, da sie das Konzept der Quantenverschränkung über vereinfacht und ihre Auswirkungen auf die Zustandsbeschreibung von Teilchen falsch darstellt. Quantenverschränkung ist keine einfache Interaktion zwischen Teilchen über eine Entfernung hinweg; es handelt sich um ein komplexes Phänomen, bei dem die Quantenzustände von zwei oder mehr Teilchen miteinander verbunden werden. Sobald diese Teilchen verschränkt sind, kann der Zustand eines Teilchens nicht unabhängig von dem/den anderen beschrieben werden, egal wie weit sie voneinander entfernt sind. Dies bedeutet, dass eine Änderung des Zustands eines Teilchens sofort den Zustand des anderen Teilchens beeinflusst, unabhängig von der Entfernung zwischen ihnen. Dies ist ein grundlegendes Merkmal der Quantenmechanik und hat bedeutende Auswirkungen auf unser Verständnis der Natur auf ihrer fundamentalsten Ebene.""
+}";
+
+        public static string MaterialAnalysisExamples = @"
+{
+  ""Language"": ""English"",
+  ""MacroSubject"": ""History"",
+  ""Title"": ""The American Civil War"",
+  ""PerceivedDifficulty"": ""high_school"",
+  ""MainTopics"": [
+    {
+      ""Topic"": ""Causes of the Civil War"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Explanation of the economic, social, and political factors that led to the conflict.""
+    },
+    {
+      ""Topic"": ""Major Battles"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Overview of key battles and their significance.""
+    },
+    {
+      ""Topic"": ""Emancipation Proclamation"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Analysis of Lincoln's executive order and its impact""
+    }
+  ]
+}
+
+{
+  ""Language"": ""Italian"",
+  ""MacroSubject"": ""History"",
+  ""Title"": ""Interesting facts you may not know about Gengis Khan"",
+  ""PerceivedDifficulty"": ""high_school"",
+  ""MainTopics"": [
+    {
+      ""Topic"": ""Strategic Marriages"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Genghis Khan arranged strategic marriages for his daughters, often to allied rulers, and then assigned military missions to his sons-in-law.""
+    },
+    {
+      ""Topic"": ""Secret Tomb"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Genghis Khan's tomb has never been found, as he ordered it to remain a secret. Thousands of people who attended his funeral were executed to keep the location hidden.""
+    },
+    {
+      ""Topic"": ""Descendants"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Genghis Khan had so many children and wives that 1 in 200 people today are believed to be his descendants.""
+    }
+  ]
+}
+
+{
+  ""Language"": ""Spanish"",
+  ""MacroSubject"": ""Literature"",
+  ""Title"": ""Don Quixote"",
+  ""PerceivedDifficulty"": ""college"",
+  ""MainTopics"": [
+    {
+      ""Topic"": ""Characters"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Description of Don Quixote, Sancho Panza, and other key characters.""
+    },
+    {
+      ""Topic"": ""Themes"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Exploration of themes such as chivalry, reality vs. illusion, and madness.""
+    },
+    {
+      ""Topic"": ""Narrative Style"",
+      ""Type"": ""Theoretical"",
+      ""Description"": ""Analysis of Cervantes' narrative techniques and metafictional elements.""
+    }
+  ]
+}";
+    }
+}
