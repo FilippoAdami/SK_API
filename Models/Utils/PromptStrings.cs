@@ -95,15 +95,22 @@ Provide **ONLY** the JSON with accuracy and correction.
 ";
     }
     public class InternalPrompts {
-        public static string TextSummarizationPrompt = @"Distill {{$lesson}} into {{$n_o_w}} words for {{$level}} level learners, incorporating essential concepts and formulas seamlessly. 
-Omit any explicit mention of summarization. 
-Provide ONLY the synthesized content.";
+        public static string TextSummarizationPrompt = @"You are a {{$level}} teacher that just gave a lesson and now you need to give a brief summary of it to your students as recap. This is your lesson material '{{$material}}'.
+----
+Instructions for GPT-3.5:
+1. Read the provided material and understand the language it is written in.
+2. Summarize the material, maintaining the same language (this is very important, if you provide a summary in English, even if the material is not in English, students won't be able to understand it), in {{$n_o_w}} words for {{$level}} level learners, incorporating all essential concepts and eventual formulas seamlessly.
+3. Provide **ONLY** the synthesized content.";
         public static string TextTranslationPrompt = @"As a native {{$language}} speaker fluent in both {{$language}} and English languages, translate the following JSON's values in {{$language}} while keeping the keys in English: JSON:
 {{$json}}
 Provide ONLY translated JSON.";
-        public static string MaterialGenerationPrompt = @"As a {{$level}} level professor, create a {{$level}} level lesson on {{$topic}} for your {{$level}} level students. 
-Craft a {{$number_of_words}}-words lesson with the aim of {{$learning_objective}} and utilizing appropriate {{$level}} vocabulary.
-Provide ONLY the generated lesson; no title needed.";  
+        public static string MaterialGenerationPrompt = @"As a {{$level}} level professor, create a {{$level}} level lesson on: '{{$topic}}' for your {{$level}} level students. 
+Craft a {{$n_o_w}}-words lesson with the learning objective: '{{$learning_objective}}' and utilizing appropriate {{$level}} vocabulary.
+----
+Instructions for GPT-3.5:
+1. Read the provided topic and the learning objective to understand the language they are written in; that's the language you lesson must be in, as your students understand only that language.
+2. Generate the lesson, maintaining the same language (this is very important, if you provide a lesson in English, even if the topic and learning objective are not in English, students won't be able to understand it), in {{$n_o_w}} words for {{$level}} level learners, incorporating all essential concepts and eventual formulas seamlessly.
+3. Provide **ONLY** the generated content.";  
     }
     public class FormatStrings{
         public static string MM_FillInTheBlanks = @"

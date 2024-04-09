@@ -33,10 +33,9 @@ public class InternalFunctions
         // Defining the prompt & generating the semantic function
         string prompt = InternalPrompts.TextSummarizationPrompt;
         var generate = kernel.CreateSemanticFunction(prompt);
-
         // Setting up the context
         var context = kernel.CreateNewContext();
-        context["lesson"] = lesson;
+        context["material"] = lesson;
         context["level"] = level;
         context["n_o_w"] = noW.ToString();
 
