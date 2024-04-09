@@ -2,9 +2,9 @@ using Microsoft.SemanticKernel;
 
 public class LLM_SetupModel
 {
-    public string SecretKey { get; set; }
-    public string ModelName { get; set; }
-    public string Endpoint { get; set; }
+    public required string SecretKey { get; set; }
+    public required string ModelName { get; set; }
+    public required string Endpoint { get; set; }
 
     public LLM_SetupModel(string secretKey, string modelName, string endpoint)
     {
@@ -15,10 +15,10 @@ public class LLM_SetupModel
 
     public IKernel Validate()
     {
-        Console.WriteLine("Validating the setup model");
-        Console.WriteLine("Secret Key: " + SecretKey);
-        Console.WriteLine("Model Name: " + ModelName);
-        Console.WriteLine("Endpoint: " + Endpoint);
+        //Console.WriteLine("Validating the setup model");
+        //Console.WriteLine("Secret Key: " + SecretKey);
+        //Console.WriteLine("Model Name: " + ModelName);
+        //Console.WriteLine("Endpoint: " + Endpoint);
         if (string.IsNullOrWhiteSpace(SecretKey))
         {
             throw new ArgumentNullException(nameof(SecretKey));

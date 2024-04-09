@@ -1,6 +1,7 @@
 // Import necessary namespaces from the ASP.NET Core framework
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
+using Newtonsoft.Json;
 
 namespace SK_API.Controllers{
     [ApiController]
@@ -20,7 +21,7 @@ namespace SK_API.Controllers{
 
         // Define your Lesson POST action method here
         [HttpPost("exercisecorrector")]
-        public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] LLM_SetupModel setupModel, [FromBody] CorrectorRequestModel input){
+        public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] CorrectorRequestModel input){
             try{
 // Authentication with the token
                 if (token == null)
@@ -35,7 +36,8 @@ namespace SK_API.Controllers{
                 }
 
 // Validate the setup model
-                LLM_SetupModel LLM = setupModel ?? throw new ArgumentNullException(nameof(setupModel));
+                var LLMsetupModel = JsonConvert.DeserializeObject<LLM_SetupModel>(setupModel);
+                LLM_SetupModel LLM = LLMsetupModel ?? throw new ArgumentNullException(nameof(setupModel));
                 IKernel kernel = LLM.Validate();
 
 // Define the TextAnalysis Semantic Function

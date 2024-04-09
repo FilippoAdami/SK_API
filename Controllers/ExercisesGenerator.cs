@@ -1,6 +1,7 @@
 //Import necessary namespaces from the ASP.NET Core framework
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
+using Newtonsoft.Json;
 using SK_API;
 
 // Declare the namespace for the SummarizerController
@@ -22,7 +23,7 @@ namespace SK_API.Controllers{
 
         // Define your Lesson POST action method here
         [HttpPost("GenerateExercise")]
-        public async Task<IActionResult> ExercisesInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] LLM_SetupModel setupModel, [FromBody] ExercisesInputModel input){
+        public async Task<IActionResult> ExercisesInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] ExercisesInputModel input){
             try{
 // Authentication with the token
                 if (token == null)
@@ -37,7 +38,8 @@ namespace SK_API.Controllers{
                 }
                 
 // Validate the setup model
-                LLM_SetupModel LLM = setupModel ?? throw new ArgumentNullException(nameof(setupModel));
+                var LLMsetupModel = JsonConvert.DeserializeObject<LLM_SetupModel>(setupModel);
+                LLM_SetupModel LLM = LLMsetupModel ?? throw new ArgumentNullException(nameof(setupModel));
                 IKernel kernel = LLM.Validate();
                 
 // Get the variables from the input

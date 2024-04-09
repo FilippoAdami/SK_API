@@ -1,6 +1,7 @@
 // Import necessary namespaces from the ASP.NET Core framework
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
+using Newtonsoft.Json;
 
 // Declare the namespace for the SummarizerController
 namespace SK_API.Controllers{
@@ -21,7 +22,7 @@ namespace SK_API.Controllers{
 
         // Define your Lesson POST action method here
         [HttpPost("translate")]
-        public async Task<IActionResult> AnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] LLM_SetupModel setupModel, [FromBody] TranslatorRequestModel input){
+        public async Task<IActionResult> AnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] TranslatorRequestModel input){
             try{
 // Authentication with the token
                 if (token == null)
@@ -36,7 +37,8 @@ namespace SK_API.Controllers{
                 }
 
 // Validate the setup model
-                LLM_SetupModel LLM = setupModel ?? throw new ArgumentNullException(nameof(setupModel));
+                var LLMsetupModel = JsonConvert.DeserializeObject<LLM_SetupModel>(setupModel);
+                LLM_SetupModel LLM = LLMsetupModel ?? throw new ArgumentNullException(nameof(setupModel));
                 IKernel kernel = LLM.Validate();
 
 // Generate the output

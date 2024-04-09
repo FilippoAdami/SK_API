@@ -17,6 +17,7 @@ public class ExercisesInputModel{
     public string Topic { get; set; }
 
     public double Temperature { get; set; }
+    
     public ExercisesInputModel(string macroSubject, string title, TextLevel level, TypeOfExercise typeOfExercise, string learningObjective, BloomLevel bloomLevel, string material, TypeOfAssignment assignmentType, string topic, string language = "english", int correctAnswersNumber = 1, int distractorsNumber = 1, int easilyDiscardableDistractorsNumber = 1, double temperature = 0.1){
         MacroSubject = macroSubject;
         Title = title;
