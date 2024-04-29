@@ -22,6 +22,7 @@ namespace SK_API.Controllers{
         // Define your Lesson POST action method here
         [HttpPost("exercisecorrector")]
         public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] CorrectorRequestModel input){
+            string final = "";
             try{
 // Authentication with the token
                 if (token == null)
@@ -52,15 +53,15 @@ namespace SK_API.Controllers{
                 context["examples"] = ExamplesStrings.ExerciseCorrections;
 // Generate the output
                 var result = await generate.InvokeAsync(context);
-                string final = result.ToString().Trim();
+                final = result.ToString().Trim();
                 Console.WriteLine("Result: " + final);
                 CorrectedAnswer correctedAnswer = new(final);
                 return Ok(correctedAnswer.ToJSON());
             }
 // Handle exceptions if something goes wrong during the text extraction
             catch (Exception ex){
-                _logger.LogError(ex, "Error during learning objective generation");
-                return StatusCode(500, "Internal Server Error");
+                _logger.LogError(ex, "Error during exercise correction");
+                return StatusCode(500, "Internal Server Error\n"+ final);
             }
         }
     }

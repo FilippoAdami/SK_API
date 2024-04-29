@@ -10,11 +10,11 @@ namespace SK_API{
             // Set the correct number of answers for the type of exercise
             CorrectAnswersNumber = "the "+answers.ToString();
             CorrectAnswersNumber = answers.ToString();
-            if (typeOfExercise == TypeOfExercise.single_choice || typeOfExercise == TypeOfExercise.true_or_false || typeOfExercise == TypeOfExercise.short_answer_question){
+            if (typeOfExercise == TypeOfExercise.multiple_choice || typeOfExercise == TypeOfExercise.true_or_false || typeOfExercise == TypeOfExercise.short_answer_question){
                 CorrectAnswersNumber = "the one";
             } else if (typeOfExercise == TypeOfExercise.open_question || category == ExerciseCategory.conceptual || category == ExerciseCategory.practical){
                 CorrectAnswersNumber = "exactly one valid";
-            } else if (typeOfExercise == TypeOfExercise.fill_in_the_blanks){
+            } else if (typeOfExercise == TypeOfExercise.information_search){
                 CorrectAnswersNumber = "all the";
             }
 
@@ -48,7 +48,7 @@ namespace SK_API{
                 }
             
             // Set the correct solution type for the type of exercise
-            if (typeOfExercise == TypeOfExercise.fill_in_the_blanks){
+            if (typeOfExercise == TypeOfExercise.information_search){
                 SolutionType = "relvenant inforation";
             }else if (typeOfExercise == TypeOfExercise.open_question){
                 SolutionType = "long form answer";
@@ -56,7 +56,7 @@ namespace SK_API{
                 SolutionType = "short form answer (4 words max)";
             }else if (typeOfExercise == TypeOfExercise.true_or_false){
                 SolutionType = "true/false + explanation";
-            }else if (typeOfExercise == TypeOfExercise.single_choice || typeOfExercise == TypeOfExercise.multiple_choice){
+            }else if (typeOfExercise == TypeOfExercise.multiple_choice || typeOfExercise == TypeOfExercise.multiple_select){
                 SolutionType = "choice element";
             }else{
                 SolutionType = "";

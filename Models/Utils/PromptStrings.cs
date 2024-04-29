@@ -17,12 +17,12 @@ Provide **ONLY** the JSON.";
             return @$"Here's the skeleton structure for formatting the output. Please use this format to organize your final answer consistently. Format: {format}";
         }
         public static string Personification(){
-            return @"You are a {{$difficulty_level}} level {{$domain_of_expertise}} professor who just gave a lecture on {{$lesson_title}}. This is a summary of your lesson: {{$material}}.
+            return @"You are a {{$difficulty_level}} level {{$domain_of_expertise}} professor who just gave a lecture on {{$lesson_title}}. Here's the material of the lesson you just provided: {{$material}}.
 Now, your objective is to assess the level of comprehension of your students about your last lesson. Drawing from your {{$domain_of_expertise}} expertise, your aim is to craft one {{$type_of_exercise}} exercise that aims to {{$learning_objective}}.";
         }
         
         public static string A_Description(){
-            return @"Now, generate a {{$type_of_assignment}} {{$type_of_exercise}} for {{$difficulty_level}} level {{$domain_of_expertise}} students. Ensure that the exercise aligns with '{{$bloom_level}}' Bloom's taxonomy level and pertains to the topic of {{$topic}}.";
+            return @"Now, generate a {{$type_of_assignment}} {{$type_of_exercise}} for {{$difficulty_level}} level {{$domain_of_expertise}} students. Ensure that the exercise aligns with '{{$bloom_level}}' Bloom's taxonomy level, pertains to the topic of '{{$topic}}' and is consistent with the information provided in the material of the lesson.";
         }
         public static string A_Resolution(string description, string type_of_solution, string number_of_solutions) {
             return @$"Please consider that the assignment request must be designed to allow {number_of_solutions} {type_of_solution} correct solution/solutions. The assignment should be clear on the instructions and {description}.";
@@ -78,12 +78,45 @@ Now, your objective is to assess the level of comprehension of your students abo
         ---
         Instructions for the generation of the learning objectives:
         1. Understand the language of the provided topic. Your learning objectives must be in the same language.
-        2. Generate the learning objectives for each Bloom's Taxonomy level: Remembering, Understanding, Applying, Analyzing, Evaluating, and Creating.
-        3. Translate those learning objectives into the topic's language.
-        4. Return the learning objectives in JSON format as shown below (Keep the keys in English and the learning objectives in topic's language). Provide **ONLY** the JSON. 
+        2. If some context is context is specified, consider it while generating the learning objectives.
+        3. Generate the learning objectives for each Bloom's Taxonomy level: Remembering, Understanding, Applying, Analyzing, Evaluating, and Creating.
+        4. Translate those learning objectives into the topic's language.
+        5. Return the learning objectives in JSON format as shown below (Keep the keys in English and the learning objectives in topic's language). Provide **ONLY** the JSON. 
         Format: {{$format}}
     }";
     }
+    
+    public class PlanningPrompts{
+      public static string LessonPlannerprompt = @"You're a {{$level}} {{$marco_subject}} skilled assistant-teacher. The main teacher asked you to plan the next lesson, which is about: ' {{$title}} '. The teacher defined the learning objective for the lesson to be: '{{$learning_objective}}' which reflect the {{$bloom_level}} level in Bloom's taxonomy. 
+You now need to define the lesson plan completely in English. From your previous lessons, you wrote down some notes about the class behaviour. Notes: '{{$context}}' (note that these notes are in {{$language}}, so you have to translate them into English to understand the context).
+Since you're a very organized person, you want to structure the lesson plan in a logical sequence of nodes. A node is an element that consists of: Type (either 'Lesson' or 'Activity'), Topic (chosen from the list provided from the teacher), Description (either an activity category from the list or a suggestion of how to explain the lesson node to the students considering your Notes), Duration (which is the time in minutes that you expect to spend on that node). 
+To provide the teacher a clear and organized lesson plan, you decided to structure it in a JSON format as it follows. Format: {{$format}}
+To help you in this job, the teacher provided you with a list of topics and a list of activities categories to use in the lesson plan and some examples of valid lesson plans.
+Here are the topics: {{$topics}}
+Here are the activities categories: {{$activities}}
+Here are the examples: {{$examples}}
+You now can plan the lesson seamlessly integrating the topics and activities in the lesson plan; your only constraint is that the last node must be an Activity node that serves as final assessment.
+Provide **ONLY** the JSON of the lesson plan, completely in English like the example.";
+    
+      public static string AbstractNodePrompt = @"You're a {{$level}} {{$marco_subject}} skilled teacher. One of your students just completed an assessment about: ' {{$title}} '.
+After correcting the assessment, you wrote feedback for the student: '{{$correction}}'. Now, strictly based on this feedback, you want to provide the student with a tailored lesson plan to help him understand the topics better. To create this tailored plan, you need to focus only on the topics that the student needs to re-study.
+As a highly organized teacher, you want to structure the mini-lesson plan logically as a sequence of nodes. A node consists of Type (either 'Lesson' or 'Activity'), Topic (the topic the student needs to re-study), Description (an activity category from the list or a brief description of the topic), and Duration (time in minutes you expect to spend on that node).
+To provide a clear and organized lesson plan, you decided to structure it in a JSON format. Format: {{$format}}
+You have the list of activities categories to use in the lesson plan and some examples of valid tailored lesson plans.
+Here are the activities categories: {{$activities}}
+Here are the examples: {{$examples}}
+You should ensure that the plan is concise, that it covers only the necessary topics and thet each topic is properly linked to at least one Activity node serving as a assessment.
+Provide **ONLY** the JSON of the lesson plan, completely in English like the examples.";
+    
+      public static string CoursePlanPrompt = @"You're a {{$language}} speaking {{$level}} {{$marco_subject}} skilled teacher. You have {{$number_of_lessons}} lessons ({{$lesson_duration}} minutes each) to teach your {{$level}} students about ' {{$topic}} '.{{$last_lesson}}
+As a highly organized teacher, you want to schedule the plan logically as a list of lessons, where each lesson has an explanatory title and a list of topics.
+To provide a clear and organized lesson plan, you decided to structure it in a JSON format. Format: {{$format}}
+Ensure that the sequence of topics in each lesson is logically scheduled and suitable for {{$level}} students.
+Ensure to spread the topics across all the {{$number_of_lessons}} lessons in a balanced way, considering that each lesson has a duration of {{$lesson_duration}} minutes.
+Provide **ONLY** the JSON of the lesson plan with keys in English and titles in {{$language}} like the example below: {{$example}}";
+
+    }
+
     public class ExerciseCorrectorPrompt{
       public static string ExerciseCorrector = @"The output should fit the format: {{$format}}
 Here are some examples: {{$examples}}
@@ -116,7 +149,7 @@ Instructions for GPT-3.5:
         public static string MM_FillInTheBlanks = @"
 {
     ""Assignment"": ""assignment phrase"",
-    ""Plus"": ""complete original text about the requested topic, the text MUST be complete with all the words. Just like the examples, the text has no gap in it"",
+    ""Plus"": ""text about the topic, like the examples"",
     ""Solutions"": [
         ""solution 1"",
         ""solution 2"",
@@ -214,6 +247,72 @@ Instructions for GPT-3.5:
     }
   ]
 }";
+    
+        public static string LessonPlanFormat = @"
+{
+  ""lesson_plan"": [
+    {
+      ""type"": ""either Lesson or Activity"", 
+      ""topic"": ""topic of the node 1"",
+      ""description"": ""either suggestion on how to explain the lesson node or value of activity-category"",
+      ""duration"": int
+    },
+    {
+      ""type"": ""either Lesson or Activity"", 
+      ""topic"": ""topic of the node 2"",
+      ""description"": ""either suggestion on how to explain the lesson node or value of activity-category"",
+      ""duration"": int
+    },
+    ...
+    {
+      ""type"": ""either Lesson or Activity"", 
+      ""topic"": ""topic of the node n"",
+      ""description"": ""either suggestion on how to explain the lesson node or value of activity-category"",
+      ""duration"": int
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""topic of final activity"",
+      ""description"": ""value of activity category"",
+      ""duration"": int
+    }
+  ]
+}";
+    
+        public static string CoursePlanFormat = @"
+{
+  ""plan"": [
+    {
+      ""title"": ""title of lesson 1"",
+      ""topics"": [
+        ""first subtopic"",
+        ""second subtopic"",
+        ...
+        "" nth subtopic""
+      ]
+    },
+    {
+      ""title"": ""title of lesson 2"",
+      ""topics"": [
+        ""first subtopic"",
+        ""second subtopic"",
+        ...
+        "" nth subtopic""
+      ]
+    },
+    ...
+    {
+      ""title"": ""title of lesson n"",
+      ""topics"": [
+        ""first subtopic"",
+        ""second subtopic"",
+        ...
+        "" nth subtopic""
+      ]
+    }
+  ]
+}";
+    
     }
     public class ExamplesStrings{
         public static string FillInTheBlanks = @"Example of a high school theoretical exercise about Pearl Harbour:
@@ -337,7 +436,32 @@ Example of a high school level theoretical/problem resolution exercise about Ber
     ""solids"",
     ""P + v^2 + g * h = constant""
 ]
-}";
+}
+
+Example of a middle school level theoretical exercise about turtles:
+{
+""Assignment"": ""Test your understanding of turtles biology facts by filling in the blanks with the correct terms."", 
+""Plus"": ""Turtles are reptiles characterized by their bony or cartilaginous shell. They are known for their slow movement and can be found in various habitats, including oceans, rivers, and forests. Turtles have a unique anatomy, with their shell serving as a protective covering for their body. They are ectothermic, meaning their body temperature is regulated by external sources of heat. Turtles are oviparous, laying eggs to reproduce, and some species can live for several decades."",
+""Solutions"": [
+    ""reptiles"",
+    ""shell"",
+    ""ectothermic"",
+    ""oviparous""
+],
+""Distractors"": [
+    ""mammals"",
+    ""fur"",
+    ""endothermic"",
+    ""viviparous""
+],
+""EasilyDiscardableDistractors"": [
+    ""birds"",
+    ""feathers"",
+    ""amphibious"",
+    ""herbivorous""
+]
+}
+";
         public static string SingleChoice= @"Example about a high school level problem solving exercise about parabolic motion:
 {
 ""Assignment"": ""A ball is launched vertically upward with an initial velocity of 15 m/s. Neglecting air resistance, calculate the maximum height reached by the ball using the parabolic motion formula."",
@@ -405,25 +529,7 @@ Example of a college level code exercise about error recognition in C++ linked l
     ""Remove temp->next = newNode; from insertNode function.""
 ]
 }";
-        public static string MultipleChoice = @"Example about a middle school level exercise about ancient Egypt social structure:
-{
-  ""Assignment"": ""What were the two highest social classes in ancient Egypt called?"",
-  ""Plus"": ""The highest social classes in ancient Egypt were the 'royals' and the 'priests,' who held significant religious and administrative power and wealth in society."",
-  ""Solutions"": [
-    ""Royals"",
-    ""Priests""
-  ],
-  ""Distractors"": [
-    ""Pharaohs"",
-    ""Scribes""
-  ],
-  ""EasilyDiscardableDistractors"": [
-    ""Farmers"",
-    ""Artisans""
-  ]
-}
-
-Example of a high school level problem solving exercise about quadratic equations resolution:
+        public static string MultipleChoice = @"Example of a high school level problem solving exercise about quadratic equations resolution:
 {
   ""Assignment"": ""Solve the quadratic equation x^2 - 5x + 6 = 0 to find the zeros of the corresponding parabola."",
   ""Plus"": ""To find the zeros of the quadratic equation x^2 - 5x + 6 = 0, we can use the quadratic formula, x = (-b ± √(b^2 - 4ac)) / (2a), where a = 1, b = -5, and c = 6."",
@@ -477,6 +583,43 @@ Example of a college level code exercise about dictionaries in Python:
   ""EasilyDiscardableDistractors"": [
     ""3"",
     ""''d''""
+  ]
+}
+
+Example of a middle school level theoretical exercise about EU geograpy:
+{
+  ""Assignment"": ""Select the countries that are part of the European Union."",
+  ""Plus"": ""Germany, France, and Italy are among the countries that are part of the European Union."",
+  ""Solutions"": [
+    ""France"",
+    ""Germany""
+  ],
+  ""Distractors"": [
+    ""Japan"",
+    ""United Kingdom""
+  ],
+  ""EasilyDiscardableDistractors"": [
+    ""Canada"",
+    ""Australia""
+  ]
+}
+
+Example of a high school level exercise about factors contributing to climate change:
+{
+  ""Assignment"": ""Identify factors contributing to climate change."",
+  ""Plus"": ""Deforestation, burning fossil fuels, and industrial emissions are factors contributing to climate change."",
+  ""Solutions"": [
+    ""Deforestation"",
+    ""Burning fossil fuels"",
+    ""Industrial emissions""
+  ],
+  ""Distractors"": [
+    ""Volcanic eruptions"",
+    ""Ocean acidification""
+  ],
+  ""EasilyDiscardableDistractors"": [
+    ""Photosynthesis"",
+    ""Global cooling""
   ]
 }";
         public static string ShortAnswerQuestion = @"Example of a high school level theoretical exercise about fluid dynamics: 
@@ -551,16 +694,6 @@ Example of a high school level problem solving exercise about fluid dynamics:
   ""Solution"": ""True, as the ball sinks deeper into the water, it experiences an increase in pressure due to the increasing weight of the water above it. This increase in pressure can be calculated using the hydrostatic pressure formula: P = ρgh, where P is the pressure, ρ is the density of the fluid (water in this case), g is the acceleration due to gravity, and h is the depth of the fluid. As the ball sinks deeper, the value of h increases, resulting in a higher pressure experienced by the ball. Therefore, the statement is true.""
 }
 ";
-        public static string Debate = @"Example of a college level debate exercise about ethics in AI:
-{
-  ""Assignment"": ""Debate on the Ethical Implications of AI in Autonomous Vehicles\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the ethical implications of AI in autonomous vehicles.\nTeam A will argue in favor of the statement: 'The benefits of AI in autonomous vehicles outweigh the ethical concerns.'\nTeam B will argue against the statement: 'The ethical concerns of AI in autonomous vehicles outweigh the benefits.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the nuances of the topic.\n\nDebate Points:\nTeam A (In favor of the benefits of AI in autonomous vehicles):\n- Safety: Argue that AI technology can significantly reduce the number of accidents caused by human error, thereby saving lives.\n- Efficiency: Highlight the potential for AI to optimize traffic flow, reduce congestion, and improve transportation systems overall.\n- Accessibility: Emphasize how autonomous vehicles can enhance mobility for individuals with disabilities and elderly populations.\n- Innovation: Discuss the role of AI in driving technological advancement and fostering economic growth in the automotive industry.\n\nTeam B (Against the ethical concerns of AI in autonomous vehicles):\n- Moral Dilemmas: Raise concerns about the ethical challenges surrounding AI decision-making in life-and-death situations, such as the 'trolley problem.'\n- Liability and Accountability: Address the complex legal and ethical issues related to assigning responsibility in the event of accidents or failures of autonomous vehicles.\n- Privacy: Explore the implications of AI surveillance in autonomous vehicles, including the collection and potential misuse of personal data.\n- Job Displacement: Discuss the socioeconomic impacts of AI-driven automation on employment in the transportation sector and the broader economy. \n- Objective: The objective of this debate exercise is to encourage students to critically analyze the ethical implications of AI in autonomous vehicles from multiple perspectives. By engaging in thoughtful discourse and considering both the benefits and concerns associated with this technology, students will develop a deeper understanding of the complex ethical dilemmas inherent in AI development and deployment.""
-}
-
-Example of a high school level exercise about impact of social media on teenagers:
-{
-  ""Assignment"": ""Debate on the Impact of Social Media Use on Teenagers\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the impact of social media use on teenagers.\nTeam A will argue in favor of the statement: 'Social media has a positive impact on teenagers' lives.'\nTeam B will argue against the statement: 'Social media has a negative impact on teenagers' lives.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the complexities of social media's impact on teenagers.\n\nDebate Points:\nTeam A (In favor of the positive impact of social media on teenagers):\n- Connectivity: Argue that social media platforms facilitate communication and connection with peers, family members, and communities, fostering a sense of belonging and support.\n- Information Access: Highlight how social media provides teenagers with access to diverse perspectives, educational resources, and opportunities for self-expression and learning.\n- Networking: Discuss the role of social media in helping teenagers build professional networks, discover career opportunities, and develop essential digital skills for the modern workforce.\n- Empowerment: Emphasize the ability of social media to amplify teenagers' voices, promote activism, and catalyze social change by mobilizing youth-led movements.\n\nTeam B (Against the negative impact of social media on teenagers):\n- Mental Health: Raise concerns about the detrimental effects of excessive social media use on teenagers' mental well-being, including increased rates of anxiety, depression, and social comparison.\n- Cyberbullying: Address the prevalence of cyberbullying on social media platforms and its harmful consequences for victims, such as psychological distress, academic difficulties, and even suicide.\n- Addiction: Discuss the addictive nature of social media platforms, leading to decreased productivity, disrupted sleep patterns, and diminished real-life social interactions among teenagers.\n- Privacy and Security: Explore the risks of privacy breaches, online harassment, and exploitation of personal data on social media, posing threats to teenagers' safety and digital privacy rights.\n\nObjective:\nThe objective of this debate exercise is to encourage students to critically evaluate the impact of social media use on teenagers' lives from different perspectives. By engaging in informed discourse and considering both the positive and negative aspects of social media, students will develop a nuanced understanding of the complex dynamics shaping adolescents' digital experiences and well-being in the digital age.""
-}
-";
         public static string Essay = @"Example of an academic level exercise about AI ethics in healthcare:
 {
 ""Assignment"": ""Write an essay discussing the ethical considerations surrounding the use of artificial intelligence (AI) in healthcare.""
@@ -589,21 +722,6 @@ Example of a middle school level exercise about enviromental conservation:
 Example of a primary school exercise about favourite animals:
 {
 ""Assignment"": ""Write a short essay describing your favorite animal and why you admire it.""
-}
-";
-        public static string Brainstorming = @"Example of a college level exercise about contemporary ethical dilemmas:
-{
-""Assignment"": ""Brainstorming Session on Contemporary Ethical Dilemmas.\n What are some contemporary ethical dilemmas related to emerging technologies, such as artificial intelligence, genetic engineering, or biotechnology?\n How do cultural differences and moral relativism impact our understanding of ethics and moral decision-making in a globalized world? \n What are the ethical implications of environmental degradation and climate change, and how should societies address these challenges?\n How should we balance individual rights and societal interests in areas such as privacy, surveillance, and national security?\n What are the ethical considerations surrounding issues of social justice, inequality, and discrimination, and how can philosophy inform our responses to these challenges?\n How should we approach ethical dilemmas in healthcare, including topics such as end-of-life care, access to healthcare, and medical experimentation?\n What are the moral responsibilities of businesses and corporations in today's society, particularly concerning issues such as corporate social responsibility, environmental sustainability, and fair labor practices?\n How do ethical theories such as utilitarianism, deontology, virtue ethics, and existentialism inform our understanding of contemporary ethical dilemmas? \n What role should empathy, compassion, and moral imagination play in ethical decision-making and social change? \n How can philosophical reflection and ethical reasoning contribute to personal growth, moral development, and responsible citizenship in a complex and rapidly changing world?""
-}
-
-Example of an academic level exercise about AI robotics:
-{
-""Assignment"": ""Research Proposal on Ethical Considerations in AI Robotics.\n What are the key ethical considerations in the development and deployment of AI robotics?\n How do ethical frameworks such as utilitarianism, deontology, and virtue ethics apply to AI robotics?\n What are the potential risks and benefits of AI robotics in various domains, such as healthcare, transportation, and military applications?\n How should society address issues of accountability, transparency, and bias in AI robotics systems?\n What ethical guidelines and regulations exist for governing the use of AI robotics, and how effective are they?\n How can AI robotics contribute to addressing societal challenges, such as aging populations, environmental sustainability, and disaster response?\n What are the moral implications of AI robotics replacing human labor in the workforce, and how should societies mitigate potential socioeconomic impacts?\n What role should interdisciplinary collaboration play in addressing ethical concerns in AI robotics, involving fields such as philosophy, law, sociology, and computer science?\n How can AI robotics research and development incorporate principles of responsible innovation and ethical design?\n What are the ethical considerations surrounding autonomous decision-making by AI robotics systems, particularly in high-stakes situations where human lives may be at risk?""
-}
-
-Example of a middle school level exercise about endangered species conservation:
-{
-""Assignment"": ""Research Project on Endangered Species Conservation.\n What are endangered species, and why is it important to protect them?\n What are the main factors contributing to the decline of endangered species?\n Can you identify three endangered species and describe their habitats, behaviors, and unique characteristics?\n How do human activities, such as habitat destruction, pollution, and climate change, impact endangered species?\n What are some conservation efforts and initiatives aimed at protecting endangered species and their habitats?\n How can individuals contribute to endangered species conservation in their communities?\n What role do zoos, wildlife sanctuaries, and national parks play in endangered species conservation?\n How does biodiversity loss affect ecosystems and the balance of nature?\n Can you discuss the ethical considerations surrounding endangered species conservation, including conflicts between human development and wildlife conservation?\n What are the potential consequences of not taking action to protect endangered species for future generations?""
 }
 ";
         public static string KnowledgeExposition = @"Example of a high school level exercise about civil war:
@@ -650,8 +768,93 @@ Example of a college level exercise about business plan creation:
 {
 ""Assignment"": ""Create a comprehensive business plan PDF for a hypothetical business venture of your choice. Include sections such as executive summary, business description, market analysis, marketing and sales strategies, operations plan, and financial projections. \n Research industry trends, target market demographics, competitors, and regulatory requirements to inform your business plan. Use professional design software or templates to layout and format your business plan PDF for readability and visual appeal. Incorporate charts, graphs, and visual elements to illustrate key data and metrics supporting your business plan.""
 }
+
+Example of a college level exercise about data visualization:
+{
+""Assignment"": ""Using Tableau or a similar data visualization tool, create an interactive dashboard displaying key performance indicators (KPIs) for a fictional company. Import sample data sets or generate your own data to populate the dashboard with metrics such as revenue, expenses, profit margins, and customer satisfaction scores. Design the dashboard layout, color scheme, and visual elements to enhance data clarity and user engagement. Include interactive features such as filters, drill-down options, and tooltips to allow users to explore the data and gain insights from the visualizations.""
+}
+
+Example of a high school level exercise about presentation creation about the fall of the Roman Empire:
+{
+""Assignment"": ""Prepare a PowerPoint presentation on the fall of the Roman Empire. Create slides with informative content, engaging visuals, and clear organization to effectively communicate your message to the audience. Practice delivering the presentation with confidence and clarity, using speaking notes or cue cards to guide your presentation. Incorporate multimedia elements, such as images, videos, and animations, to enhance the visual appeal and interactivity of your slides.""
+}
 ";
     
+        public static string Debate = @"Example of a college level debate exercise about ethics in AI:
+{
+  ""Assignment"": ""Debate on the Ethical Implications of AI in Autonomous Vehicles\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the ethical implications of AI in autonomous vehicles.\nTeam A will argue in favor of the statement: 'The benefits of AI in autonomous vehicles outweigh the ethical concerns.'\nTeam B will argue against the statement: 'The ethical concerns of AI in autonomous vehicles outweigh the benefits.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the nuances of the topic.\n\nDebate Points:\nTeam A (In favor of the benefits of AI in autonomous vehicles):\n- Safety: Argue that AI technology can significantly reduce the number of accidents caused by human error, thereby saving lives.\n- Efficiency: Highlight the potential for AI to optimize traffic flow, reduce congestion, and improve transportation systems overall.\n- Accessibility: Emphasize how autonomous vehicles can enhance mobility for individuals with disabilities and elderly populations.\n- Innovation: Discuss the role of AI in driving technological advancement and fostering economic growth in the automotive industry.\n\nTeam B (Against the ethical concerns of AI in autonomous vehicles):\n- Moral Dilemmas: Raise concerns about the ethical challenges surrounding AI decision-making in life-and-death situations, such as the 'trolley problem.'\n- Liability and Accountability: Address the complex legal and ethical issues related to assigning responsibility in the event of accidents or failures of autonomous vehicles.\n- Privacy: Explore the implications of AI surveillance in autonomous vehicles, including the collection and potential misuse of personal data.\n- Job Displacement: Discuss the socioeconomic impacts of AI-driven automation on employment in the transportation sector and the broader economy. \n- Objective: The objective of this debate exercise is to encourage students to critically analyze the ethical implications of AI in autonomous vehicles from multiple perspectives. By engaging in thoughtful discourse and considering both the benefits and concerns associated with this technology, students will develop a deeper understanding of the complex ethical dilemmas inherent in AI development and deployment.""
+}
+
+Example of a high school level exercise about impact of social media on teenagers:
+{
+  ""Assignment"": ""Debate on the Impact of Social Media Use on Teenagers\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the impact of social media use on teenagers.\nTeam A will argue in favor of the statement: 'Social media has a positive impact on teenagers' lives.'\nTeam B will argue against the statement: 'Social media has a negative impact on teenagers' lives.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the complexities of social media's impact on teenagers.\n\nDebate Points:\nTeam A (In favor of the positive impact of social media on teenagers):\n- Connectivity: Argue that social media platforms facilitate communication and connection with peers, family members, and communities, fostering a sense of belonging and support.\n- Information Access: Highlight how social media provides teenagers with access to diverse perspectives, educational resources, and opportunities for self-expression and learning.\n- Networking: Discuss the role of social media in helping teenagers build professional networks, discover career opportunities, and develop essential digital skills for the modern workforce.\n- Empowerment: Emphasize the ability of social media to amplify teenagers' voices, promote activism, and catalyze social change by mobilizing youth-led movements.\n\nTeam B (Against the negative impact of social media on teenagers):\n- Mental Health: Raise concerns about the detrimental effects of excessive social media use on teenagers' mental well-being, including increased rates of anxiety, depression, and social comparison.\n- Cyberbullying: Address the prevalence of cyberbullying on social media platforms and its harmful consequences for victims, such as psychological distress, academic difficulties, and even suicide.\n- Addiction: Discuss the addictive nature of social media platforms, leading to decreased productivity, disrupted sleep patterns, and diminished real-life social interactions among teenagers.\n- Privacy and Security: Explore the risks of privacy breaches, online harassment, and exploitation of personal data on social media, posing threats to teenagers' safety and digital privacy rights.\n\nObjective:\nThe objective of this debate exercise is to encourage students to critically evaluate the impact of social media use on teenagers' lives from different perspectives. By engaging in informed discourse and considering both the positive and negative aspects of social media, students will develop a nuanced understanding of the complex dynamics shaping adolescents' digital experiences and well-being in the digital age.""
+}
+";
+        public static string Brainstorming = @"Example of a college level exercise about contemporary ethical dilemmas:
+{
+""Assignment"": ""Brainstorming Session on Contemporary Ethical Dilemmas.\n What are some contemporary ethical dilemmas related to emerging technologies, such as artificial intelligence, genetic engineering, or biotechnology?\n How do cultural differences and moral relativism impact our understanding of ethics and moral decision-making in a globalized world? \n What are the ethical implications of environmental degradation and climate change, and how should societies address these challenges?\n How should we balance individual rights and societal interests in areas such as privacy, surveillance, and national security?\n What are the ethical considerations surrounding issues of social justice, inequality, and discrimination, and how can philosophy inform our responses to these challenges?\n How should we approach ethical dilemmas in healthcare, including topics such as end-of-life care, access to healthcare, and medical experimentation?\n What are the moral responsibilities of businesses and corporations in today's society, particularly concerning issues such as corporate social responsibility, environmental sustainability, and fair labor practices?\n How do ethical theories such as utilitarianism, deontology, virtue ethics, and existentialism inform our understanding of contemporary ethical dilemmas? \n What role should empathy, compassion, and moral imagination play in ethical decision-making and social change? \n How can philosophical reflection and ethical reasoning contribute to personal growth, moral development, and responsible citizenship in a complex and rapidly changing world?""
+}
+
+Example of an academic level exercise about AI robotics:
+{
+""Assignment"": ""Research Proposal on Ethical Considerations in AI Robotics.\n What are the key ethical considerations in the development and deployment of AI robotics?\n How do ethical frameworks such as utilitarianism, deontology, and virtue ethics apply to AI robotics?\n What are the potential risks and benefits of AI robotics in various domains, such as healthcare, transportation, and military applications?\n How should society address issues of accountability, transparency, and bias in AI robotics systems?\n What ethical guidelines and regulations exist for governing the use of AI robotics, and how effective are they?\n How can AI robotics contribute to addressing societal challenges, such as aging populations, environmental sustainability, and disaster response?\n What are the moral implications of AI robotics replacing human labor in the workforce, and how should societies mitigate potential socioeconomic impacts?\n What role should interdisciplinary collaboration play in addressing ethical concerns in AI robotics, involving fields such as philosophy, law, sociology, and computer science?\n How can AI robotics research and development incorporate principles of responsible innovation and ethical design?\n What are the ethical considerations surrounding autonomous decision-making by AI robotics systems, particularly in high-stakes situations where human lives may be at risk?""
+}
+
+Example of a middle school level exercise about endangered species conservation:
+{
+""Assignment"": ""Research Project on Endangered Species Conservation.\n What are endangered species, and why is it important to protect them?\n What are the main factors contributing to the decline of endangered species?\n Can you identify three endangered species and describe their habitats, behaviors, and unique characteristics?\n How do human activities, such as habitat destruction, pollution, and climate change, impact endangered species?\n What are some conservation efforts and initiatives aimed at protecting endangered species and their habitats?\n How can individuals contribute to endangered species conservation in their communities?\n What role do zoos, wildlife sanctuaries, and national parks play in endangered species conservation?\n How does biodiversity loss affect ecosystems and the balance of nature?\n Can you discuss the ethical considerations surrounding endangered species conservation, including conflicts between human development and wildlife conservation?\n What are the potential consequences of not taking action to protect endangered species for future generations?""
+}
+";
+        public static string GroupDiscussion = @"Example of a college level group discussion about the impact of automation on employment:
+{
+  ""Assignment"": ""Engage in a group discussion on the impact of automation on employment.\n\nDiscussion Points:\n- How is automation transforming the nature of work across different industries?\n- What are the potential benefits of automation in terms of efficiency, productivity, and innovation?\n- What are the challenges and concerns associated with automation, such as job displacement, income inequality, and skills gaps?\n- How can societies and governments prepare for the impact of automation on the labor market?\n- What role should education, training, and lifelong learning play in helping individuals adapt to the changing demands of the workforce?\n- How can businesses and policymakers ensure that the benefits of automation are shared equitably, and that no one is left behind?\n- What are the ethical considerations surrounding the use of automation, particularly regarding job loss, economic stability, and social welfare?\n- How can automation be leveraged to create new job opportunities, enhance job quality, and promote economic prosperity?\n- What are the long-term implications of automation on the future of work, employment relations, and the overall structure of society?""
+}
+Example of a college level group discussion about the ethics of artificial intelligence:
+{
+  ""Assignment"": ""Engage in a group discussion on the ethical implications of artificial intelligence (AI).\n\nDiscussion Points:\n- What are the ethical considerations surrounding the development and use of AI technology?\n- How do AI algorithms impact issues such as privacy, bias, and autonomy?\n- What are the potential risks and benefits of AI in various domains, such as healthcare, finance, and criminal justice?\n- How should society address concerns about job displacement, inequality, and the ethical treatment of AI-generated data?\n- What ethical principles and frameworks should guide the development and deployment of AI systems?\n- How can we ensure transparency, accountability, and fairness in AI decision-making?\n- What role should interdisciplinary collaboration play in addressing ethical challenges in AI development?\n- How can individuals, organizations, and governments promote ethical AI practices and mitigate potential harms?\n- What are the long-term ethical implications of advancing AI technology, and how can we anticipate and address them proactively?""
+}";
+        public static string CaseStudyAnalysis = @"Example of an academic level case study analysis on the ethical implications of data privacy:
+{
+  ""Assignment"": ""Analyzing the ethical implications of data privacy violations by a social media company.\n\nCase Study Scenario:\nA major social media company is accused of violating user privacy by sharing personal data with third-party companies without user consent. This data includes personal information, browsing history, and user preferences, which were used for targeted advertising purposes.\n\nCase Study Analysis Questions:\n1. What are the ethical concerns raised by the social media company's actions?\n2. What are the potential consequences of these privacy violations for users and society as a whole?\n3. What ethical principles and values are at stake in this case, and how do they conflict with the business interests of the company?\n4. How should the social media company respond to allegations of data privacy violations?\n5. What role should government regulation and oversight play in protecting user privacy and holding companies accountable for data breaches?\n6. What steps can individuals take to protect their privacy online and hold companies accountable for unethical behavior?\n7. How do ethical theories such as utilitarianism, deontology, and virtue ethics inform our understanding of data privacy issues and guide ethical decision-making in this case?\n8. What are the broader implications of this case for the ethical use of data in the digital age, and how can society address these challenges moving forward?""
+}
+Example of a case study analysis on medical ethics:
+{
+  ""Assignment"": ""Analyzing the ethical considerations involved in organ transplant allocation.\n\nCase Study Scenario:\nA hospital is facing a shortage of donor organs for transplant surgeries. The hospital's transplant committee must decide how to allocate the available organs fairly and ethically.\n\nCase Study Analysis Questions:\n1. What are the ethical principles and values at stake in organ transplant allocation?\n2. What factors should the transplant committee consider when deciding how to allocate organs?\n3. How should the committee balance competing ethical concerns, such as medical need, recipient suitability, and distributive justice?\n4. What role should clinical criteria, such as medical urgency and likelihood of success, play in organ allocation decisions?\n5. How should the committee address issues of equity, fairness, and transparency in the organ allocation process?\n6. What are the potential consequences of different allocation strategies for patients, donors, and society as a whole?\n7. How can ethical theories such as utilitarianism, deontology, and virtue ethics inform the committee's decision-making?\n8. What are the broader ethical implications of organ transplant allocation for healthcare policy, resource allocation, and social justice?""
+}";
+        public static string ProjectBasedLearning = @"Example of a high school project-based learning activity on sustainable agriculture:
+{
+  ""Assignment"": ""Designing a sustainable agriculture project to address food security and environmental sustainability.\n\nProject Overview:\nYour task is to design a sustainable agriculture project for a community facing food insecurity and environmental degradation. This project should promote sustainable farming practices, enhance food production, and improve access to nutritious food.\n\nProject Tasks:\n1. Research different sustainable agriculture techniques, such as organic farming, permaculture, agroforestry, and hydroponics.\n2. Identify the food security challenges facing your chosen community, including issues of access, affordability, and nutritional quality.\n3. Develop a plan for implementing sustainable agriculture practices, including crop selection, soil management, water conservation, and pest control.\n4. Consider the social, economic, and environmental benefits of your project, as well as any potential challenges or obstacles.\n5. Implement your sustainable agriculture project, working collaboratively with community members, local organizations, and agricultural experts.\n6. Monitor and evaluate the impact of your project on food security, environmental sustainability, and community well-being.\n7. Reflect on the ethical considerations involved in sustainable agriculture, including issues of equity, justice, and environmental stewardship.\n\nProject Deliverables:\n- Project proposal outlining your sustainable agriculture project\n- Implementation plan detailing your project goals, activities, and timeline\n- Evaluation report assessing the impact of your project\n- Presentation to the community highlighting your project's achievements and lessons learned\n- Reflection essay on the ethical implications of sustainable agriculture and your role as a responsible global citizen.""
+}
+Example of a college level project-based learning activity on software development:
+{
+  ""Assignment"": ""Designing and design a web application to address a specific user need.\n\nProject Overview:\nYour task is to design a web application that solves a real-world problem or fulfills a specific user need. This project will involve the entire software designing lifecycle, from project planning and requirements gathering to design, simulation-testing, and presentation of the results.\n\nProject Tasks:\n1. Identify a problem or user need that can be addressed with a web application.\n2. Conduct user research to understand the target audience, their needs, and pain points.\n3. Define project requirements, features, and functionality based on user feedback and stakeholder input.\n4. Design the user interface (UI) and user experience (UX) of your web application, including wireframes, mockups, and user flow diagrams.\n5. Select appropriate technologies and tools for building your web application, such as HTML, CSS, JavaScript, and a backend framework like Node.js, Django, or Ruby on Rails.\n6. Test your prototyped web application to ensure that it meets user requirements, is free of errors, and provides a seamless user experience.\n8. Gather feedback from users and stakeholders, and iterate on your web application based on their input.\n9 Create a presentation of your final design to and expose it like you were looking for fundings. n\nProject Deliverables:\n- Project proposal outlining your web application idea, user research, and project requirements\n- UI/UX design documents, including wireframes, mockups, and user flow diagrams\n- Test cases and test results\n- Presentation of your final designed product.""
+}";
+        public static string ProblemSolvingActivity = @"Example of an academic level problem-solving activity on renewable energy:
+{
+  ""Assignment"": ""Work in teams to solve a renewable energy challenge involving the design of a solar power system.\n\nProblem Scenario:\nYour team has been tasked with designing a solar power system for a remote community that lacks access to reliable electricity. The system should be cost-effective, environmentally friendly, and capable of meeting the community's energy needs.\n\nProblem-Solving Tasks:\n1. Conduct a site assessment to determine the community's energy requirements and solar potential.\n2. Design a solar power system that meets the community's energy needs, taking into account factors such as available sunlight, energy demand, and system efficiency.\n3. Calculate the costs and benefits of your proposed solar power system, including installation, maintenance, and long-term energy savings.\n4. Develop a plan for implementing and managing the solar power system, including financing, training, and community engagement.\n5. Present your solar power system design to the class, explaining your approach, key design decisions, and expected outcomes.\n6. Reflect on the ethical considerations involved in renewable energy development, including issues of access, equity, and environmental justice.\n\nProblem-Solving Deliverables:\n- Solar power system design proposal\n- Cost-benefit analysis of your proposed system\n- Implementation plan outlining the steps for installing and managing the system\n- Presentation to the class\n- Reflection essay on the ethical implications of renewable energy development and the importance of sustainable energy solutions.""
+}
+Example of a middle school level problem-solving activity on math:
+{
+  ""Assignment"": ""Activity Overview:\nStudents will work individually or in small groups to solve a math problem involving fractions, proportions, and critical thinking skills. The goal is to determine how to fairly divide pizzas among a group of friends with different preferences.\n\nActivity Task:\n1. Problem scenario: A group of 12 friends is having a pizza party. They have ordered 5 large pizzas with different toppings: pepperoni, sausage, mushrooms, olives, and peppers. Each pizza has 8 slices. Each friend has different preferences for toppings, 2 frineds only like pepperoni, 2 only like mushrooms, 1 only likes olives, 1 only likes sausage, 3 like all the toppings and the other 3 like peppers, mushrooms and olives. They want to ensure that everyone gets a share as fair as possible of their favorite toppings.\n2. Work independently or in small groups to come up with a solution. How can you divide the pizzas so that each friend gets share as fair as possible of their favorite toppings? \n3. Present your solution to the class and explain your reasoning. How did you decide to divide the pizzas? Did you use fractions, proportions, or another method? Discuss any alternative solutions or strategies.""
+}";
+        public static string Simulation = @"Example of a high school level simulation activity on international diplomacy:
+{
+  ""Assignment"": ""Participate in a simulation activity to simulate a meeting of the United Nations Security Council.\n\nSimulation Scenario:\nYou will take on the role of a representative from a member state of the United Nations Security Council. Your task is to address a crisis situation and negotiate a resolution with other council members.\n\nSimulation Tasks:\n1. Research the foreign policy objectives and priorities of the country you represent.\n2. Analyze the crisis situation and develop a negotiating strategy based on your country's interests and goals.\n3. Participate in simulated Security Council meetings, working with other representatives to draft and negotiate a resolution.\n4. Consider the ethical, political, and strategic implications of different policy options, as well as the need for international cooperation and collective security.\n5. Reach consensus on a resolution to address the crisis situation and maintain peace and security.\n6. Reflect on the challenges of international diplomacy and the role of ethics, justice, and human rights in global politics.\n\nSimulation Deliverables:\n- Country briefing document outlining your foreign policy objectives and priorities\n- Negotiating strategy and position papers\n- Security Council resolution drafted during the simulation\n- Reflection essay on the ethical dimensions of international diplomacy and the challenges of maintaining peace and security in a complex and interconnected world.""
+}
+Example of a middle school level simulation activity on a the French Revolution:
+{
+  ""Assignment"": ""Role-playing activity simulating the key events and debates of the French Revolution.\n\nSimulation Overview:\nIn this simulation activity, students will role-play as key figures during the French Revolution. The goal is to recreate the political and social dynamics of revolutionary France and understand the causes, events, and outcomes of this pivotal historical period.\n\nSimulation Tasks:\n1. Assign each student a role as a historical figure from the French Revolution, such as King Louis XVI, Marie Antoinette, Maximilien Robespierre, Georges Danton, or Jean-Paul Marat.\n2. Research the major events and issues of the French Revolution, including the political, social, and economic causes, as well as the key figures and factions involved.\n3. Participate in simulated debates and discussions on these issues, working with other historical figures to negotiate and compromise on key decisions.\n4. Role-play the major events of the French Revolution, such as the storming of the Bastille, the Reign of Terror, the rise of the Jacobins, and the execution of King Louis XVI.\n5. Reflect on the decision-making process and the challenges of revolution, reform, and political change.\n\nSimulation Roles:\n- King Louis XVI\n- Marie Antoinette\n- Maximilien Robespierre\n- Georges Danton\n- Jean-Paul Marat\n- Jacques Necker\n- Charlotte Corday\n- And other historical figures representing different factions and perspectives\n\nSimulation Outcome:\n- Gain a deeper understanding of the French Revolution and its significance in world history\n- Develop research, critical thinking, and negotiation skills through role-playing and debate\n- Reflect on the causes, events, and outcomes of the French Revolution and its impact on modern society\n- Gain insight into the complexities of political change, revolution, and social reform"";
+}";
+        public static string InquiryBasedLearning = @"Example of a college level inquiry-based learning activity on genetic engineering:
+{
+  ""Assignment"": ""Engage in an inquiry-based learning activity to explore the ethical implications of genetic engineering.\n\nInquiry Questions:\n1. What is genetic engineering, and how does it work?\n2. What are the potential benefits of genetic engineering in areas such as agriculture, medicine, and biotechnology?\n3. What are the ethical concerns raised by the use of genetic engineering, including issues of consent, safety, and environmental impact?\n4. How do different ethical theories and frameworks inform our understanding of the ethical implications of genetic engineering?\n5. What role should government regulation and oversight play in governing the use of genetic engineering?\n6. How can we balance the potential benefits of genetic engineering with the need to address ethical concerns and minimize risks?\n7. What are the long-term implications of genetic engineering for society, including issues of social justice, equity, and human enhancement?\n8. How can ethical reflection and dialogue inform responsible decision-making and public policy in the field of genetic engineering?\n\nInquiry-Based Learning Activities:\n- Research different applications of genetic engineering and their ethical implications\n- Analyze case studies and real-world examples of genetic engineering projects\n- Engage in group discussions and debates on ethical dilemmas in genetic engineering\n- Reflect on your own values, beliefs, and ethical principles in relation to genetic engineering\n- Collaborate on a final project that explores the ethical dimensions of genetic engineering and proposes recommendations for responsible innovation and regulation.\n\nInquiry-Based Learning Outcomes:\n- Develop a deeper understanding of the ethical implications of genetic engineering\n- Enhance critical thinking, research, and analytical skills\n- Foster ethical reflection, dialogue, and responsible decision-making\n- Gain insight into the complex relationship between science, technology, and ethics in contemporary society.""
+}
+Example of a high school level inquiry-based learning activity on artificial intelligence:
+{
+  ""Assignment"": ""Engage in an inquiry-based learning activity to explore the opportunities and challenges of artificial intelligence (AI).\n\nInquiry Questions:\n1. What is artificial intelligence, and how is it used in everyday life?\n2. What are the potential benefits of artificial intelligence in various fields, such as healthcare, education, transportation, and entertainment?\n3. What are the challenges and ethical considerations associated with the development and use of artificial intelligence?\n4. How does artificial intelligence impact society, including issues such as job displacement, privacy concerns, and bias in AI algorithms?\n5. What are the current trends and future directions of artificial intelligence technology?\n\nInquiry-Based Learning Activities:\n- Research real-world examples of artificial intelligence applications and their impact on society\n- Analyze case studies and news articles related to artificial intelligence\n- Engage in group discussions and debates on the ethical and societal implications of artificial intelligence\n- Interview professionals working in the field of artificial intelligence to gain insights into current trends and future developments\n- Collaborate on a final project that explores the opportunities and challenges of artificial intelligence and proposes recommendations for responsible AI development and deployment.\n\nInquiry-Based Learning Outcomes:\n- Develop a deeper understanding of artificial intelligence technology and its impact on society\n- Enhance critical thinking, research, and analytical skills\n- Foster ethical reflection, dialogue, and responsible decision-making\n- Gain insight into the role of artificial intelligence in shaping the future of technology and society.""
+}";
+
+
         public static string LearningObjective = @"Learning Objective: Students will identify the main themes in a Shakespeare's poem.
 Response: 
 {
@@ -865,18 +1068,25 @@ Answer: La prima legge della termodinamica, ovvero la 'legge di conservazione de
 ""Correction"": ""null""
 }
 
+Question: Enuncia le leggi della termodinamica.
+Answer: Prima legge della termodinamica (Conservazione dell'energia): L'energia non può essere creata né distrutta, ma solo trasformata da una forma all'altra. In altre parole, l'energia totale di un sistema isolato rimane costante nel tempo. Seconda legge della termodinamica (Legge dell'entropia): L'entropia di un sistema isolato tende ad aumentare nel tempo. Questa legge stabilisce che il disordine di un sistema isolato aumenta nel corso di una trasformazione spontanea. Zeroth law of thermodynamics (Legge zero della termodinamica): Se due sistemi sono in equilibrio termico con un terzo sistema, allora sono in equilibrio termico tra loro.
+{
+""Accuracy"": 0.5,
+""Correction"": ""La risposta data è corretta, ma non è stata enunciata la Terza legge della termodinamica (Teorema di Nernst): Questa legge stabilisce che è impossibile raggiungere il valore di zero assoluto in un numero finito di passaggi termodinamici. Consiglio di ristudiare questa terza legge e vedere alcuna applicazioni pratiche per aiutare a ricordarla""
+}
+
 Question: Qu'est-ce que l'entrelacement quantique, et comment cela impacte-t-il la description de l'état des particules?
 Answer: L'entrelacement quantique est un phénomène rare qui s'applique uniquement aux particules en laboratoire.
 {
 ""Accuracy"": 0.0,
-""Correction"": ""La réponse fournie est incorrecte car elle affirme que l'entrelacement quantique est un phénomène rare qui ne s'applique qu'aux particules en laboratoire. Ceci est incorrect car l'entrelacement quantique est un aspect fondamental de la mécanique quantique et a été démontré dans de nombreuses expériences impliquant un large éventail de particules et de conditions. Il n'est pas limité aux paramètres de laboratoire et est un phénomène bien établi dans le domaine de la physique quantique.""
+""Correction"": ""La réponse fournie est incorrecte car elle affirme que l'entrelacement quantique est un phénomène rare qui ne s'applique qu'aux particules en laboratoire. Ceci est incorrect car l'entrelacement quantique est un aspect fondamental de la mécanique quantique et a été démontré dans de nombreuses expériences impliquant un large éventail de particules et de conditions. Il n'est pas limité aux paramètres de laboratoire et est un phénomène bien établi dans le domaine de la physique quantique. Pour améliorer la compréhension dans ce domaine, il serait bénéfique d'étudier le principe de l'entrelacement quantique et les expériences qui l'ont démontré dans diverses conditions et avec différents types de particules.""
 }
 
 Question: Was ist Quantenverschränkung, und wie beeinflusst sie die Zustandsbeschreibung von Teilchen?
 Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, die über eine Entfernung hinweg ohne Einfluss auf ihre individuellen Zustände stattfindet.
 {
 ""Accuracy"": 0.4,
-""Correction"": ""Die gegebene Antwort ist inkorrekt, da sie das Konzept der Quantenverschränkung über vereinfacht und ihre Auswirkungen auf die Zustandsbeschreibung von Teilchen falsch darstellt. Quantenverschränkung ist keine einfache Interaktion zwischen Teilchen über eine Entfernung hinweg; es handelt sich um ein komplexes Phänomen, bei dem die Quantenzustände von zwei oder mehr Teilchen miteinander verbunden werden. Sobald diese Teilchen verschränkt sind, kann der Zustand eines Teilchens nicht unabhängig von dem/den anderen beschrieben werden, egal wie weit sie voneinander entfernt sind. Dies bedeutet, dass eine Änderung des Zustands eines Teilchens sofort den Zustand des anderen Teilchens beeinflusst, unabhängig von der Entfernung zwischen ihnen. Dies ist ein grundlegendes Merkmal der Quantenmechanik und hat bedeutende Auswirkungen auf unser Verständnis der Natur auf ihrer fundamentalsten Ebene.""
+""Correction"": ""Die gegebene Antwort ist inkorrekt, da sie das Konzept der Quantenverschränkung über vereinfacht und ihre Auswirkungen auf die Zustandsbeschreibung von Teilchen falsch darstellt. Quantenverschränkung ist keine einfache Interaktion zwischen Teilchen über eine Entfernung hinweg; es handelt sich um ein komplexes Phänomen, bei dem die Quantenzustände von zwei oder mehr Teilchen miteinander verbunden werden. Sobald diese Teilchen verschränkt sind, kann der Zustand eines Teilchens nicht unabhängig von dem/den anderen beschrieben werden, egal wie weit sie voneinander entfernt sind. Dies bedeutet, dass eine Änderung des Zustands eines Teilchens sofort den Zustand des anderen Teilchens beeinflusst, unabhängig von der Entfernung zwischen ihnen. Dies ist ein grundlegendes Merkmal der Quantenmechanik und hat bedeutende Auswirkungen auf unser Verständnis der Natur auf ihrer fundamentalsten Ebene.Um das Verständnis in diesem Bereich zu verbessern, wäre es vorteilhaft, das Prinzip der quantenmechanischen Verschränkung und die Experimente, die es unter verschiedenen Bedingungen und Teilchentypen demonstriert haben, zu studieren.""
 }";
 
         public static string MaterialAnalysisExamples = @"
@@ -951,5 +1161,348 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
     }
   ]
 }";
+    
+        public static string LessonPlanExamples = @"
+""{
+  ""lesson_plan"": [
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Introduction to the rise of the Napoleon empire"",
+      ""description"": ""Use a slide presentation to introduce the students to the lesson topics by providing an overview of the lesson plan."",
+      ""duration"": 10
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Context of the historical situation before the rise of the Napoleon empire"",
+      ""description"": ""group_discussion"",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Timeline of key events"",
+      ""description"": ""Create a visually engaging timeline of key events leading to the rise of the Napoleon empire."",
+      ""duration"": 20
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""The rise of Napoleon, the two coups d'état"",
+      ""description"": ""simulation"",
+      ""duration"": 25
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""The rise of the Napoleon empire"",
+      ""description"": ""multiple_choice"",
+      ""duration"": 10
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Assessment: perspective of a common citizen living during the rise of the Napoleon empire"",
+      ""description"": ""essay"",
+      ""duration"": 40
+    },
+    
+  ]
+}
+{
+  ""lesson_plan"": [
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Introduction to Linear Algebra"",
+      ""description"": ""Provide an overview of the basic concepts of linear algebra, including vectors, matrices, and linear transformations."",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Matrix Operations"",
+      ""description"": ""Demonstrate basic matrix operations such as addition, subtraction, scalar multiplication, and matrix multiplication."",
+      ""duration"": 20
+    },
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Systems of Linear Equations"",
+      ""description"": ""Using real life cases, introduce the concept of systems of linear equations and methods for solving them."",
+      ""duration"": 25
+    },
+    {
+      ""type"": ""Activiy"",
+      ""topic"": ""Systems of Linear Equations"",
+      ""description"": ""open_question"",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Vector Spaces"",
+      ""description"": ""Explore the properties of vector spaces, including basis, dimension, and linear independence."",
+      ""duration"": 30
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Assessment: vector spaces and linear transformations"",
+      ""description"": ""short_answer_question"",
+      ""duration"": 25
+    }
+  ]
+}
+{
+  ""lesson_plan"": [
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Introduction to Parabolic Motion"",
+      ""description"": ""Introduce the concept of parabolic motion using videos and real-life examples."",
+      ""duration"": 20
+    },
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Experiment on Projectile Motion"",
+      ""description"": ""Perform an experiment to investigate the factors that affect the range and height of a projectile's trajectory."",
+      ""duration"": 30
+    },
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Mathematical Modeling of Parabolic Motion"",
+      ""description"": ""Teach students how to create mathematical models to describe parabolic motion using equations and graphs."",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Analyzing Real-life Data"",
+      ""description"": ""non_written_material_analysis"",
+      ""duration"": 30
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""group_discussion"",
+      ""description"": ""Facilitate a discussion on the significance of parabolic motion in various fields, including physics, engineering, and mathematics."",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Assessment: Parabolic Motion Problem"",
+      ""description"": ""open_question"",
+      ""duration"": 15
+    }
+  ]
+}""";
+        public static string CustomPlanExamples = @"
+""{
+  ""lesson_plan"": [
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Timeline of key events"",
+      ""description"": ""Review the key events that led to the rise of the Napoleon empire."",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Timeline of key events"",
+      ""description"": ""multiple_choice"",
+      ""duration"": 5
+    },
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""The rise of Napoleon, the two coups d'état"",
+      ""description"": ""review the dynamics of the two coups d'état that brought Napoleon to power."",
+      ""duration"": 20
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""The rise of the Napoleon empire"",
+      ""description"": ""open_question"",
+      ""duration"": 10
+    }
+  ]
+}
+{
+  ""lesson_plan"": [
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Matrix Operations"",
+      ""description"": ""Review matrix addition, scalar multiplication, and matrix multiplication."",
+      ""duration"": 20
+    },
+    {
+      ""type"": ""Activiy"",
+      ""topic"": ""Matrix Operations"",
+      ""description"": ""open_question"",
+      ""duration"": 15
+    }
+  ]
+}
+{
+  ""lesson_plan"": [
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Mathematical Modeling of Projectile Motion"",
+      ""description"": ""Review mathematical models and formulas used to describe projectile motion."",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Mathematical Modeling of Projectile Motion"",
+      ""description"": ""multiple_choice"",
+      ""duration"": 10
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Mathematical Modeling of Projectile Motion"",
+      ""description"": ""short_answer_question"",
+      ""duration"": 20
+    }
+  ]
+}
+{
+  ""lesson_plan"": [
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Photosynthesis"",
+      ""description"": ""Review the process of photosynthesis and its significance in the plant kingdom."",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Photosynthesis"",
+      ""description"": ""true_or_false"",
+      ""duration"": 15
+    }
+  ]
+}
+{
+  ""lesson_plan"": [
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Mesozoic Era"",
+      ""description"": ""Review the characteristics and major events of the Mesozoic Era."",
+      ""duration"": 15
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Mesozoic Era"",
+      ""description"": ""information_search"",
+      ""duration"": 10
+    },
+    {
+      ""type"": ""Lesson"",
+      ""topic"": ""Dinosaurs"",
+      ""description"": ""Review the classification, anatomy, and behavior of dinosaurs."",
+      ""duration"": 25
+    },
+    {
+      ""type"": ""Activity"",
+      ""topic"": ""Dinosaurs"",
+      ""description"": ""multiple_select"",
+      ""duration"": 10
+    }
+  ]
+}""";
+        public static string CoursePlanExamples = @"
+""{
+  ""plan"": [
+    {
+      ""title"": ""Gli Alleati prendono l'iniziativa: le campagne di riconquista"",
+      ""topics"": [
+        ""La battaglia di Stalingrado"",
+        ""La conferenza di Casablanca"",
+        ""La campagna del Nord Africa"",
+        ""La conquista di Sicilia e Corsica""
+      ]
+    },
+    {
+      ""title"": ""La svolta finale della guerra"",
+      ""topics"": [
+        ""Lo sbarco in Normandia (D-Day)"",
+        ""La liberazione di Parigi"",
+        ""La resistenza europea"",
+        ""La conferenza di Yalta""
+      ]
+    },
+    {
+      ""title"": ""La conclusione della guerra e le sue conseguenze"",
+      ""topics"": [
+        ""La battaglia di Berlino"",
+        ""La resa della Germania nazista"",
+        ""L'esplosione delle bombe atomiche su Hiroshima e Nagasaki"",
+        ""La fine della seconda guerra mondiale"",
+        ""Le conferenze di Teheran e Potsdam"",
+        ""La nascita delle Nazioni Unite""
+      ]
+    }
+  ]
+}
+{
+  ""plan"": [
+    {
+      ""title"": ""Los Aliados toman la iniciativa: las campañas de reconquista"",
+      ""topics"": [
+        ""La batalla de Stalingrado"",
+        ""La conferencia de Casablanca"",
+        ""La campaña del Norte de África"",
+        ""La conquista de Sicilia y Córcega""
+      ]
+    },
+    {
+      ""title"": ""El giro final de la guerra"",
+      ""topics"": [
+        ""El desembarco de Normandía (Día D)"",
+        ""La liberación de París"",
+        ""La resistencia europea"",
+        ""La conferencia de Yalta""
+      ]
+    },
+    {
+      ""title"": ""La conclusión de la guerra y sus consecuencias"",
+      ""topics"": [
+        ""La batalla de Berlín"",
+        ""La rendición de la Alemania nazi"",
+        ""La explosión de las bombas atómicas en Hiroshima y Nagasaki"",
+        ""El fin de la Segunda Guerra Mundial"",
+        ""Las conferencias de Teherán y Potsdam"",
+        ""El nacimiento de las Naciones Unidas""
+      ]
+    }
+  ]
+}""";
+    }
+
+    public class UtilsStrings{
+        public static string ActivitiesList = @"
+'open_question' (open question exercise that expects a free-form elaborated answer),
+'short_answer_question' (open question exercise that expects a short exact answer),
+'true_or_false' (true or false question, it may or may not require an explanation),
+'information_search' (fill in the blanks exercise),
+'multiple_choice' (multiple choice question with one correct answer),
+'multiple_select' (multiple choice question with multiple correct answers),
+'essay' (open ended assignment that expects a full essay as answer),
+'knoledge_exposition' (presentation or dissertation of a specific topic),
+
+'debate' (oral debate between groups of students),
+'brainstorming' (group activity to generate ideas or solutions about a specifc topic),
+'group_discussion' (group activity to discuss a specific topic),
+'simulation' (role-playing activity to simulate a situation about a specific topic),
+'inquiry_based_learning' (activity where students explore a topic through inquiry and research),
+
+'non_written_material_analysis' (analysis of non-written material such as images, videos, or audio),
+'non_written_material_production' (production of non-written material such as images, videos, or audio),
+'case_study_analysis' (analysis of a specific case study),
+'project_based_learning' (activity where students work on a project to develope a real-world project),
+'problem_solving_activity' (activity where students solve a specific problem)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+    
+        public static string ActivitiesListB = @"
+'open_question' (open question exercise that expects a free-form elaborated answer),
+'short_answer_question' (open question exercise that expects a short exact answer),
+'true_or_false' (true or false question, it may or may not require an explanation),
+'information_search' (fill in the blanks exercise),
+'multiple_choice' (multiple choice question with one correct answer),
+'multiple_select' (multiple choice question with multiple correct answers),
+'essay' (open ended assignment that expects a full essay as answer),
+'knoledge_exposition' (presentation or dissertation of a specific topic),
+'non_written_material_analysis' (analysis of non-written material such as images, videos, or audio),
+'non_written_material_production' (production of non-written material such as images, videos, or audio),
+'case_study_analysis' (analysis of a specific case study),
+'project_based_learning' (activity where students work on a project to develope a real-world project),
+'problem_solving_activity' (activity where students solve a specific problem)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+    
     }
 }

@@ -6,25 +6,29 @@ namespace SK_API
         short_answer_question,
         true_or_false,
 
-        fill_in_the_blanks,
-        
-        single_choice,
-        multiple_choice,
-
+        information_search,
         //matching
         //ordering
-
-        // text comprehension
-        debate,
+        multiple_choice,
+        multiple_select,
+        
         essay,
-        brainstorming,
         knoledge_exposition,
+        //text_comprehension,
+        debate,
+        brainstorming,
+        group_discussion,
+        simulation,
+        inquiry_based_learning,
 
         non_written_material_analysis,
-        non_written_material_production
+        non_written_material_production,
+        case_study_analysis,
+        project_based_learning,
+        problem_solving_activity
         
-        //conceptual maps
-        // graphs
+        //conceptual maps,
+        //graphs
     }
     public enum ExerciseCategory
     {
@@ -40,6 +44,13 @@ namespace SK_API
         code,
         problem_resolution,
     }
+    public enum TypeOfAssessment{
+        peer_review,
+        self_assessment,
+        teacher_assessment,
+        automated_assessment
+    }
+    
     public enum TextLevel
     {
         primary_school,

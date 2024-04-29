@@ -40,20 +40,36 @@ namespace SK_API{
                     return ExamplesStrings.ShortAnswerQuestion;
                 case TypeOfExercise.true_or_false:
                     return ExamplesStrings.TrueOrFalse;
-                case TypeOfExercise.fill_in_the_blanks:
+                case TypeOfExercise.information_search:
                     return ExamplesStrings.FillInTheBlanks;
-                case TypeOfExercise.single_choice:
-                    return ExamplesStrings.SingleChoice;
                 case TypeOfExercise.multiple_choice:
+                    return ExamplesStrings.SingleChoice;
+                case TypeOfExercise.multiple_select:
                     return ExamplesStrings.MultipleChoice;
-                case TypeOfExercise.debate:
-                    return ExamplesStrings.Debate;
                 case TypeOfExercise.essay:
                     return ExamplesStrings.Essay;
-                case TypeOfExercise.brainstorming:
-                    return ExamplesStrings.Brainstorming;
                 case TypeOfExercise.knoledge_exposition:
                     return ExamplesStrings.KnowledgeExposition;
+                case TypeOfExercise.non_written_material_analysis:
+                    return ExamplesStrings.NonWrittenMaterialAnalysis;
+                case TypeOfExercise.non_written_material_production:
+                    return ExamplesStrings.NonWrittenMaterialProduction;
+                case TypeOfExercise.debate:
+                    return ExamplesStrings.Debate;
+                case TypeOfExercise.brainstorming:
+                    return ExamplesStrings.Brainstorming;
+                case TypeOfExercise.group_discussion:   
+                    return ExamplesStrings.GroupDiscussion;
+                case TypeOfExercise.case_study_analysis:
+                    return ExamplesStrings.CaseStudyAnalysis;
+                case TypeOfExercise.project_based_learning:
+                    return ExamplesStrings.ProjectBasedLearning;
+                case TypeOfExercise.problem_solving_activity:
+                    return ExamplesStrings.ProblemSolvingActivity;
+                case TypeOfExercise.simulation:
+                    return ExamplesStrings.Simulation;
+                case TypeOfExercise.inquiry_based_learning:
+                    return ExamplesStrings.InquiryBasedLearning;
                 default:
                     return ExamplesStrings.OpenQuestion;
             }

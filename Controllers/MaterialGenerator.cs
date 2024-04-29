@@ -23,6 +23,7 @@ namespace SK_API.Controllers{
         // Define your Lesson POST action method here
         [HttpPost("generatematerial")]
         public async Task<IActionResult> SummarizerInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] MaterialGeneratorRequestModel input){
+            string output = "";
             try{
 // Authentication with the token
                 if (token == null)
@@ -48,14 +49,14 @@ namespace SK_API.Controllers{
                 string info = input.LearningObjective;
                 var InternalFunctions = new InternalFunctions();
                 var translation = await InternalFunctions.GenerateMaterial(topic, info, level, kernel, n_o_w);
-                string output = translation.ToString().Trim();
+                output = translation.ToString().Trim();
                 Console.WriteLine("Result: " + output);
                 return Ok(output);
             }
 // Handle exceptions if something goes wrong during the material generation
             catch (Exception ex){
                 _logger.LogError(ex, "Error during material generation");
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, "Internal Server Error\n" + output);
             }
         }
 

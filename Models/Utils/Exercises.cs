@@ -5,7 +5,7 @@ namespace SK_API{
         {
             (ExerciseCategory.fill_in_the_blanks, new List<(TypeOfExercise, List<BloomLevel>)>
             {
-                (TypeOfExercise.fill_in_the_blanks, new List<BloomLevel>
+                (TypeOfExercise.information_search, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
@@ -40,13 +40,13 @@ namespace SK_API{
 
             (ExerciseCategory.choice, new List<(TypeOfExercise, List<BloomLevel>)>
             {
-                (TypeOfExercise.single_choice, new List<BloomLevel>
+                (TypeOfExercise.multiple_choice, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
                     BloomLevel.Applying,
                 }),
-                (TypeOfExercise.multiple_choice, new List<BloomLevel>
+                (TypeOfExercise.multiple_select, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
@@ -56,21 +56,7 @@ namespace SK_API{
             
             (ExerciseCategory.conceptual, new List<(TypeOfExercise, List<BloomLevel>)>
             {
-                (TypeOfExercise.debate, new List<BloomLevel>
-                {
-                    BloomLevel.Applying,
-                    BloomLevel.Analyzing,
-                    BloomLevel.Evaluating,
-                    BloomLevel.Creating,
-                }),
                 (TypeOfExercise.essay, new List<BloomLevel>
-                {
-                    BloomLevel.Applying,
-                    BloomLevel.Analyzing,
-                    BloomLevel.Evaluating,
-                    BloomLevel.Creating,
-                }),
-                (TypeOfExercise.brainstorming, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
@@ -86,6 +72,40 @@ namespace SK_API{
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
+                (TypeOfExercise.debate, new List<BloomLevel>
+                {
+                    BloomLevel.Applying,
+                    BloomLevel.Analyzing,
+                    BloomLevel.Evaluating,
+                    BloomLevel.Creating,
+                }),
+                (TypeOfExercise.brainstorming, new List<BloomLevel>
+                {
+                    BloomLevel.Applying,
+                    BloomLevel.Analyzing,
+                    BloomLevel.Evaluating,
+                    BloomLevel.Creating,
+                }),
+                (TypeOfExercise.group_discussion, new List<BloomLevel>
+                {
+                    BloomLevel.Applying,
+                    BloomLevel.Analyzing,
+                    BloomLevel.Evaluating,
+                    BloomLevel.Creating,
+                }),
+                (TypeOfExercise.simulation, new List<BloomLevel>
+                {
+                    BloomLevel.Applying,
+                    BloomLevel.Analyzing,
+                    BloomLevel.Evaluating,
+                    BloomLevel.Creating,
+                }),
+                (TypeOfExercise.inquiry_based_learning, new List<BloomLevel>
+                {
+                    BloomLevel.Analyzing,
+                    BloomLevel.Evaluating,
+                    BloomLevel.Creating,
+                }),
             }),
     
             (ExerciseCategory.practical, new List<(TypeOfExercise, List<BloomLevel>)>
@@ -97,6 +117,26 @@ namespace SK_API{
                 }),
                 (TypeOfExercise.non_written_material_production, new List<BloomLevel>
                 {
+                    BloomLevel.Creating,
+                }),
+                (TypeOfExercise.case_study_analysis, new List<BloomLevel>
+                {
+                    BloomLevel.Applying,
+                    BloomLevel.Analyzing,
+                    BloomLevel.Evaluating,
+                }),
+                (TypeOfExercise.project_based_learning, new List<BloomLevel>
+                {
+                    BloomLevel.Applying,
+                    BloomLevel.Analyzing,
+                    BloomLevel.Evaluating,
+                    BloomLevel.Creating,
+                }),
+                (TypeOfExercise.problem_solving_activity, new List<BloomLevel>
+                {
+                    BloomLevel.Applying,
+                    BloomLevel.Analyzing,
+                    BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
             }),
@@ -126,11 +166,19 @@ namespace SK_API{
         public TypeOfAssignment Type { get; set; }
         public string Explanation { get; set; }
 
+        // Parameterless constructor
+        public TopicAndExplanation() { }
+
         public TopicAndExplanation(string topic, TypeOfAssignment type, string explanation)
         {
             Topic = topic;
             Type = type;
             Explanation = explanation;
+        }
+
+        public override string ToString()
+        {
+            return $"Topic: {Topic}, Explanation: {Explanation}, Type of exercise suggested: {Type};\n";
         }
     }
 }

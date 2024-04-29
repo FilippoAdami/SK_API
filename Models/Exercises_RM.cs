@@ -39,25 +39,31 @@ public class ExercisesInputModel{
     {
         return type switch
         {
-            TypeOfExercise.multiple_choice => ExerciseCategory.choice,
+            TypeOfExercise.multiple_select => ExerciseCategory.choice,
             //TypeOfExercise.matching => ExerciseCategory.choice,
-            TypeOfExercise.single_choice => ExerciseCategory.choice,
+            TypeOfExercise.multiple_choice => ExerciseCategory.choice,
             //TypeOfExercise.ordering => ExerciseCategory.choice,
 
             TypeOfExercise.true_or_false => ExerciseCategory.question,
             TypeOfExercise.short_answer_question => ExerciseCategory.question,
             TypeOfExercise.open_question => ExerciseCategory.question,
 
-            TypeOfExercise.fill_in_the_blanks => ExerciseCategory.fill_in_the_blanks,
+            TypeOfExercise.information_search => ExerciseCategory.fill_in_the_blanks,
 
             TypeOfExercise.essay => ExerciseCategory.conceptual,
-            TypeOfExercise.debate => ExerciseCategory.conceptual,
             //TypeOfExercise.text_comprehension => ExerciseCategory.conceptual,
             TypeOfExercise.knoledge_exposition => ExerciseCategory.conceptual,
+            TypeOfExercise.debate => ExerciseCategory.conceptual,
             TypeOfExercise.brainstorming => ExerciseCategory.conceptual,
+            TypeOfExercise.group_discussion => ExerciseCategory.conceptual,
+            TypeOfExercise.simulation => ExerciseCategory.conceptual,
+            TypeOfExercise.inquiry_based_learning => ExerciseCategory.conceptual,
 
             TypeOfExercise.non_written_material_analysis => ExerciseCategory.practical,
             TypeOfExercise.non_written_material_production => ExerciseCategory.practical,
+            TypeOfExercise.case_study_analysis => ExerciseCategory.practical,
+            TypeOfExercise.project_based_learning => ExerciseCategory.practical,
+            TypeOfExercise.problem_solving_activity => ExerciseCategory.practical,
             
             _ => ExerciseCategory.question,
         };

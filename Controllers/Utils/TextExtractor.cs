@@ -15,7 +15,7 @@ public class TextExtractor
     public string ExtractTextFromFileOrUrl(string source)
     {
         //if the input is a copied-pasted text, return it, else extract the text from the path or the text from the url
-        if (source.Length > 150)
+        if (source.Length > 300)
             return source;
         else
         {
@@ -273,6 +273,21 @@ public class TextExtractor
         {
             return $"Failed to extract text from TXT stream. Error: {ex.Message}";
         }
+    }
+
+    // This method divides the extracted text into chunks of 12000 characters.
+    internal List<string> DivideText(string extractedText)
+    {
+        // Split the text into chunks of 12000 characters
+        List<string> extractedTexts = new();
+        for (int i = 0; i < extractedText.Length; i += 12000)
+        {
+            if (i + 12000 < extractedText.Length)
+                extractedTexts.Add(extractedText.Substring(i, 12000));
+            else
+                extractedTexts.Add(extractedText.Substring(i));
+        }
+        return extractedTexts;
     }
 }
 

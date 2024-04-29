@@ -23,6 +23,7 @@ namespace SK_API.Controllers{
         // Define your Lesson POST action method here
         [HttpPost("generatelearningobjective")]
         public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] LORM input){
+            string output = "";
             try{
 // Authentication with the token
                 if (token == null)
@@ -58,12 +59,13 @@ namespace SK_API.Controllers{
                 final = final.Substring(1, final.Length - 2);
                 Console.WriteLine("Result: " + final);
                 LOFM learningObjective = new(final);
-                return Ok(learningObjective.ToJSON());
+                output = learningObjective.ToJSON();
+                return Ok(output);
             }
 // Handle exceptions if something goes wrong during the text extraction
             catch (Exception ex){
                 _logger.LogError(ex, "Error during learning objective generation");
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, "Internal Server Error\n" + output);
             }
         }
     }

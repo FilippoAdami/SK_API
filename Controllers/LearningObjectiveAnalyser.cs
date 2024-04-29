@@ -23,6 +23,7 @@ namespace SK_API.Controllers{
         // Define your Lesson POST action method here
         [HttpPost("analyselearningobjective")]
         public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] LOAnalyserRequestModel input){
+            string output = "";
             try{
 // Authentication with the token
                 if (token == null)
@@ -53,12 +54,13 @@ namespace SK_API.Controllers{
                 var result = await generate.InvokeAsync(context);
                 Console.WriteLine("Result: " + result.ToString());
                 LOAnalysis analysis = new(result.ToString());
-                return Ok(analysis.ToJSON());
+                output = analysis.ToJSON();
+                return Ok(output);
             }
 // Handle exceptions if something goes wrong during the text extraction
             catch (Exception ex){
                 _logger.LogError(ex, "Error during learning objective analysis");
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, "Internal Server Error\n"+ output);
             }
         }
     }

@@ -23,6 +23,7 @@ namespace SK_API.Controllers{
         // Define your Lesson POST action method here
         [HttpPost("translate")]
         public async Task<IActionResult> AnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] TranslatorRequestModel input){
+            string output = "";
             try{
 // Authentication with the token
                 if (token == null)
@@ -46,14 +47,14 @@ namespace SK_API.Controllers{
                 string language = input.Language;
                 var InternalFunctions = new InternalFunctions();
                 var translation = await InternalFunctions.Translate(kernel, json, language);
-                string output = translation.ToString().Trim();
+                output = translation.ToString().Trim();
                 Console.WriteLine("Result: " + output);
                 return Ok(output);
             }
 // Handle exceptions if something goes wrong during the text extraction
             catch (Exception ex){
-                _logger.LogError(ex, "Error during text analysis");
-                return StatusCode(500, "Internal Server Error");
+                _logger.LogError(ex, "Error during json translation");
+                return StatusCode(500, "Internal Server Error\n" + output);
             }
         }
 

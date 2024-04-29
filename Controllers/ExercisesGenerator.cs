@@ -24,6 +24,7 @@ namespace SK_API.Controllers{
         // Define your Lesson POST action method here
         [HttpPost("GenerateExercise")]
         public async Task<IActionResult> ExercisesInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] ExercisesInputModel input){
+            string output = "";
             try{
 // Authentication with the token
                 if (token == null)
@@ -160,15 +161,16 @@ namespace SK_API.Controllers{
                 Console.WriteLine(resultString);
         // Map the result to the ExercisesOutputModel
                 ExerciseFinalModel exercise = new(resultString);
-                if (type_of_exercise == TypeOfExercise.fill_in_the_blanks){
+                if (type_of_exercise == TypeOfExercise.information_search){
                     exercise = ExerciseFinalModel.ProcessExercise(exercise);
+                    output = exercise.ToJSON();
                 }
-                return Ok(exercise.ToJSON());
+                return Ok(output);
             }
 // Handle exceptions if something goes wrong during the exercises generation
             catch (Exception ex){
                 _logger.LogError(ex, "Error during exercises generation");
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, "Internal Server Error\n" + output);
             }
         }
     }
