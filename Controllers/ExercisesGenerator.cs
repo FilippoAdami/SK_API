@@ -163,8 +163,8 @@ namespace SK_API.Controllers{
                 ExerciseFinalModel exercise = new(resultString);
                 if (type_of_exercise == TypeOfExercise.information_search){
                     exercise = ExerciseFinalModel.ProcessExercise(exercise);
-                    output = exercise.ToJSON();
                 }
+                output = exercise.ToJSON();
                 return Ok(output);
             }
 // Handle exceptions if something goes wrong during the exercises generation
