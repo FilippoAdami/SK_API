@@ -21,7 +21,7 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("plancourse")]
+        [HttpPost("planCourse")]
         public async Task<IActionResult> CoursePlannerInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] CoursePlanRequestModel input){
         string output = "";
             try{

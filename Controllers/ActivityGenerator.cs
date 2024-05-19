@@ -8,13 +8,13 @@ using SK_API;
 namespace SK_API.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public partial class ExercisesController : ControllerBase
+    public partial class ActivityGeneratorController : ControllerBase
     {
-        private readonly ILogger<ExercisesController> _logger;
+        private readonly ILogger<ActivityGeneratorController> _logger;
         private readonly IConfiguration _configuration;
         private readonly Auth _auth;
 
-        public ExercisesController(ILogger<ExercisesController> logger, IConfiguration configuration, Auth auth)
+        public ActivityGeneratorController(ILogger<ActivityGeneratorController> logger, IConfiguration configuration, Auth auth)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -22,8 +22,8 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("GenerateExercise")]
-        public async Task<IActionResult> ExercisesInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] ExercisesInputModel input){
+        [HttpPost("generateActivity")]
+        public async Task<IActionResult> ActivitysInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] ActivityInputModel input){
             string output = "";
             try{
 // Authentication with the token
@@ -58,7 +58,7 @@ namespace SK_API.Controllers{
                 string extractedText = textProcessor.ExtractTextFromFileOrUrl(input.Material);
                 //Console.WriteLine("Extracted text: " + extractedText);
 
-// Retrieve the variables for the exercise to be generated
+// Retrieve the variables for the Activity to be generated
                 // difficulty level
                 TextLevel difficulty_level = input.Level;
                 // set the presencePenalty and the frequencyPenalty based on the difficulty level
@@ -95,8 +95,8 @@ namespace SK_API.Controllers{
                 string domain_of_expertise = input.MacroSubject;
                 // title 
                 string title = input.Title;
-                // tipe of exercise
-                TypeOfExercise type_of_exercise = input.TypeOfExercise;
+                // tipe of Activity
+                TypeOfActivity type_of_Activity = input.TypeOfActivity;
                 // learning objective
                 string learning_objective = input.LearningObjective;
 
@@ -113,7 +113,7 @@ namespace SK_API.Controllers{
                 TypeOfAssignment final_type = input.AssignmentType;          
 
                 // category and bloom level
-                var (category, levels) = ExerciseData.GetCategoryAndLevels(input.TypeOfExercise);
+                var (category, levels) = ActivityData.GetCategoryAndLevels(input.TypeOfActivity);
                 BloomLevel bloom_level = input.BloomLevel;
                     // if the bloom_level is not contained in levels, set it as the closest level contained in levels
                     if (!levels.Contains(bloom_level)){
@@ -122,13 +122,13 @@ namespace SK_API.Controllers{
                     }
                 
 // Construct the Meta Model
-                AssignmentModel assignmentModel = new(category, type_of_exercise, number_of_solutions);
-                SolutionModel solutionModel = new(type_of_exercise, final_type, category, number_of_solutions);
-                MetaModel metaModel = new(type_of_exercise, category, assignmentModel, solutionModel);
+                AssignmentModel assignmentModel = new(category, type_of_Activity, number_of_solutions);
+                SolutionModel solutionModel = new(type_of_Activity, final_type, category, number_of_solutions);
+                MetaModel metaModel = new(type_of_Activity, category, assignmentModel, solutionModel);
                 
-// Define the ExercisesGenerator Semantic Function
+// Define the ActivitysGenerator Semantic Function
                 string prompt = metaModel.ToString(category);
-                var generate = kernel.CreateSemanticFunction(prompt, "exercisesGenerator" ,"ExercisesGenerator", "generates exercises for the given material", null, temperature, 0, presencePenalty, frequencyPenalty);
+                var generate = kernel.CreateSemanticFunction(prompt, "ActivitysGenerator" ,"ActivitysGenerator", "generates Activitys for the given material", null, temperature, 0, presencePenalty, frequencyPenalty);
                 Console.WriteLine("Prompt: " + prompt);
                 var context = kernel.CreateNewContext();
 
@@ -137,7 +137,7 @@ namespace SK_API.Controllers{
                 context["lesson_title"] = title;
                 context["material"] = extractedText;
 
-                context["type_of_exercise"] = type_of_exercise.ToString();
+                context["type_of_Activity"] = type_of_Activity.ToString();
                 context["learning_objective"] = learning_objective;
 
                 context["type_of_assignment"] = final_type.ToString();
@@ -152,24 +152,24 @@ namespace SK_API.Controllers{
                 var result = await generate.InvokeAsync(context);
                 string resultString = result.ToString();
                 Console.WriteLine(result.ToString());
-        // Translate the result
+// Translate the result
                 if (language != "english"){
                     var InternalFunctions = new InternalFunctions();
                     var translation = await InternalFunctions.Translate(kernel, resultString, language);
                     resultString = translation;
                 }
                 Console.WriteLine(resultString);
-        // Map the result to the ExercisesOutputModel
-                ExerciseFinalModel exercise = new(resultString);
-                if (type_of_exercise == TypeOfExercise.information_search){
-                    exercise = ExerciseFinalModel.ProcessExercise(exercise);
+// Map the result to the ActivitysOutputModel
+                ActivityFinalModel Activity = new(resultString);
+                if (type_of_Activity == TypeOfActivity.information_search){
+                    Activity = ActivityFinalModel.ProcessActivity(Activity);
                 }
-                output = exercise.ToJSON();
+                output = Activity.ToJSON();
                 return Ok(output);
             }
-// Handle exceptions if something goes wrong during the exercises generation
+// Handle exceptions if something goes wrong during the Activitys generation
             catch (Exception ex){
-                _logger.LogError(ex, "Error during exercises generation");
+                _logger.LogError(ex, "Error during Activitys generation");
                 return StatusCode(500, "Internal Server Error\n" + output);
             }
         }

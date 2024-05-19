@@ -1,6 +1,6 @@
 namespace SK_API{
     public class MetaModel{
-        public TypeOfExercise Type { get; set; }
+        public TypeOfActivity Type { get; set; }
         public string Examples { get; set;}
         public string Formatting { get; set; }
         public string Personification { get; set; }
@@ -9,7 +9,7 @@ namespace SK_API{
         public SolutionModel Solution { get; set; }
         
         // Constructor
-        public MetaModel(TypeOfExercise type, ExerciseCategory category, AssignmentModel assignment, SolutionModel solution)
+        public MetaModel(TypeOfActivity type, ActivityCategory category, AssignmentModel assignment, SolutionModel solution)
         {
             if ( assignment == null || solution == null)
             {
@@ -22,83 +22,83 @@ namespace SK_API{
                 Examples = GetExamples(type);
                 Formatting = GetFormatting(category);
 
-                Personification = ExercisesGenerationPrompt.Personification();
-                Ending = ExercisesGenerationPrompt.Ending();
+                Personification = ActivityGenerationPrompt.Personification();
+                Ending = ActivityGenerationPrompt.Ending();
 
                 Assignment = assignment;
                 Solution = solution;
             }
         }
 
-        public string GetExamples(TypeOfExercise type){
-            // Get the correct string from the ExamplesStrings class for each type of exercise
+        public string GetExamples(TypeOfActivity type){
+            // Get the correct string from the ExamplesStrings class for each type of Activity
             switch (type)
             {
-                case TypeOfExercise.open_question:
+                case TypeOfActivity.open_question:
                     return ExamplesStrings.OpenQuestion;
-                case TypeOfExercise.short_answer_question:
+                case TypeOfActivity.short_answer_question:
                     return ExamplesStrings.ShortAnswerQuestion;
-                case TypeOfExercise.true_or_false:
+                case TypeOfActivity.true_or_false:
                     return ExamplesStrings.TrueOrFalse;
-                case TypeOfExercise.information_search:
+                case TypeOfActivity.information_search:
                     return ExamplesStrings.FillInTheBlanks;
-                case TypeOfExercise.multiple_choice:
+                case TypeOfActivity.multiple_choice:
                     return ExamplesStrings.SingleChoice;
-                case TypeOfExercise.multiple_select:
+                case TypeOfActivity.multiple_select:
                     return ExamplesStrings.MultipleChoice;
-                case TypeOfExercise.essay:
+                case TypeOfActivity.essay:
                     return ExamplesStrings.Essay;
-                case TypeOfExercise.knoledge_exposition:
+                case TypeOfActivity.knoledge_exposition:
                     return ExamplesStrings.KnowledgeExposition;
-                case TypeOfExercise.non_written_material_analysis:
+                case TypeOfActivity.non_written_material_analysis:
                     return ExamplesStrings.NonWrittenMaterialAnalysis;
-                case TypeOfExercise.non_written_material_production:
+                case TypeOfActivity.non_written_material_production:
                     return ExamplesStrings.NonWrittenMaterialProduction;
-                case TypeOfExercise.debate:
+                case TypeOfActivity.debate:
                     return ExamplesStrings.Debate;
-                case TypeOfExercise.brainstorming:
+                case TypeOfActivity.brainstorming:
                     return ExamplesStrings.Brainstorming;
-                case TypeOfExercise.group_discussion:   
+                case TypeOfActivity.group_discussion:   
                     return ExamplesStrings.GroupDiscussion;
-                case TypeOfExercise.case_study_analysis:
+                case TypeOfActivity.case_study_analysis:
                     return ExamplesStrings.CaseStudyAnalysis;
-                case TypeOfExercise.project_based_learning:
+                case TypeOfActivity.project_based_learning:
                     return ExamplesStrings.ProjectBasedLearning;
-                case TypeOfExercise.problem_solving_activity:
+                case TypeOfActivity.problem_solving_activity:
                     return ExamplesStrings.ProblemSolvingActivity;
-                case TypeOfExercise.simulation:
+                case TypeOfActivity.simulation:
                     return ExamplesStrings.Simulation;
-                case TypeOfExercise.inquiry_based_learning:
+                case TypeOfActivity.inquiry_based_learning:
                     return ExamplesStrings.InquiryBasedLearning;
                 default:
                     return ExamplesStrings.OpenQuestion;
             }
         }
-        public string GetFormatting(ExerciseCategory type){
+        public string GetFormatting(ActivityCategory type){
             switch (type)
             {
-                case ExerciseCategory.fill_in_the_blanks:
+                case ActivityCategory.fill_in_the_blanks:
                     return FormatStrings.MM_FillInTheBlanks;
-                case ExerciseCategory.question:
+                case ActivityCategory.question:
                     return FormatStrings.MM_Question;
-                case ExerciseCategory.choice:
+                case ActivityCategory.choice:
                     return FormatStrings.MM_Choice;
-                case ExerciseCategory.conceptual:
+                case ActivityCategory.conceptual:
                     return FormatStrings.MM_Conceptual;
-                case ExerciseCategory.practical:
+                case ActivityCategory.practical:
                     return FormatStrings.MM_Practical;
                 default:
                     return FormatStrings.MM_Conceptual;
             }
         }
 
-        public string ToString(ExerciseCategory category){
+        public string ToString(ActivityCategory category){
             string result;
-            if(category == ExerciseCategory.conceptual || category == ExerciseCategory.practical){
-                result = ExercisesGenerationPrompt.Examples(Examples) + '\n' + ExercisesGenerationPrompt.Format(Formatting) + '\n' + Personification + '\n' + Assignment.ToString() + '\n' + Ending;
+            if(category == ActivityCategory.conceptual || category == ActivityCategory.practical){
+                result = ActivityGenerationPrompt.Examples(Examples) + '\n' + ActivityGenerationPrompt.Format(Formatting) + '\n' + Personification + '\n' + Assignment.ToString() + '\n' + Ending;
             }
             else{
-                result = ExercisesGenerationPrompt.Examples(Examples) + '\n' + ExercisesGenerationPrompt.Format(Formatting) + '\n' + Personification + '\n' + Assignment.ToString() + '\n' + Solution.ToString(category) + '\n' + Ending;
+                result = ActivityGenerationPrompt.Examples(Examples) + '\n' + ActivityGenerationPrompt.Format(Formatting) + '\n' + Personification + '\n' + Assignment.ToString() + '\n' + Solution.ToString(category) + '\n' + Ending;
             }
             return result;
         }

@@ -6,13 +6,13 @@ using Newtonsoft.Json;
 namespace SK_API.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public partial class ExerciseCorrectorController : ControllerBase
+    public partial class CorrectorController : ControllerBase
     {
-        private readonly ILogger<ExerciseCorrectorController> _logger;
+        private readonly ILogger<CorrectorController> _logger;
         private readonly IConfiguration _configuration;
         private readonly Auth _auth;
 
-        public ExerciseCorrectorController(ILogger<ExerciseCorrectorController> logger, IConfiguration configuration, Auth auth)
+        public CorrectorController(ILogger<CorrectorController> logger, IConfiguration configuration, Auth auth)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -20,7 +20,7 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("exercisecorrector")]
+        [HttpPost("evaluate")]
         public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] CorrectorRequestModel input){
             string final = "";
             try{

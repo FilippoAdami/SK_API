@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 namespace SK_API.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public partial class LOGeneratorController : ControllerBase
+    public partial class LearningObjectiveGeneratorController : ControllerBase
     {
-        private readonly ILogger<LOGeneratorController> _logger;
+        private readonly ILogger<LearningObjectiveGeneratorController> _logger;
         private readonly IConfiguration _configuration;
         private readonly Auth _auth;
 
-        public LOGeneratorController(ILogger<LOGeneratorController> logger, IConfiguration configuration, Auth auth)
+        public LearningObjectiveGeneratorController(ILogger<LearningObjectiveGeneratorController> logger, IConfiguration configuration, Auth auth)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -21,7 +21,7 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("generatelearningobjective")]
+        [HttpPost("generateLearningObjective")]
         public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] LORM input){
             string output = "";
             try{
