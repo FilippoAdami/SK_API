@@ -11,6 +11,13 @@ namespace SK_API{
             // Assign properties if present, otherwise set them to default values
             Accuracy = json?["Accuracy"] ?? 0.0;
             Correction = json?["Correction"] ?? "null";
+            if (Accuracy == 0.2){
+                Accuracy = 0.0;
+            } else if (Accuracy == 0.4 || Accuracy == 0.6){
+                Accuracy = 0.5;
+            } else if (Accuracy == 0.8){
+                Accuracy = 1.0;
+            }
         }
 
         public string ToJSON()

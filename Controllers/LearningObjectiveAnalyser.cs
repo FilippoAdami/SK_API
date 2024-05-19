@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 namespace SK_API.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public partial class LOAnalyserController : ControllerBase
+    public partial class LearningObjectiveAnalyserController : ControllerBase
     {
-        private readonly ILogger<LOAnalyserController> _logger;
+        private readonly ILogger<LearningObjectiveAnalyserController> _logger;
         private readonly IConfiguration _configuration;
         private readonly Auth _auth;
 
-        public LOAnalyserController(ILogger<LOAnalyserController> logger, IConfiguration configuration, Auth auth)
+        public LearningObjectiveAnalyserController(ILogger<LearningObjectiveAnalyserController> logger, IConfiguration configuration, Auth auth)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -21,7 +21,7 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("analyselearningobjective")]
+        [HttpPost("analyseLearningObjective")]
         public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] LOAnalyserRequestModel input){
             string output = "";
             try{
@@ -53,7 +53,8 @@ namespace SK_API.Controllers{
 // Generate the output
                 var result = await generate.InvokeAsync(context);
                 Console.WriteLine("Result: " + result.ToString());
-                LOAnalysis analysis = new(result.ToString());
+                string trim_result = result.ToString().Trim();
+                LOAnalysis analysis = new(trim_result);
                 output = analysis.ToJSON();
                 return Ok(output);
             }

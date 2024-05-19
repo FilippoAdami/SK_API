@@ -21,7 +21,7 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("generatematerial")]
+        [HttpPost("generateMaterial")]
         public async Task<IActionResult> SummarizerInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] MaterialGeneratorRequestModel input){
             string output = "";
             try{

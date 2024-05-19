@@ -1,6 +1,6 @@
 namespace SK_API
-{    
-    public enum TypeOfExercise
+{
+    public enum TypeOfActivity
     {
         open_question,
         short_answer_question,
@@ -11,7 +11,7 @@ namespace SK_API
         //ordering
         multiple_choice,
         multiple_select,
-        
+
         essay,
         knoledge_exposition,
         //text_comprehension,
@@ -26,11 +26,11 @@ namespace SK_API
         case_study_analysis,
         project_based_learning,
         problem_solving_activity
-        
+
         //conceptual maps,
         //graphs
     }
-    public enum ExerciseCategory
+    public enum ActivityCategory
     {
         fill_in_the_blanks,
         question,
@@ -44,13 +44,14 @@ namespace SK_API
         code,
         problem_resolution,
     }
-    public enum TypeOfAssessment{
+    public enum TypeOfAssessment
+    {
         peer_review,
         self_assessment,
         teacher_assessment,
         automated_assessment
     }
-    
+
     public enum TextLevel
     {
         primary_school,

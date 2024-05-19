@@ -9,7 +9,7 @@ Ensure the topics are ordered by their appearance in the material and provide co
 The type must be either 'theoretical', 'code' or 'problem_resolution', where 'code' has to be returned for all the topics that talk about programming,  'problem_resolution' for all scientific topics and 'theoretical' has to be returned only if neither 'code' nor 'problem_resolution' are applicable.
 Provide **ONLY** the JSON."; 
     }
-    public class ExercisesGenerationPrompt {
+    public class ActivityGenerationPrompt {
         public static string Examples(string examples) {
             return @$"Hello! Here are some approved examples of valid outputs for your reference. Please utilize these examples to guide the generation of your final answer, ensuring consistency and quality. Examples: {examples}";
         }
@@ -22,7 +22,7 @@ Now, your objective is to assess the level of comprehension of your students abo
         }
         
         public static string A_Description(){
-            return @"Now, generate a {{$type_of_assignment}} {{$type_of_exercise}} for {{$difficulty_level}} level {{$domain_of_expertise}} students. Ensure that the exercise aligns with '{{$bloom_level}}' Bloom's taxonomy level, pertains to the topic of '{{$topic}}' and is consistent with the information provided in the material of the lesson.";
+            return @"Now, generate a {{$type_of_assignment}} {{$type_of_exercise}} assignment for {{$difficulty_level}} level {{$domain_of_expertise}} students. Ensure that the exercise aligns with '{{$bloom_level}}' Bloom's taxonomy level, pertains to the topic of '{{$topic}}' and is consistent with the information provided in the material of the lesson.";
         }
         public static string A_Resolution(string description, string type_of_solution, string number_of_solutions) {
             return @$"Please consider that the assignment request must be designed to allow {number_of_solutions} {type_of_solution} correct solution/solutions. The assignment should be clear on the instructions and {description}.";
@@ -32,14 +32,14 @@ Now, your objective is to assess the level of comprehension of your students abo
             return @$"Now you need to define {number_of_solutions} {type_of_solution} correct solution/solutions for the assignment. To generate the solution/solutions you need to {indications}";
         }
         public static string S_Distractors(){
-            return @"Generate {{$number_of_distractors}} distractors for each solution, designed to challenge students by closely resembling the correct solution, while maintaining similarity in style and format. ";
+            return @"Generate {{$number_of_distractors}} distractors for each solution, designed to challenge students by closely resembling the correct solution, while maintaining similarity in style and format.";
         }
         public static string S_EasilyDiscardableDistractors(){
             return "Now generate {{$number_of_easily_discardable_distractors}} easily discardable distractor for each solution, clearly distinguishable as incorrect, while maintaining similarity in style and format to the correct solution.";
         }
         
         public static string Ending(){
-            return "Now output your final response in the format provided at the beginning, just like the provided examples";
+            return "Now output your final response in the format provided at the beginning, just like the provided examples.";
         }
     }
     public class LearningObjectivePrompts{
@@ -130,7 +130,7 @@ Provide **ONLY** the JSON with accuracy and correction.
     public class InternalPrompts {
         public static string TextSummarizationPrompt = @"You are a {{$level}} teacher that just gave a lesson and now you need to give a brief summary of it to your students as recap. This is your lesson material '{{$material}}'.
 ----
-Instructions for GPT-3.5:
+Instructions for GPT:
 1. Read the provided material and understand the language it is written in.
 2. Summarize the material, maintaining the same language (this is very important, if you provide a summary in English, even if the material is not in English, students won't be able to understand it), in {{$n_o_w}} words for {{$level}} level learners, incorporating all essential concepts and eventual formulas seamlessly.
 3. Provide **ONLY** the synthesized content.";
@@ -140,7 +140,7 @@ Provide ONLY translated JSON.";
         public static string MaterialGenerationPrompt = @"As a {{$level}} level professor, create a {{$level}} level lesson on: '{{$topic}}' for your {{$level}} level students. 
 Craft a {{$n_o_w}}-words lesson with the learning objective: '{{$learning_objective}}' and utilizing appropriate {{$level}} vocabulary.
 ----
-Instructions for GPT-3.5:
+Instructions for GPT:
 1. Read the provided topic and the learning objective to understand the language they are written in; that's the language you lesson must be in, as your students understand only that language.
 2. Generate the lesson, maintaining the same language (this is very important, if you provide a lesson in English, even if the topic and learning objective are not in English, students won't be able to understand it), in {{$n_o_w}} words for {{$level}} level learners, incorporating all essential concepts and eventual formulas seamlessly.
 3. Provide **ONLY** the generated content.";  
@@ -855,17 +855,13 @@ Example of a high school level inquiry-based learning activity on artificial int
 }";
 
 
-        public static string LearningObjective = @"Learning Objective: Students will identify the main themes in a Shakespeare's poem.
-Response: 
-{
+        public static string LearningObjective = @"{
   ""BloomLevel"": 1,
   ""MacroSubject"": ""Literature"",
   ""Level"": 3,
   ""Topic"": ""Shakespeare's poem""
 }
 
-Learning Objective: Given a mathematical problem about parabolic motion, students will apply appropriate problem-solving strategies to find the solution.
-Response: 
 {
   ""BloomLevel"": 2,
   ""MacroSubject"": ""Mathematics"",
@@ -873,8 +869,6 @@ Response:
   ""Topic"": ""Parabolic Motion""
 }
 
-Learning Objective: Students will create a multimedia presentation to demonstrate their understanding of Pearl Harbour's events.
-Response: 
 {
   ""BloomLevel"": 5,
   ""MacroSubject"": ""History"",
@@ -882,8 +876,6 @@ Response:
   ""Topic"": ""Pearl Harbour""
 }
 
-Learning Objective: Gli studenti dovranno valutare differenti tecniche di studio per riconoscere punti di forza e di debolezza di ciascuna.
-Response: 
 {
   ""BloomLevel"": 4,
   ""MacroSubject"": ""Educazione"",
@@ -891,8 +883,6 @@ Response:
   ""Topic"": ""Tecniche di studio""
 }
 
-Learning Objective: Given a scientific experiment of a redox reaction, students will analyze the data to draw conclusions.
-Response: 
 {
   ""BloomLevel"": 3,
   ""MacroSubject"": ""Chemistry"",
@@ -900,8 +890,6 @@ Response:
   ""Topic"": ""Redox Reaction""
 }
 
-Learning Objective: Los estudiantes deberán comprender los conceptos básicos de la teoría de la relatividad de Einstein.
-Response: 
 {
   ""BloomLevel"": 1,
   ""MacroSubject"": ""Física"",
@@ -909,8 +897,6 @@ Response:
   ""Topic"": ""Teoría de la relatividad""
 }
 
-Leraning Objective: Les élèves seront capables d'analyser les causes et les effets de la déforestation en Amazonie, y compris son impact sur la biodiversité, les communautés autochtones et les modèles climatiques mondiaux.
-Response:
 {
   ""BloomLevel"": 3,
   ""MacroSubject"": ""Sciences de la Terre"",

@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace SK_API{
-    public class ExerciseFinalModel{
+    public class ActivityFinalModel{
         public string Assignment {get;set;}
         public string Plus {get;set;}
         public List<string> Solutions {get;set;}
@@ -10,7 +10,7 @@ namespace SK_API{
         public List<string> EasilyDiscardableDistractors {get;set;}
 
         // Constructor
-        public ExerciseFinalModel(string exercise)
+        public ActivityFinalModel(string exercise)
         {
             dynamic exerciseData = JsonConvert.DeserializeObject(exercise);
             // Assign properties if present, otherwise set them as empty strings
@@ -50,7 +50,7 @@ namespace SK_API{
             return JsonConvert.SerializeObject(this);
         }
         // Process the exercise (for fill in the blanks exercises)
-        public static ExerciseFinalModel ProcessExercise(ExerciseFinalModel model)
+        public static ActivityFinalModel ProcessActivity(ActivityFinalModel model)
         {
             string text = ExtractTextFromExercise(model.Assignment);
             if (string.IsNullOrEmpty(text))

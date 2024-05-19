@@ -1,20 +1,20 @@
 namespace SK_API{
-    public static class ExerciseData
+    public static class ActivityData
     {
-        public static List<(ExerciseCategory Category, List<(TypeOfExercise Type, List<BloomLevel> Levels)> Exercises)> Exercises { get; } = new List<(ExerciseCategory, List<(TypeOfExercise, List<BloomLevel>)>)>
+        public static List<(ActivityCategory Category, List<(TypeOfActivity Type, List<BloomLevel> Levels)> Activities)> Activities { get; } = new List<(ActivityCategory, List<(TypeOfActivity, List<BloomLevel>)>)>
         {
-            (ExerciseCategory.fill_in_the_blanks, new List<(TypeOfExercise, List<BloomLevel>)>
+            (ActivityCategory.fill_in_the_blanks, new List<(TypeOfActivity, List<BloomLevel>)>
             {
-                (TypeOfExercise.information_search, new List<BloomLevel>
+                (TypeOfActivity.information_search, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
                 })
             }),
 
-            (ExerciseCategory.question, new List<(TypeOfExercise, List<BloomLevel>)>
+            (ActivityCategory.question, new List<(TypeOfActivity, List<BloomLevel>)>
             {
-                (TypeOfExercise.open_question, new List<BloomLevel>
+                (TypeOfActivity.open_question, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
@@ -23,7 +23,7 @@ namespace SK_API{
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.short_answer_question, new List<BloomLevel>
+                (TypeOfActivity.short_answer_question, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
@@ -31,22 +31,22 @@ namespace SK_API{
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                 }),
-                (TypeOfExercise.true_or_false, new List<BloomLevel>
+                (TypeOfActivity.true_or_false, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
                 }),
             }),
 
-            (ExerciseCategory.choice, new List<(TypeOfExercise, List<BloomLevel>)>
+            (ActivityCategory.choice, new List<(TypeOfActivity, List<BloomLevel>)>
             {
-                (TypeOfExercise.multiple_choice, new List<BloomLevel>
+                (TypeOfActivity.multiple_choice, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
                     BloomLevel.Applying,
                 }),
-                (TypeOfExercise.multiple_select, new List<BloomLevel>
+                (TypeOfActivity.multiple_select, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
@@ -54,16 +54,16 @@ namespace SK_API{
                 })
             }),
             
-            (ExerciseCategory.conceptual, new List<(TypeOfExercise, List<BloomLevel>)>
+            (ActivityCategory.conceptual, new List<(TypeOfActivity, List<BloomLevel>)>
             {
-                (TypeOfExercise.essay, new List<BloomLevel>
+                (TypeOfActivity.essay, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.knoledge_exposition, new List<BloomLevel>
+                (TypeOfActivity.knoledge_exposition, new List<BloomLevel>
                 {
                     BloomLevel.Remembering,
                     BloomLevel.Understanding,
@@ -72,35 +72,35 @@ namespace SK_API{
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.debate, new List<BloomLevel>
+                (TypeOfActivity.debate, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.brainstorming, new List<BloomLevel>
+                (TypeOfActivity.brainstorming, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.group_discussion, new List<BloomLevel>
+                (TypeOfActivity.group_discussion, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.simulation, new List<BloomLevel>
+                (TypeOfActivity.simulation, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.inquiry_based_learning, new List<BloomLevel>
+                (TypeOfActivity.inquiry_based_learning, new List<BloomLevel>
                 {
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
@@ -108,31 +108,31 @@ namespace SK_API{
                 }),
             }),
     
-            (ExerciseCategory.practical, new List<(TypeOfExercise, List<BloomLevel>)>
+            (ActivityCategory.practical, new List<(TypeOfActivity, List<BloomLevel>)>
             {
-                (TypeOfExercise.non_written_material_analysis, new List<BloomLevel>
+                (TypeOfActivity.non_written_material_analysis, new List<BloomLevel>
                 {
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                 }),
-                (TypeOfExercise.non_written_material_production, new List<BloomLevel>
+                (TypeOfActivity.non_written_material_production, new List<BloomLevel>
                 {
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.case_study_analysis, new List<BloomLevel>
+                (TypeOfActivity.case_study_analysis, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                 }),
-                (TypeOfExercise.project_based_learning, new List<BloomLevel>
+                (TypeOfActivity.project_based_learning, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
-                (TypeOfExercise.problem_solving_activity, new List<BloomLevel>
+                (TypeOfActivity.problem_solving_activity, new List<BloomLevel>
                 {
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
@@ -142,22 +142,58 @@ namespace SK_API{
             }),
         };
 
-        public static (ExerciseCategory Category, List<BloomLevel> Levels) GetCategoryAndLevels(TypeOfExercise typeOfExercise)
+        public static (ActivityCategory Category, List<BloomLevel> Levels) GetCategoryAndLevels(TypeOfActivity TypeOfActivity)
         {
-            foreach (var exerciseCategory in Exercises)
+            foreach (var ActivityCategory in Activities)
             {
-                foreach (var exercise in exerciseCategory.Exercises)
+                foreach (var Activity in ActivityCategory.Activities)
                 {
-                    if (exercise.Type == typeOfExercise)
+                    if (Activity.Type == TypeOfActivity)
                     {
-                        return (exerciseCategory.Category, exercise.Levels);
+                        return (ActivityCategory.Category, Activity.Levels);
                     }
                 }
             }
 
-            throw new ArgumentException("TypeOfExercise not found in the Exercises data.");
+            throw new ArgumentException("TypeOfActivity not found in the Activities data.");
         }
     
+        public static List<TypeOfActivity> FilterActivitiesByBloomLevel(BloomLevel BloomLevel)
+        {
+            List<TypeOfActivity> ActivitiesList = new List<TypeOfActivity>();
+
+            foreach (var Activity in Activities)
+            {
+                foreach (var Pair in Activity.Activities)
+                {
+                    if (Pair.Levels.Contains(BloomLevel))
+                    {
+                        ActivitiesList.Add(Pair.Type);
+                    }
+                }
+            }
+
+            return ActivitiesList;
+        }
+
+        public static List<TypeOfActivity> FilterActivitiesByCategory(ActivityCategory Category)
+        {
+            List<TypeOfActivity> ActivitiesList = new List<TypeOfActivity>();
+
+            foreach (var Activity in Activities)
+            {
+                if (Activity.Category == Category)
+                {
+                    foreach (var Pair in Activity.Activities)
+                    {
+                        ActivitiesList.Add(Pair.Type);
+                    }
+                }
+            }
+
+            return ActivitiesList;
+        }
+
     }
 
     public class TopicAndExplanation
@@ -178,7 +214,7 @@ namespace SK_API{
 
         public override string ToString()
         {
-            return $"Topic: {Topic}, Explanation: {Explanation}, Type of exercise suggested: {Type};\n";
+            return $"Topic: {Topic}, Explanation: {Explanation}, Type of Activity suggested: {Type};\n";
         }
     }
 }

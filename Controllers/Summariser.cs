@@ -21,7 +21,7 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("summarise")]
+        [HttpPost("summarize")]
         public async Task<IActionResult> SummarizerInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] SummarizerRequestModel input){
             string output = "";
             try{

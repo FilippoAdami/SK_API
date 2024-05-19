@@ -21,7 +21,7 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("planlesson")]
+        [HttpPost("planLesson")]
         public async Task<IActionResult> LessonPlannerInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] LessonPlannerRequestModel input){
             string output = "";
             try{
@@ -74,9 +74,9 @@ namespace SK_API.Controllers{
                 LessonPlan lessonPlan = new(output);
                 foreach (var node in lessonPlan.Nodes){
                     if(node.Type){
-                        //map the value into TypeOfExercise enum
-                        int exercise = (int)Enum.Parse<TypeOfExercise>(node.Details);
-                        node.Details = exercise.ToString();
+                        //map the value into TypeOfActivity enum
+                        int Activity = (int)Enum.Parse<TypeOfActivity>(node.Details);
+                        node.Details = Activity.ToString();
                     }
                 }
                 string json = lessonPlan.ToJson();

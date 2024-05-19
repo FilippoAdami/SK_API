@@ -4,8 +4,8 @@ namespace SK_API{
     public class LOAnalysis{
         public BloomLevel BloomLevel { get; set; }
         public string MacroSubject { get; set; }
-        public string Topic { get; set; }
         public TextLevel Level { get; set; }
+        public string Topic { get; set; }
 
         public LOAnalysis(string response)
         {

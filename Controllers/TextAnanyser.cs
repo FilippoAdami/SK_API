@@ -8,13 +8,13 @@ using Newtonsoft.Json;
 namespace SK_API.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public partial class AnalyserController : ControllerBase
+    public partial class MaterialAnalyserController : ControllerBase
     {
-        private readonly ILogger<AnalyserController> _logger;
+        private readonly ILogger<MaterialAnalyserController> _logger;
         private readonly IConfiguration _configuration;
         private readonly Auth _auth;
 
-        public AnalyserController(ILogger<AnalyserController> logger, IConfiguration configuration, Auth auth)
+        public MaterialAnalyserController(ILogger<MaterialAnalyserController> logger, IConfiguration configuration, Auth auth)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
