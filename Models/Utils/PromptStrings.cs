@@ -95,8 +95,8 @@ To help you in this job, the teacher provided you with a list of topics and a li
 Here are the topics: {{$topics}}
 Here are the activities categories: {{$activities}}
 Here are the examples: {{$examples}}
-You now can plan the lesson seamlessly integrating the topics and activities in the lesson plan; your only constraint is that the last node must be an Activity node that serves as final assessment.
-Provide **ONLY** the JSON of the lesson plan, completely in English like the example.";
+You now can plan the lesson seamlessly integrating the topics with some activities in the lesson plan. The last node MUST be an 'Activity' node, as it serves as final assessment.
+Provide **ONLY** the JSON of the lesson plan, completely in English like the examples.";
     
       public static string AbstractNodePrompt = @"You're a {{$level}} {{$marco_subject}} skilled teacher. One of your students just completed an assessment about: ' {{$title}} '.
 After correcting the assessment, you wrote feedback for the student: '{{$correction}}'. Now, strictly based on this feedback, you want to provide the student with a tailored lesson plan to help him understand the topics better. To create this tailored plan, you need to focus only on the topics that the student needs to re-study.
@@ -1258,8 +1258,8 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
     },
     {
       ""type"": ""Activity"",
-      ""topic"": ""group_discussion"",
-      ""description"": ""Facilitate a discussion on the significance of parabolic motion in various fields, including physics, engineering, and mathematics."",
+      ""topic"": ""Significance of parabolic motion in various fields, including physics, engineering, and mathematics."",
+      ""description"": ""group_discussion"",
       ""duration"": 15
     },
     {

@@ -200,21 +200,21 @@ namespace SK_API{
     {
         public string Topic { get; set; }
         public TypeOfAssignment Type { get; set; }
-        public string Explanation { get; set; }
+        public string Description { get; set; }
 
         // Parameterless constructor
         public TopicAndExplanation() { }
 
-        public TopicAndExplanation(string topic, TypeOfAssignment type, string explanation)
+        public TopicAndExplanation(string topic, TypeOfAssignment type, string description)
         {
             Topic = topic;
             Type = type;
-            Explanation = explanation;
+            Description = description;
         }
 
         public override string ToString()
         {
-            return $"Topic: {Topic}, Explanation: {Explanation}, Type of Activity suggested: {Type};\n";
+            return $"Topic: {Topic}, Explanation: {Description}, Type of Activity suggested: {Type};\n";
         }
     }
 }
