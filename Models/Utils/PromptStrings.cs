@@ -18,7 +18,7 @@ Provide **ONLY** the JSON.";
         }
         public static string Personification(){
             return @"You are a {{$difficulty_level}} level {{$domain_of_expertise}} professor who just gave a lecture on {{$lesson_title}}. Here's the material of the lesson you just provided: {{$material}}.
-Now, your objective is to assess the level of comprehension of your students about your last lesson. Drawing from your {{$domain_of_expertise}} expertise, your aim is to craft one {{$type_of_exercise}} exercise that aims to {{$learning_objective}}.";
+Now, your objective is to assess the level of comprehension of your students about your last lesson. Drawing from your {{$domain_of_expertise}} expertise, your aim is to craft one {{$type_of_exercise}} exercise with related learning objective of '{{$learning_objective}}'.";
         }
         
         public static string A_Description(){
@@ -79,7 +79,7 @@ Now, your objective is to assess the level of comprehension of your students abo
         Instructions for the generation of the learning objectives:
         1. Understand the language of the provided topic. Your learning objectives must be in the same language.
         2. If some context is context is specified, consider it while generating the learning objectives.
-        3. Generate the learning objectives for each Bloom's Taxonomy level: Remembering, Understanding, Applying, Analyzing, Evaluating, and Creating.
+        3. Generate the learning objectives for each Bloom's Taxonomy level: Remembering, Understanding, Applying, Analyzing, Evaluating, and Creating. Each learning objective should start with 'Students will be able to ' (or its equivalent in the extracted language).
         4. Translate those learning objectives into the topic's language.
         5. Return the learning objectives in JSON format as shown below (Keep the keys in English and the learning objectives in topic's language). Provide **ONLY** the JSON. 
         Format: {{$format}}
@@ -906,136 +906,136 @@ Example of a high school level inquiry-based learning activity on artificial int
         public static string LearningObjectives = @"
 Example in English:""{
   ""Remembering"":[
-    ""Recall the definition of uniform acceleration motion."",
-    ""List the equations that describe uniform acceleration motion.""
+    ""Students will be able to recall the definition of uniform acceleration motion."",
+    ""Students will be able to list the equations that describe uniform acceleration motion.""
   ],
   ""Understanding"":[
-    ""Explain the concept of uniform acceleration motion in your own words."",
-    ""Interpret graphs depicting uniform acceleration motion.""
+    ""Students will be able to explain the concept of uniform acceleration motion in your own words."",
+    ""Students will be able to interpret graphs depicting uniform acceleration motion.""
   ],
   ""Applying"":[
-    ""Solve problems involving uniform acceleration motion using the appropriate equations."",
-    ""Design an experiment to measure the acceleration of an object in uniform motion.""
+    ""Students will be able to solve problems involving uniform acceleration motion using the appropriate equations."",
+    ""Students will be able to design an experiment to measure the acceleration of an object in uniform motion.""
   ],
   ""Analyzing"":[
-    ""Compare and contrast uniform acceleration motion with il moto uniforme."",
-    ""Analyze real-life examples of uniform acceleration motion and identify the factors affecting acceleration.""
+    ""Students will be able to compare and contrast uniform acceleration motion with il moto uniforme."",
+    ""Students will be able to analyze real-life examples of uniform acceleration motion and identify the factors affecting acceleration.""
   ],
   ""Evaluating"":[
-    ""Critique the validity of experimental procedures used to measure acceleration in various scenarios."",
-    ""Evaluate the efficiency of different methods for calculating acceleration in uniform acceleration motion.""
+    ""Students will be able to critique the validity of experimental procedures used to measure acceleration in various scenarios."",
+    ""Students will be able to evaluate the efficiency of different methods for calculating acceleration in uniform acceleration motion.""
   ],
   ""Creating"":[
-    ""Develop a scenario involving uniform acceleration motion and solve related problems."",
-    ""Construct a model or simulation to demonstrate uniform acceleration motion.""
+    ""Students will be able to develop a scenario involving uniform acceleration motion and solve related problems."",
+    ""Students will be able to construct a model or simulation to demonstrate uniform acceleration motion.""
   ]
 }""
 
 Example in Italian:""{
   ""Remembering"":[
-    ""Ricordare la definizione di il moto uniformemente accelerato."",
-    ""Ricordare le equazioni che descrivono il moto uniformemente accelerato.""
+    ""Gli studenti saranno in grado di ricordare la definizione di il moto uniformemente accelerato."",
+    ""Gli studenti saranno in grado di ricordare le equazioni che descrivono il moto uniformemente accelerato.""
   ],
   ""Understanding"":[
-    ""Spiegare il concetto di il moto uniformemente accelerato con parole proprie."",
-    ""Interpretare i grafici che rappresentano il moto uniformemente accelerato.""
+    ""Gli studenti saranno in grado di spiegare il concetto di il moto uniformemente accelerato con parole proprie."",
+    ""Gli studenti saranno in grado di interpretare i grafici che rappresentano il moto uniformemente accelerato.""
   ],
   ""Applying"":[
-    ""Risolvere problemi che coinvolgono il moto uniformemente accelerato utilizzando le equazioni appropriate."",
-    ""Progettare un esperimento per misurare l'accelerazione di un oggetto in moto uniformemente accelerato.""
+    ""Gli studenti saranno in grado di risolvere problemi che coinvolgono il moto uniformemente accelerato utilizzando le equazioni appropriate."",
+    ""Gli studenti saranno in grado di progettare un esperimento per misurare l'accelerazione di un oggetto in moto uniformemente accelerato.""
   ],
   ""Analyzing"":[
-    ""Confrontare e mettere in contrasto il moto uniformemente accelerato con il moto uniforme."",
-    ""Analizzare esempi della vita reale di moto uniformemente accelerato e identificare i fattori che influenzano l'accelerazione.""
+    ""Gli studenti saranno in grado di confrontare e mettere in contrasto il moto uniformemente accelerato con il moto uniforme."",
+    ""Gli studenti saranno in grado di analizzare esempi della vita reale di moto uniformemente accelerato e identificare i fattori che influenzano l'accelerazione.""
   ],
   ""Evaluating"":[
-    ""Criticare la validità delle procedure sperimentali utilizzate per misurare l'accelerazione in diversi scenari."",
-    ""Valutare l'efficienza di diversi metodi per calcolare l'accelerazione nel moto uniformemente accelerato.""
+    ""Gli studenti saranno in grado di criticare la validità delle procedure sperimentali utilizzate per misurare l'accelerazione in diversi scenari."",
+    ""Gli studenti saranno in grado di valutare l'efficienza di diversi metodi per calcolare l'accelerazione nel moto uniformemente accelerato.""
   ],
   ""Creating"":[
-    ""Sviluppare uno scenario che coinvolge il moto uniformemente accelerato e risolvere problemi correlati."",
-    ""Costruire un modello o una simulazione per dimostrare il moto uniformemente accelerato.""
+    ""Gli studenti saranno in grado di sviluppare uno scenario che coinvolge il moto uniformemente accelerato e risolvere problemi correlati."",
+    ""Gli studenti saranno in grado di costruire un modello o una simulazione per dimostrare il moto uniformemente accelerato.""
   ]
 }""
 
 Example in French:""{
   ""Remembering"":[
-    ""Se souvenir de la définition de il moto uniformemente accelerato."",
-    ""Énumérer les équations qui décrivent il moto uniformemente accelerato.""
+    ""Les étudiants seront capables de se souvenir de la définition de il moto uniformemente accelerato."",
+    ""Les étudiants seront capables de énumérer les équations qui décrivent il moto uniformemente accelerato.""
   ],
   ""Understanding"":[
-    ""Expliquer le concept de il moto uniformemente accelerato avec ses propres mots."",
-    ""Interpréter les graphiques représentant il moto uniformemente accelerato.""
+    ""Les étudiants seront capables de expliquer le concept de il moto uniformemente accelerato avec ses propres mots."",
+    ""Les étudiants seront capables de interpréter les graphiques représentant il moto uniformemente accelerato.""
   ],
   ""Applying"":[
-    ""Résoudre des problèmes impliquant il moto uniformemente accelerato en utilisant les équations appropriées."",
-    ""Concevoir une expérience pour mesurer l'accélération d'un objet en mouvement uniformément accéléré.""
+    ""Les étudiants seront capables de résoudre des problèmes impliquant il moto uniformemente accelerato en utilisant les équations appropriées."",
+    ""Les étudiants seront capables de concevoir une expérience pour mesurer l'accélération d'un objet en mouvement uniformément accéléré.""
   ],
   ""Analyzing"":[
-    ""Comparer et mettre en contraste il moto uniformemente accelerato avec il moto uniforme."",
-    ""Analyser des exemples de la vie réelle de il moto uniformemente accelerato et identifier les facteurs affectant l'accélération.""
+    ""Les étudiants seront capables de comparer et mettre en contraste il moto uniformemente accelerato avec il moto uniforme."",
+    ""Les étudiants seront capables de analyser des exemples de la vie réelle de il moto uniformemente accelerato et identifier les facteurs affectant l'accélération.""
   ],
   ""Evaluating"":[
-    ""Critiquer la validité des procédures expérimentales utilisées pour mesurer l'accélération dans différents scénarios."",
-    ""Évaluer l'efficacité de différentes méthodes pour calculer l'accélération dans il moto uniformemente accelerato.""
+    ""Les étudiants seront capables de critiquer la validité des procédures expérimentales utilisées pour mesurer l'accélération dans différents scénarios."",
+    ""Les étudiants seront capables de évaluer l'efficacité de différentes méthodes pour calculer l'accélération dans il moto uniformemente accelerato.""
   ],
   ""Creating"":[
-    ""Développer un scénario impliquant il moto uniformemente accelerato et résoudre des problèmes associés."",
-    ""Construire un modèle ou une simulation pour démontrer il moto uniformemente accelerato.""
+    ""Les étudiants seront capables de développer un scénario impliquant il moto uniformemente accelerato et résoudre des problèmes associés."",
+    ""Les étudiants seront capables de construire un modèle ou une simulation pour démontrer il moto uniformemente accelerato.""
   ]
 }""
 
 Example in German:""{
   ""Remembering"":[
-    ""Erinnern Sie sich an die Definition von il moto uniformemente accelerato."",
-    ""Auflisten der Gleichungen, die il moto uniformemente accelerato beschreiben.""
+    ""Studenten werden in der Lage sein zu erinnern Sie sich an die Definition von il moto uniformemente accelerato."",
+    ""Studenten werden in der Lage sein zu auflisten der Gleichungen, die il moto uniformemente accelerato beschreiben.""
   ],
   ""Understanding"":[
-    ""Erklären Sie das Konzept von il moto uniformemente accelerato in eigenen Worten."",
-    ""Interpretieren von Grafiken, die il moto uniformemente accelerato darstellen.""
+    ""Studenten werden in der Lage sein zu erklären Sie das Konzept von il moto uniformemente accelerato in eigenen Worten."",
+    ""Studenten werden in der Lage sein zu interpretieren von Grafiken, die il moto uniformemente accelerato darstellen.""
   ],
   ""Applying"":[
-    ""Lösen von Problemen, die il moto uniformemente accelerato unter Verwendung der entsprechenden Gleichungen betreffen."",
-    ""Entwerfen eines Experiments zur Messung der Beschleunigung eines Objekts in gleichmäßiger Bewegung.""
+    ""Studenten werden in der Lage sein zu lösen von Problemen, die il moto uniformemente accelerato unter Verwendung der entsprechenden Gleichungen betreffen."",
+    ""Studenten werden in der Lage sein zu entwerfen eines Experiments zur Messung der Beschleunigung eines Objekts in gleichmäßiger Bewegung.""
   ],
   ""Analyzing"":[
-    ""Vergleichen und kontrastieren Sie il moto uniformemente accelerato mit il moto uniforme."",
-    ""Analysieren von Beispielen aus dem wirklichen Leben von il moto uniformemente accelerato und Identifizieren der Faktoren, die die Beschleunigung beeinflussen.""
+    ""Studenten werden in der Lage sein zu vergleichen und kontrastieren Sie il moto uniformemente accelerato mit il moto uniforme."",
+    ""Studenten werden in der Lage sein zu analysieren von Beispielen aus dem wirklichen Leben von il moto uniformemente accelerato und Identifizieren der Faktoren, die die Beschleunigung beeinflussen.""
   ],
   ""Evaluating"":[
-    ""Kritisieren Sie die Gültigkeit experimenteller Verfahren zur Messung der Beschleunigung in verschiedenen Szenarien."",
-    ""Bewerten Sie die Effizienz verschiedener Methoden zur Berechnung der Beschleunigung in il moto uniformemente accelerato.""
+    ""Studenten werden in der Lage sein zu kritisieren Sie die Gültigkeit experimenteller Verfahren zur Messung der Beschleunigung in verschiedenen Szenarien."",
+    ""Studenten werden in der Lage sein zu bewerten Sie die Effizienz verschiedener Methoden zur Berechnung der Beschleunigung in il moto uniformemente accelerato.""
   ],
   ""Creating"":[
-    ""Entwickeln Sie ein Szenario, das il moto uniformemente accelerato einbezieht, und lösen Sie damit verbundene Probleme."",
-    ""Erstellen Sie ein Modell oder eine Simulation, um il moto uniformemente accelerato zu demonstrieren.""
+    ""Studenten werden in der Lage sein zu entwickeln Sie ein Szenario, das il moto uniformemente accelerato einbezieht, und lösen Sie damit verbundene Probleme."",
+    ""Studenten werden in der Lage sein zu erstellen Sie ein Modell oder eine Simulation, um il moto uniformemente accelerato zu demonstrieren.""
   ]
 }""
 
 Example in Spanish:""{
   ""Remembering"":[
-    ""Recordar la definición de il moto uniformemente accelerato."",
-    ""Enumerar las ecuaciones que describen il moto uniformemente accelerato.""
+    ""Los estudiantes serán capaces de recordar la definición de il moto uniformemente accelerato."",
+    ""Los estudiantes serán capaces de recordar enumerar las ecuaciones que describen il moto uniformemente accelerato.""
   ],
   ""Understanding"":[
-    ""Explicar el concepto de il moto uniformemente accelerato con sus propias palabras."",
-    ""Interpretar gráficos que representen il moto uniformemente accelerato.""
+    ""Los estudiantes serán capaces de recordar explicar el concepto de il moto uniformemente accelerato con sus propias palabras."",
+    ""Los estudiantes serán capaces de recordar interpretar gráficos que representen il moto uniformemente accelerato.""
   ],
   ""Applying"":[
-    ""Resolver problemas que involucren il moto uniformemente accelerato utilizando las ecuaciones apropiadas."",
-    ""Diseñar un experimento para medir la aceleración de un objeto en movimiento uniformemente acelerado.""
+    ""Los estudiantes serán capaces de recordar resolver problemas que involucren il moto uniformemente accelerato utilizando las ecuaciones apropiadas."",
+    ""Los estudiantes serán capaces de recordar diseñar un experimento para medir la aceleración de un objeto en movimiento uniformemente acelerado.""
   ],
   ""Analyzing"":[
-    ""Comparar y contrastar il moto uniformemente accelerato con il moto uniforme."",
-    ""Analizar ejemplos de la vida real de il moto uniformemente accelerato e identificar los factores que afectan la aceleración.""
+    ""Los estudiantes serán capaces de recordar comparar y contrastar il moto uniformemente accelerato con il moto uniforme."",
+    ""Los estudiantes serán capaces de recordar analizar ejemplos de la vida real de il moto uniformemente accelerato e identificar los factores que afectan la aceleración.""
   ],
   ""Evaluating"":[
-    ""Critique la validez de los procedimientos experimentales utilizados para medir la aceleración en diferentes escenarios."",
-    ""Evaluar la eficacia de diferentes métodos para calcular la aceleración en il moto uniformemente accelerato.""
+    ""Los estudiantes serán capaces de recordar critique la validez de los procedimientos experimentales utilizados para medir la aceleración en diferentes escenarios."",
+    ""Los estudiantes serán capaces de recordar evaluar la eficacia de diferentes métodos para calcular la aceleración en il moto uniformemente accelerato.""
   ],
   ""Creating"":[
-    ""Desarrollar un escenario que involucre il moto uniformemente accelerato y resolver problemas relacionados."",
-    ""Construir un modelo o simulación para demostrar il moto uniformemente accelerato.""
+    ""Los estudiantes serán capaces de recordar desarrollar un escenario que involucre il moto uniformemente accelerato y resolver problemas relacionados."",
+    ""Los estudiantes serán capaces de recordar construir un modelo o simulación para demostrar il moto uniformemente accelerato.""
   ]
 }""";
 
