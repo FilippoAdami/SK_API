@@ -18,11 +18,11 @@ Provide **ONLY** the JSON.";
         }
         public static string Personification(){
             return @"You are a {{$difficulty_level}} level {{$domain_of_expertise}} professor who just gave a lecture on {{$lesson_title}}. Here's the material of the lesson you just provided: {{$material}}.
-Now, your objective is to assess the level of comprehension of your students about your last lesson. Drawing from your {{$domain_of_expertise}} expertise, your aim is to craft one {{$type_of_exercise}} exercise with related learning objective of '{{$learning_objective}}'.";
+Now, your objective is to assess the level of comprehension of your Learners about your last lesson. Drawing from your {{$domain_of_expertise}} expertise, your aim is to craft one {{$type_of_exercise}} exercise with related learning objective of '{{$learning_objective}}'.";
         }
         
         public static string A_Description(){
-            return @"Now, generate a {{$type_of_assignment}} {{$type_of_exercise}} assignment for {{$difficulty_level}} level {{$domain_of_expertise}} students. Ensure that the exercise aligns with '{{$bloom_level}}' Bloom's taxonomy level, pertains to the topic of '{{$topic}}' and is consistent with the information provided in the material of the lesson.";
+            return @"Now, generate a {{$type_of_assignment}} {{$type_of_exercise}} assignment for {{$difficulty_level}} level {{$domain_of_expertise}} Learners. Ensure that the exercise aligns with '{{$bloom_level}}' Bloom's taxonomy level, pertains to the topic of '{{$topic}}' and is consistent with the information provided in the material of the lesson.";
         }
         public static string A_Resolution(string description, string type_of_solution, string number_of_solutions) {
             return @$"Please consider that the assignment request must be designed to allow {number_of_solutions} {type_of_solution} correct solution/solutions. The assignment should be clear on the instructions and {description}.";
@@ -32,7 +32,7 @@ Now, your objective is to assess the level of comprehension of your students abo
             return @$"Now you need to define {number_of_solutions} {type_of_solution} correct solution/solutions for the assignment. To generate the solution/solutions you need to {indications}";
         }
         public static string S_Distractors(){
-            return @"Generate {{$number_of_distractors}} distractors for each solution, designed to challenge students by closely resembling the correct solution, while maintaining similarity in style and format.";
+            return @"Generate {{$number_of_distractors}} distractors for each solution, designed to challenge Learners by closely resembling the correct solution, while maintaining similarity in style and format.";
         }
         public static string S_EasilyDiscardableDistractors(){
             return "Now generate {{$number_of_easily_discardable_distractors}} easily discardable distractor for each solution, clearly distinguishable as incorrect, while maintaining similarity in style and format to the correct solution.";
@@ -73,13 +73,13 @@ Now, your objective is to assess the level of comprehension of your students abo
             5. Include, **in the same language of the provided learning objective, like the examples**, the macro-subject, and the topic associated with the learning objective.
             6. Format the answer in JSON format as shown in the examples.";
        
-        public static string LearningObjectiveGenerator = @"You're a {{$level}} teacher that wants to give a lesson to your {{$level}} level students about the topic of: ' {{$topic}} '. You need to choose the learning objective of the lesson. To do so, you need to generate between two suitable learning objectives for each Bloom's Taxonomy level; each of them should be concise, specific, and aligned with the requested topic. {{$context}}
+        public static string LearningObjectiveGenerator = @"You're a {{$level}} teacher that wants to give a lesson to your {{$level}} level Learners about the topic of: ' {{$topic}} '. You need to choose the learning objective of the lesson. To do so, you need to generate between two suitable learning objectives for each Bloom's Taxonomy level; each of them should be concise, specific, and aligned with the requested topic. {{$context}}
         Examples: {{$examples}}
         ---
         Instructions for the generation of the learning objectives:
         1. Understand the language of the provided topic. Your learning objectives must be in the same language.
         2. If some context is context is specified, consider it while generating the learning objectives.
-        3. Generate the learning objectives for each Bloom's Taxonomy level: Remembering, Understanding, Applying, Analyzing, Evaluating, and Creating. Each learning objective should start with 'Students will be able to ' (or its equivalent in the extracted language).
+        3. Generate the learning objectives for each Bloom's Taxonomy level: Remembering, Understanding, Applying, Analyzing, Evaluating, and Creating. Each learning objective should start with 'Learners will be able to ' (or its equivalent in the extracted language).
         4. Translate those learning objectives into the topic's language.
         5. Return the learning objectives in JSON format as shown below (Keep the keys in English and the learning objectives in topic's language). Provide **ONLY** the JSON. 
         Format: {{$format}}
@@ -89,7 +89,7 @@ Now, your objective is to assess the level of comprehension of your students abo
     public class PlanningPrompts{
       public static string LessonPlannerprompt = @"You're a {{$level}} {{$marco_subject}} skilled assistant-teacher. The main teacher asked you to plan the next lesson, which is about: ' {{$title}} '. The teacher defined the learning objective for the lesson to be: '{{$learning_objective}}' which reflect the {{$bloom_level}} level in Bloom's taxonomy. 
 You now need to define the lesson plan completely in English. From your previous lessons, you wrote down some notes about the class behaviour. Notes: '{{$context}}' (note that these notes are in {{$language}}, so you have to translate them into English to understand the context).
-Since you're a very organized person, you want to structure the lesson plan in a logical sequence of nodes. A node is an element that consists of: Type (either 'Lesson' or 'Activity'), Topic (chosen from the list provided from the teacher), Description (either an activity category from the list or a suggestion of how to explain the lesson node to the students considering your Notes), Duration (which is the time in minutes that you expect to spend on that node). 
+Since you're a very organized person, you want to structure the lesson plan in a logical sequence of nodes. A node is an element that consists of: Type (either 'Lesson' or 'Activity'), Topic (chosen from the list provided from the teacher), Description (either an activity category from the list or a suggestion of how to explain the lesson node to the Learners considering your Notes), Duration (which is the time in minutes that you expect to spend on that node). 
 To provide the teacher a clear and organized lesson plan, you decided to structure it in a JSON format as it follows. Format: {{$format}}
 To help you in this job, the teacher provided you with a list of topics and a list of activities categories to use in the lesson plan and some examples of valid lesson plans.
 Here are the topics: {{$topics}}
@@ -98,7 +98,7 @@ Here are the examples: {{$examples}}
 You now can plan the lesson seamlessly integrating the topics with some activities in the lesson plan. The last node MUST be an 'Activity' node, as it serves as final assessment.
 Provide **ONLY** the JSON of the lesson plan, completely in English like the examples.";
     
-      public static string AbstractNodePrompt = @"You're a {{$level}} {{$marco_subject}} skilled teacher. One of your students just completed an assessment about: ' {{$title}} '.
+      public static string AbstractNodePrompt = @"You're a {{$level}} {{$marco_subject}} skilled teacher. One of your Learners just completed an assessment about: ' {{$title}} '.
 After correcting the assessment, you wrote feedback for the student: '{{$correction}}'. Now, strictly based on this feedback, you want to provide the student with a tailored lesson plan to help him understand the topics better. To create this tailored plan, you need to focus only on the topics that the student needs to re-study.
 As a highly organized teacher, you want to structure the mini-lesson plan logically as a sequence of nodes. A node consists of Type (either 'Lesson' or 'Activity'), Topic (the topic the student needs to re-study), Description (an activity category from the list or a brief description of the topic), and Duration (time in minutes you expect to spend on that node).
 To provide a clear and organized lesson plan, you decided to structure it in a JSON format. Format: {{$format}}
@@ -108,10 +108,10 @@ Here are the examples: {{$examples}}
 You should ensure that the plan is concise, that it covers only the necessary topics and thet each topic is properly linked to at least one Activity node serving as a assessment.
 Provide **ONLY** the JSON of the lesson plan, completely in English like the examples.";
     
-      public static string CoursePlanPrompt = @"You're a {{$language}} speaking {{$level}} {{$marco_subject}} skilled teacher. You have {{$number_of_lessons}} lessons ({{$lesson_duration}} minutes each) to teach your {{$level}} students about ' {{$topic}} '.{{$last_lesson}}
+      public static string CoursePlanPrompt = @"You're a {{$language}} speaking {{$level}} {{$marco_subject}} skilled teacher. You have {{$number_of_lessons}} lessons ({{$lesson_duration}} minutes each) to teach your {{$level}} Learners about ' {{$topic}} '.{{$last_lesson}}
 As a highly organized teacher, you want to schedule the plan logically as a list of lessons, where each lesson has an explanatory title and a list of topics.
 To provide a clear and organized lesson plan, you decided to structure it in a JSON format. Format: {{$format}}
-Ensure that the sequence of topics in each lesson is logically scheduled and suitable for {{$level}} students.
+Ensure that the sequence of topics in each lesson is logically scheduled and suitable for {{$level}} Learners.
 Ensure to spread the topics across all the {{$number_of_lessons}} lessons in a balanced way, considering that each lesson has a duration of {{$lesson_duration}} minutes.
 Provide **ONLY** the JSON of the lesson plan with keys in English and titles in {{$language}} like the example below: {{$example}}";
 
@@ -120,29 +120,29 @@ Provide **ONLY** the JSON of the lesson plan with keys in English and titles in 
     public class ExerciseCorrectorPrompt{
       public static string ExerciseCorrector = @"The output should fit the format: {{$format}}
 Here are some examples: {{$examples}}
-You are a teacher and you need to evaluate your students. You asked them: Question:'{{$question}}'. To that question they answered with: Answer:'{{$answer}}'.
-Considering that you expected an answer like: Expected answer: '{{$expected_answer}}', evaluate the accuracy of your students' answer and, eventually, give them a feedback about what they did wrong, why it is wrong and how they should correct their answer.
+You are a teacher and you need to evaluate your Learners. You asked them: Question:'{{$question}}'. To that question they answered with: Answer:'{{$answer}}'.
+Considering that you expected an answer like: Expected answer: '{{$expected_answer}}', evaluate the accuracy of your Learners' answer and, eventually, give them a feedback about what they did wrong, why it is wrong and how they should correct their answer.
 Keep in mind that the accuracy value must range from 0 (if the answer is completely wrong) to 1 (if the answer is completely correct) with 0.2 intervals, where 0.0 and 0.2 are for a wrong answer, 0.4 and 0.6 are for a partially correct answer, 0.8 and 1.0 are for a correct answer.
 Keep in mind that the language of the eventual correction must match the language of the question and answer.
 Provide **ONLY** the JSON with accuracy and correction.
 ";
     }
     public class InternalPrompts {
-        public static string TextSummarizationPrompt = @"You are a {{$level}} teacher that just gave a lesson and now you need to give a brief summary of it to your students as recap. This is your lesson material '{{$material}}'.
+        public static string TextSummarizationPrompt = @"You are a {{$level}} teacher that just gave a lesson and now you need to give a brief summary of it to your Learners as recap. This is your lesson material '{{$material}}'.
 ----
 Instructions for GPT:
 1. Read the provided material and understand the language it is written in.
-2. Summarize the material, maintaining the same language (this is very important, if you provide a summary in English, even if the material is not in English, students won't be able to understand it), in {{$n_o_w}} words for {{$level}} level learners, incorporating all essential concepts and eventual formulas seamlessly.
+2. Summarize the material, maintaining the same language (this is very important, if you provide a summary in English, even if the material is not in English, Learners won't be able to understand it), in {{$n_o_w}} words for {{$level}} level learners, incorporating all essential concepts and eventual formulas seamlessly.
 3. Provide **ONLY** the synthesized content.";
         public static string TextTranslationPrompt = @"As a native {{$language}} speaker fluent in both {{$language}} and English languages, translate the following JSON's values in {{$language}} while keeping the keys in English: JSON:
 {{$json}}
 Provide ONLY translated JSON.";
-        public static string MaterialGenerationPrompt = @"As a {{$level}} level professor, create a {{$level}} level lesson on: '{{$topic}}' for your {{$level}} level students. 
+        public static string MaterialGenerationPrompt = @"As a {{$level}} level professor, create a {{$level}} level lesson on: '{{$topic}}' for your {{$level}} level Learners. 
 Craft a {{$n_o_w}}-words lesson with the learning objective: '{{$learning_objective}}' and utilizing appropriate {{$level}} vocabulary.
 ----
 Instructions for GPT:
-1. Read the provided topic and the learning objective to understand the language they are written in; that's the language you lesson must be in, as your students understand only that language.
-2. Generate the lesson, maintaining the same language (this is very important, if you provide a lesson in English, even if the topic and learning objective are not in English, students won't be able to understand it), in {{$n_o_w}} words for {{$level}} level learners, incorporating all essential concepts and eventual formulas seamlessly.
+1. Read the provided topic and the learning objective to understand the language they are written in; that's the language you lesson must be in, as your Learners understand only that language.
+2. Generate the lesson, maintaining the same language (this is very important, if you provide a lesson in English, even if the topic and learning objective are not in English, Learners won't be able to understand it), in {{$n_o_w}} words for {{$level}} level learners, incorporating all essential concepts and eventual formulas seamlessly.
 3. Provide **ONLY** the generated content.";  
     }
     public class FormatStrings{
@@ -482,7 +482,7 @@ Example of a middle school level theoretical exercise about turtles:
 Example of a high school level code exercise about dictionaries in Python:""
 {
 ""Assignment"": ""Given the Python code below, which of the following is the correct output? \n student_grades = {''John'': 85, ''Emily'': 92, ''Michael'': 78}\n print(student_grades[''John''])"",
-""Plus"": ""The provided code defines a dictionary student_grades with students' names as keys and their corresponding grades as values. It then prints the grade of the student named ''John'' using square brackets notation to access the value associated with the key ''John''."",
+""Plus"": ""The provided code defines a dictionary student_grades with Learners' names as keys and their corresponding grades as values. It then prints the grade of the student named ''John'' using square brackets notation to access the value associated with the key ''John''."",
 ""Solutions"": [
     ""85""
 ],
@@ -701,7 +701,7 @@ Example of a high school level problem solving exercise about fluid dynamics:
 
 Example of an high school level exercise about AI impact:
 {
-""Assignment"": ""Write an essay discussing the impact of social media on middle school students.""
+""Assignment"": ""Write an essay discussing the impact of social media on middle school Learners.""
 }
 
 Example of an college level exercise about implications of climate change on global food security:
@@ -782,12 +782,12 @@ Example of a high school level exercise about presentation creation about the fa
     
         public static string Debate = @"Example of a college level debate exercise about ethics in AI:
 {
-  ""Assignment"": ""Debate on the Ethical Implications of AI in Autonomous Vehicles\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the ethical implications of AI in autonomous vehicles.\nTeam A will argue in favor of the statement: 'The benefits of AI in autonomous vehicles outweigh the ethical concerns.'\nTeam B will argue against the statement: 'The ethical concerns of AI in autonomous vehicles outweigh the benefits.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the nuances of the topic.\n\nDebate Points:\nTeam A (In favor of the benefits of AI in autonomous vehicles):\n- Safety: Argue that AI technology can significantly reduce the number of accidents caused by human error, thereby saving lives.\n- Efficiency: Highlight the potential for AI to optimize traffic flow, reduce congestion, and improve transportation systems overall.\n- Accessibility: Emphasize how autonomous vehicles can enhance mobility for individuals with disabilities and elderly populations.\n- Innovation: Discuss the role of AI in driving technological advancement and fostering economic growth in the automotive industry.\n\nTeam B (Against the ethical concerns of AI in autonomous vehicles):\n- Moral Dilemmas: Raise concerns about the ethical challenges surrounding AI decision-making in life-and-death situations, such as the 'trolley problem.'\n- Liability and Accountability: Address the complex legal and ethical issues related to assigning responsibility in the event of accidents or failures of autonomous vehicles.\n- Privacy: Explore the implications of AI surveillance in autonomous vehicles, including the collection and potential misuse of personal data.\n- Job Displacement: Discuss the socioeconomic impacts of AI-driven automation on employment in the transportation sector and the broader economy. \n- Objective: The objective of this debate exercise is to encourage students to critically analyze the ethical implications of AI in autonomous vehicles from multiple perspectives. By engaging in thoughtful discourse and considering both the benefits and concerns associated with this technology, students will develop a deeper understanding of the complex ethical dilemmas inherent in AI development and deployment.""
+  ""Assignment"": ""Debate on the Ethical Implications of AI in Autonomous Vehicles\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the ethical implications of AI in autonomous vehicles.\nTeam A will argue in favor of the statement: 'The benefits of AI in autonomous vehicles outweigh the ethical concerns.'\nTeam B will argue against the statement: 'The ethical concerns of AI in autonomous vehicles outweigh the benefits.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the nuances of the topic.\n\nDebate Points:\nTeam A (In favor of the benefits of AI in autonomous vehicles):\n- Safety: Argue that AI technology can significantly reduce the number of accidents caused by human error, thereby saving lives.\n- Efficiency: Highlight the potential for AI to optimize traffic flow, reduce congestion, and improve transportation systems overall.\n- Accessibility: Emphasize how autonomous vehicles can enhance mobility for individuals with disabilities and elderly populations.\n- Innovation: Discuss the role of AI in driving technological advancement and fostering economic growth in the automotive industry.\n\nTeam B (Against the ethical concerns of AI in autonomous vehicles):\n- Moral Dilemmas: Raise concerns about the ethical challenges surrounding AI decision-making in life-and-death situations, such as the 'trolley problem.'\n- Liability and Accountability: Address the complex legal and ethical issues related to assigning responsibility in the event of accidents or failures of autonomous vehicles.\n- Privacy: Explore the implications of AI surveillance in autonomous vehicles, including the collection and potential misuse of personal data.\n- Job Displacement: Discuss the socioeconomic impacts of AI-driven automation on employment in the transportation sector and the broader economy. \n- Objective: The objective of this debate exercise is to encourage Learners to critically analyze the ethical implications of AI in autonomous vehicles from multiple perspectives. By engaging in thoughtful discourse and considering both the benefits and concerns associated with this technology, Learners will develop a deeper understanding of the complex ethical dilemmas inherent in AI development and deployment.""
 }
 
 Example of a high school level exercise about impact of social media on teenagers:
 {
-  ""Assignment"": ""Debate on the Impact of Social Media Use on Teenagers\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the impact of social media use on teenagers.\nTeam A will argue in favor of the statement: 'Social media has a positive impact on teenagers' lives.'\nTeam B will argue against the statement: 'Social media has a negative impact on teenagers' lives.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the complexities of social media's impact on teenagers.\n\nDebate Points:\nTeam A (In favor of the positive impact of social media on teenagers):\n- Connectivity: Argue that social media platforms facilitate communication and connection with peers, family members, and communities, fostering a sense of belonging and support.\n- Information Access: Highlight how social media provides teenagers with access to diverse perspectives, educational resources, and opportunities for self-expression and learning.\n- Networking: Discuss the role of social media in helping teenagers build professional networks, discover career opportunities, and develop essential digital skills for the modern workforce.\n- Empowerment: Emphasize the ability of social media to amplify teenagers' voices, promote activism, and catalyze social change by mobilizing youth-led movements.\n\nTeam B (Against the negative impact of social media on teenagers):\n- Mental Health: Raise concerns about the detrimental effects of excessive social media use on teenagers' mental well-being, including increased rates of anxiety, depression, and social comparison.\n- Cyberbullying: Address the prevalence of cyberbullying on social media platforms and its harmful consequences for victims, such as psychological distress, academic difficulties, and even suicide.\n- Addiction: Discuss the addictive nature of social media platforms, leading to decreased productivity, disrupted sleep patterns, and diminished real-life social interactions among teenagers.\n- Privacy and Security: Explore the risks of privacy breaches, online harassment, and exploitation of personal data on social media, posing threats to teenagers' safety and digital privacy rights.\n\nObjective:\nThe objective of this debate exercise is to encourage students to critically evaluate the impact of social media use on teenagers' lives from different perspectives. By engaging in informed discourse and considering both the positive and negative aspects of social media, students will develop a nuanced understanding of the complex dynamics shaping adolescents' digital experiences and well-being in the digital age.""
+  ""Assignment"": ""Debate on the Impact of Social Media Use on Teenagers\n\nInstructions:\nDivide the class into two groups: Team A and Team B.\nEach team will be assigned a stance on the impact of social media use on teenagers.\nTeam A will argue in favor of the statement: 'Social media has a positive impact on teenagers' lives.'\nTeam B will argue against the statement: 'Social media has a negative impact on teenagers' lives.'\nEach team will appoint a spokesperson to present their arguments.\nThe debate will consist of three rounds:\nRound 1: Opening Arguments\nRound 2: Rebuttals and Counterarguments\nRound 3: Closing Statements\nEach spokesperson will have three minutes to present their arguments in each round.\nDuring the rebuttal and counterarguments round, each team will have two minutes to respond to the opposing team's arguments.\nAfter all rounds are completed, the class will have an open discussion to further explore the complexities of social media's impact on teenagers.\n\nDebate Points:\nTeam A (In favor of the positive impact of social media on teenagers):\n- Connectivity: Argue that social media platforms facilitate communication and connection with peers, family members, and communities, fostering a sense of belonging and support.\n- Information Access: Highlight how social media provides teenagers with access to diverse perspectives, educational resources, and opportunities for self-expression and learning.\n- Networking: Discuss the role of social media in helping teenagers build professional networks, discover career opportunities, and develop essential digital skills for the modern workforce.\n- Empowerment: Emphasize the ability of social media to amplify teenagers' voices, promote activism, and catalyze social change by mobilizing youth-led movements.\n\nTeam B (Against the negative impact of social media on teenagers):\n- Mental Health: Raise concerns about the detrimental effects of excessive social media use on teenagers' mental well-being, including increased rates of anxiety, depression, and social comparison.\n- Cyberbullying: Address the prevalence of cyberbullying on social media platforms and its harmful consequences for victims, such as psychological distress, academic difficulties, and even suicide.\n- Addiction: Discuss the addictive nature of social media platforms, leading to decreased productivity, disrupted sleep patterns, and diminished real-life social interactions among teenagers.\n- Privacy and Security: Explore the risks of privacy breaches, online harassment, and exploitation of personal data on social media, posing threats to teenagers' safety and digital privacy rights.\n\nObjective:\nThe objective of this debate exercise is to encourage Learners to critically evaluate the impact of social media use on teenagers' lives from different perspectives. By engaging in informed discourse and considering both the positive and negative aspects of social media, Learners will develop a nuanced understanding of the complex dynamics shaping adolescents' digital experiences and well-being in the digital age.""
 }
 ";
         public static string Brainstorming = @"Example of a college level exercise about contemporary ethical dilemmas:
@@ -835,7 +835,7 @@ Example of a college level project-based learning activity on software developme
 }
 Example of a middle school level problem-solving activity on math:
 {
-  ""Assignment"": ""Activity Overview:\nStudents will work individually or in small groups to solve a math problem involving fractions, proportions, and critical thinking skills. The goal is to determine how to fairly divide pizzas among a group of friends with different preferences.\n\nActivity Task:\n1. Problem scenario: A group of 12 friends is having a pizza party. They have ordered 5 large pizzas with different toppings: pepperoni, sausage, mushrooms, olives, and peppers. Each pizza has 8 slices. Each friend has different preferences for toppings, 2 frineds only like pepperoni, 2 only like mushrooms, 1 only likes olives, 1 only likes sausage, 3 like all the toppings and the other 3 like peppers, mushrooms and olives. They want to ensure that everyone gets a share as fair as possible of their favorite toppings.\n2. Work independently or in small groups to come up with a solution. How can you divide the pizzas so that each friend gets share as fair as possible of their favorite toppings? \n3. Present your solution to the class and explain your reasoning. How did you decide to divide the pizzas? Did you use fractions, proportions, or another method? Discuss any alternative solutions or strategies.""
+  ""Assignment"": ""Activity Overview:\nLearners will work individually or in small groups to solve a math problem involving fractions, proportions, and critical thinking skills. The goal is to determine how to fairly divide pizzas among a group of friends with different preferences.\n\nActivity Task:\n1. Problem scenario: A group of 12 friends is having a pizza party. They have ordered 5 large pizzas with different toppings: pepperoni, sausage, mushrooms, olives, and peppers. Each pizza has 8 slices. Each friend has different preferences for toppings, 2 frineds only like pepperoni, 2 only like mushrooms, 1 only likes olives, 1 only likes sausage, 3 like all the toppings and the other 3 like peppers, mushrooms and olives. They want to ensure that everyone gets a share as fair as possible of their favorite toppings.\n2. Work independently or in small groups to come up with a solution. How can you divide the pizzas so that each friend gets share as fair as possible of their favorite toppings? \n3. Present your solution to the class and explain your reasoning. How did you decide to divide the pizzas? Did you use fractions, proportions, or another method? Discuss any alternative solutions or strategies.""
 }";
         public static string Simulation = @"Example of a high school level simulation activity on international diplomacy:
 {
@@ -843,7 +843,7 @@ Example of a middle school level problem-solving activity on math:
 }
 Example of a middle school level simulation activity on a the French Revolution:
 {
-  ""Assignment"": ""Role-playing activity simulating the key events and debates of the French Revolution.\n\nSimulation Overview:\nIn this simulation activity, students will role-play as key figures during the French Revolution. The goal is to recreate the political and social dynamics of revolutionary France and understand the causes, events, and outcomes of this pivotal historical period.\n\nSimulation Tasks:\n1. Assign each student a role as a historical figure from the French Revolution, such as King Louis XVI, Marie Antoinette, Maximilien Robespierre, Georges Danton, or Jean-Paul Marat.\n2. Research the major events and issues of the French Revolution, including the political, social, and economic causes, as well as the key figures and factions involved.\n3. Participate in simulated debates and discussions on these issues, working with other historical figures to negotiate and compromise on key decisions.\n4. Role-play the major events of the French Revolution, such as the storming of the Bastille, the Reign of Terror, the rise of the Jacobins, and the execution of King Louis XVI.\n5. Reflect on the decision-making process and the challenges of revolution, reform, and political change.\n\nSimulation Roles:\n- King Louis XVI\n- Marie Antoinette\n- Maximilien Robespierre\n- Georges Danton\n- Jean-Paul Marat\n- Jacques Necker\n- Charlotte Corday\n- And other historical figures representing different factions and perspectives\n\nSimulation Outcome:\n- Gain a deeper understanding of the French Revolution and its significance in world history\n- Develop research, critical thinking, and negotiation skills through role-playing and debate\n- Reflect on the causes, events, and outcomes of the French Revolution and its impact on modern society\n- Gain insight into the complexities of political change, revolution, and social reform"";
+  ""Assignment"": ""Role-playing activity simulating the key events and debates of the French Revolution.\n\nSimulation Overview:\nIn this simulation activity, Learners will role-play as key figures during the French Revolution. The goal is to recreate the political and social dynamics of revolutionary France and understand the causes, events, and outcomes of this pivotal historical period.\n\nSimulation Tasks:\n1. Assign each student a role as a historical figure from the French Revolution, such as King Louis XVI, Marie Antoinette, Maximilien Robespierre, Georges Danton, or Jean-Paul Marat.\n2. Research the major events and issues of the French Revolution, including the political, social, and economic causes, as well as the key figures and factions involved.\n3. Participate in simulated debates and discussions on these issues, working with other historical figures to negotiate and compromise on key decisions.\n4. Role-play the major events of the French Revolution, such as the storming of the Bastille, the Reign of Terror, the rise of the Jacobins, and the execution of King Louis XVI.\n5. Reflect on the decision-making process and the challenges of revolution, reform, and political change.\n\nSimulation Roles:\n- King Louis XVI\n- Marie Antoinette\n- Maximilien Robespierre\n- Georges Danton\n- Jean-Paul Marat\n- Jacques Necker\n- Charlotte Corday\n- And other historical figures representing different factions and perspectives\n\nSimulation Outcome:\n- Gain a deeper understanding of the French Revolution and its significance in world history\n- Develop research, critical thinking, and negotiation skills through role-playing and debate\n- Reflect on the causes, events, and outcomes of the French Revolution and its impact on modern society\n- Gain insight into the complexities of political change, revolution, and social reform"";
 }";
         public static string InquiryBasedLearning = @"Example of a college level inquiry-based learning activity on genetic engineering:
 {
@@ -906,28 +906,28 @@ Example of a high school level inquiry-based learning activity on artificial int
         public static string LearningObjectives = @"
 Example in English:""{
   ""Remembering"":[
-    ""Students will be able to recall the definition of uniform acceleration motion."",
-    ""Students will be able to list the equations that describe uniform acceleration motion.""
+    ""Learners will be able to recall the definition of uniform acceleration motion."",
+    ""Learners will be able to list the equations that describe uniform acceleration motion.""
   ],
   ""Understanding"":[
-    ""Students will be able to explain the concept of uniform acceleration motion in your own words."",
-    ""Students will be able to interpret graphs depicting uniform acceleration motion.""
+    ""Learners will be able to explain the concept of uniform acceleration motion in your own words."",
+    ""Learners will be able to interpret graphs depicting uniform acceleration motion.""
   ],
   ""Applying"":[
-    ""Students will be able to solve problems involving uniform acceleration motion using the appropriate equations."",
-    ""Students will be able to design an experiment to measure the acceleration of an object in uniform motion.""
+    ""Learners will be able to solve problems involving uniform acceleration motion using the appropriate equations."",
+    ""Learners will be able to design an experiment to measure the acceleration of an object in uniform motion.""
   ],
   ""Analyzing"":[
-    ""Students will be able to compare and contrast uniform acceleration motion with il moto uniforme."",
-    ""Students will be able to analyze real-life examples of uniform acceleration motion and identify the factors affecting acceleration.""
+    ""Learners will be able to compare and contrast uniform acceleration motion with il moto uniforme."",
+    ""Learners will be able to analyze real-life examples of uniform acceleration motion and identify the factors affecting acceleration.""
   ],
   ""Evaluating"":[
-    ""Students will be able to critique the validity of experimental procedures used to measure acceleration in various scenarios."",
-    ""Students will be able to evaluate the efficiency of different methods for calculating acceleration in uniform acceleration motion.""
+    ""Learners will be able to critique the validity of experimental procedures used to measure acceleration in various scenarios."",
+    ""Learners will be able to evaluate the efficiency of different methods for calculating acceleration in uniform acceleration motion.""
   ],
   ""Creating"":[
-    ""Students will be able to develop a scenario involving uniform acceleration motion and solve related problems."",
-    ""Students will be able to construct a model or simulation to demonstrate uniform acceleration motion.""
+    ""Learners will be able to develop a scenario involving uniform acceleration motion and solve related problems."",
+    ""Learners will be able to construct a model or simulation to demonstrate uniform acceleration motion.""
   ]
 }""
 
@@ -960,82 +960,82 @@ Example in Italian:""{
 
 Example in French:""{
   ""Remembering"":[
-    ""Les étudiants seront capables de se souvenir de la définition de il moto uniformemente accelerato."",
-    ""Les étudiants seront capables de énumérer les équations qui décrivent il moto uniformemente accelerato.""
+    ""Les apprenants seront capables de se souvenir de la définition de il moto uniformemente accelerato."",
+    ""Les apprenants seront capables de énumérer les équations qui décrivent il moto uniformemente accelerato.""
   ],
   ""Understanding"":[
-    ""Les étudiants seront capables de expliquer le concept de il moto uniformemente accelerato avec ses propres mots."",
-    ""Les étudiants seront capables de interpréter les graphiques représentant il moto uniformemente accelerato.""
+    ""Les apprenants seront capables de expliquer le concept de il moto uniformemente accelerato avec ses propres mots."",
+    ""Les apprenants seront capables de interpréter les graphiques représentant il moto uniformemente accelerato.""
   ],
   ""Applying"":[
-    ""Les étudiants seront capables de résoudre des problèmes impliquant il moto uniformemente accelerato en utilisant les équations appropriées."",
-    ""Les étudiants seront capables de concevoir une expérience pour mesurer l'accélération d'un objet en mouvement uniformément accéléré.""
+    ""Les apprenants seront capables de résoudre des problèmes impliquant il moto uniformemente accelerato en utilisant les équations appropriées."",
+    ""Les apprenants seront capables de concevoir une expérience pour mesurer l'accélération d'un objet en mouvement uniformément accéléré.""
   ],
   ""Analyzing"":[
-    ""Les étudiants seront capables de comparer et mettre en contraste il moto uniformemente accelerato avec il moto uniforme."",
-    ""Les étudiants seront capables de analyser des exemples de la vie réelle de il moto uniformemente accelerato et identifier les facteurs affectant l'accélération.""
+    ""Les apprenants seront capables de comparer et mettre en contraste il moto uniformemente accelerato avec il moto uniforme."",
+    ""Les apprenants seront capables de analyser des exemples de la vie réelle de il moto uniformemente accelerato et identifier les facteurs affectant l'accélération.""
   ],
   ""Evaluating"":[
-    ""Les étudiants seront capables de critiquer la validité des procédures expérimentales utilisées pour mesurer l'accélération dans différents scénarios."",
-    ""Les étudiants seront capables de évaluer l'efficacité de différentes méthodes pour calculer l'accélération dans il moto uniformemente accelerato.""
+    ""Les apprenants seront capables de critiquer la validité des procédures expérimentales utilisées pour mesurer l'accélération dans différents scénarios."",
+    ""Les apprenants seront capables de évaluer l'efficacité de différentes méthodes pour calculer l'accélération dans il moto uniformemente accelerato.""
   ],
   ""Creating"":[
-    ""Les étudiants seront capables de développer un scénario impliquant il moto uniformemente accelerato et résoudre des problèmes associés."",
-    ""Les étudiants seront capables de construire un modèle ou une simulation pour démontrer il moto uniformemente accelerato.""
+    ""Les apprenants seront capables de développer un scénario impliquant il moto uniformemente accelerato et résoudre des problèmes associés."",
+    ""Les apprenants seront capables de construire un modèle ou une simulation pour démontrer il moto uniformemente accelerato.""
   ]
 }""
 
 Example in German:""{
   ""Remembering"":[
-    ""Studenten werden in der Lage sein zu erinnern Sie sich an die Definition von il moto uniformemente accelerato."",
-    ""Studenten werden in der Lage sein zu auflisten der Gleichungen, die il moto uniformemente accelerato beschreiben.""
+    ""Lernende werden in der Lage sein zu erinnern Sie sich an die Definition von il moto uniformemente accelerato."",
+    ""Lernende werden in der Lage sein zu auflisten der Gleichungen, die il moto uniformemente accelerato beschreiben.""
   ],
   ""Understanding"":[
-    ""Studenten werden in der Lage sein zu erklären Sie das Konzept von il moto uniformemente accelerato in eigenen Worten."",
-    ""Studenten werden in der Lage sein zu interpretieren von Grafiken, die il moto uniformemente accelerato darstellen.""
+    ""Lernende werden in der Lage sein zu erklären Sie das Konzept von il moto uniformemente accelerato in eigenen Worten."",
+    ""Lernende werden in der Lage sein zu interpretieren von Grafiken, die il moto uniformemente accelerato darstellen.""
   ],
   ""Applying"":[
-    ""Studenten werden in der Lage sein zu lösen von Problemen, die il moto uniformemente accelerato unter Verwendung der entsprechenden Gleichungen betreffen."",
-    ""Studenten werden in der Lage sein zu entwerfen eines Experiments zur Messung der Beschleunigung eines Objekts in gleichmäßiger Bewegung.""
+    ""Lernende werden in der Lage sein zu lösen von Problemen, die il moto uniformemente accelerato unter Verwendung der entsprechenden Gleichungen betreffen."",
+    ""Lernende werden in der Lage sein zu entwerfen eines Experiments zur Messung der Beschleunigung eines Objekts in gleichmäßiger Bewegung.""
   ],
   ""Analyzing"":[
-    ""Studenten werden in der Lage sein zu vergleichen und kontrastieren Sie il moto uniformemente accelerato mit il moto uniforme."",
-    ""Studenten werden in der Lage sein zu analysieren von Beispielen aus dem wirklichen Leben von il moto uniformemente accelerato und Identifizieren der Faktoren, die die Beschleunigung beeinflussen.""
+    ""Lernende werden in der Lage sein zu vergleichen und kontrastieren Sie il moto uniformemente accelerato mit il moto uniforme."",
+    ""Lernende werden in der Lage sein zu analysieren von Beispielen aus dem wirklichen Leben von il moto uniformemente accelerato und Identifizieren der Faktoren, die die Beschleunigung beeinflussen.""
   ],
   ""Evaluating"":[
-    ""Studenten werden in der Lage sein zu kritisieren Sie die Gültigkeit experimenteller Verfahren zur Messung der Beschleunigung in verschiedenen Szenarien."",
-    ""Studenten werden in der Lage sein zu bewerten Sie die Effizienz verschiedener Methoden zur Berechnung der Beschleunigung in il moto uniformemente accelerato.""
+    ""Lernende werden in der Lage sein zu kritisieren Sie die Gültigkeit experimenteller Verfahren zur Messung der Beschleunigung in verschiedenen Szenarien."",
+    ""Lernende werden in der Lage sein zu bewerten Sie die Effizienz verschiedener Methoden zur Berechnung der Beschleunigung in il moto uniformemente accelerato.""
   ],
   ""Creating"":[
-    ""Studenten werden in der Lage sein zu entwickeln Sie ein Szenario, das il moto uniformemente accelerato einbezieht, und lösen Sie damit verbundene Probleme."",
-    ""Studenten werden in der Lage sein zu erstellen Sie ein Modell oder eine Simulation, um il moto uniformemente accelerato zu demonstrieren.""
+    ""Lernende werden in der Lage sein zu entwickeln Sie ein Szenario, das il moto uniformemente accelerato einbezieht, und lösen Sie damit verbundene Probleme."",
+    ""Lernende werden in der Lage sein zu erstellen Sie ein Modell oder eine Simulation, um il moto uniformemente accelerato zu demonstrieren.""
   ]
 }""
 
 Example in Spanish:""{
   ""Remembering"":[
-    ""Los estudiantes serán capaces de recordar la definición de il moto uniformemente accelerato."",
-    ""Los estudiantes serán capaces de recordar enumerar las ecuaciones que describen il moto uniformemente accelerato.""
+    ""Los aprendices serán capaces de recordar la definición de il moto uniformemente accelerato."",
+    ""Los aprendices serán capaces de recordar enumerar las ecuaciones que describen il moto uniformemente accelerato.""
   ],
   ""Understanding"":[
-    ""Los estudiantes serán capaces de recordar explicar el concepto de il moto uniformemente accelerato con sus propias palabras."",
-    ""Los estudiantes serán capaces de recordar interpretar gráficos que representen il moto uniformemente accelerato.""
+    ""Los aprendices serán capaces de recordar explicar el concepto de il moto uniformemente accelerato con sus propias palabras."",
+    ""Los aprendices serán capaces de recordar interpretar gráficos que representen il moto uniformemente accelerato.""
   ],
   ""Applying"":[
-    ""Los estudiantes serán capaces de recordar resolver problemas que involucren il moto uniformemente accelerato utilizando las ecuaciones apropiadas."",
-    ""Los estudiantes serán capaces de recordar diseñar un experimento para medir la aceleración de un objeto en movimiento uniformemente acelerado.""
+    ""Los aprendices serán capaces de recordar resolver problemas que involucren il moto uniformemente accelerato utilizando las ecuaciones apropiadas."",
+    ""Los aprendices serán capaces de recordar diseñar un experimento para medir la aceleración de un objeto en movimiento uniformemente acelerado.""
   ],
   ""Analyzing"":[
-    ""Los estudiantes serán capaces de recordar comparar y contrastar il moto uniformemente accelerato con il moto uniforme."",
-    ""Los estudiantes serán capaces de recordar analizar ejemplos de la vida real de il moto uniformemente accelerato e identificar los factores que afectan la aceleración.""
+    ""Los aprendices serán capaces de recordar comparar y contrastar il moto uniformemente accelerato con il moto uniforme."",
+    ""Los aprendices serán capaces de recordar analizar ejemplos de la vida real de il moto uniformemente accelerato e identificar los factores que afectan la aceleración.""
   ],
   ""Evaluating"":[
-    ""Los estudiantes serán capaces de recordar critique la validez de los procedimientos experimentales utilizados para medir la aceleración en diferentes escenarios."",
-    ""Los estudiantes serán capaces de recordar evaluar la eficacia de diferentes métodos para calcular la aceleración en il moto uniformemente accelerato.""
+    ""Los aprendices serán capaces de recordar critique la validez de los procedimientos experimentales utilizados para medir la aceleración en diferentes escenarios."",
+    ""Los aprendices serán capaces de recordar evaluar la eficacia de diferentes métodos para calcular la aceleración en il moto uniformemente accelerato.""
   ],
   ""Creating"":[
-    ""Los estudiantes serán capaces de recordar desarrollar un escenario que involucre il moto uniformemente accelerato y resolver problemas relacionados."",
-    ""Los estudiantes serán capaces de recordar construir un modelo o simulación para demostrar il moto uniformemente accelerato.""
+    ""Los aprendices serán capaces de recordar desarrollar un escenario que involucre il moto uniformemente accelerato y resolver problemas relacionados."",
+    ""Los aprendices serán capaces de recordar construir un modelo o simulación para demostrar il moto uniformemente accelerato.""
   ]
 }""";
 
@@ -1154,7 +1154,7 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
     {
       ""type"": ""Lesson"",
       ""topic"": ""Introduction to the rise of the Napoleon empire"",
-      ""description"": ""Use a slide presentation to introduce the students to the lesson topics by providing an overview of the lesson plan."",
+      ""description"": ""Use a slide presentation to introduce the Learners to the lesson topics by providing an overview of the lesson plan."",
       ""duration"": 10
     },
     {
@@ -1247,7 +1247,7 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
     {
       ""type"": ""Lesson"",
       ""topic"": ""Mathematical Modeling of Parabolic Motion"",
-      ""description"": ""Teach students how to create mathematical models to describe parabolic motion using equations and graphs."",
+      ""description"": ""Teach Learners how to create mathematical models to describe parabolic motion using equations and graphs."",
       ""duration"": 15
     },
     {
@@ -1461,17 +1461,17 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
 'essay' (open ended assignment that expects a full essay as answer),
 'knoledge_exposition' (presentation or dissertation of a specific topic),
 
-'debate' (oral debate between groups of students),
+'debate' (oral debate between groups of Learners),
 'brainstorming' (group activity to generate ideas or solutions about a specifc topic),
 'group_discussion' (group activity to discuss a specific topic),
 'simulation' (role-playing activity to simulate a situation about a specific topic),
-'inquiry_based_learning' (activity where students explore a topic through inquiry and research),
+'inquiry_based_learning' (activity where Learners explore a topic through inquiry and research),
 
 'non_written_material_analysis' (analysis of non-written material such as images, videos, or audio),
 'non_written_material_production' (production of non-written material such as images, videos, or audio),
 'case_study_analysis' (analysis of a specific case study),
-'project_based_learning' (activity where students work on a project to develope a real-world project),
-'problem_solving_activity' (activity where students solve a specific problem)
+'project_based_learning' (activity where Learners work on a project to develope a real-world project),
+'problem_solving_activity' (activity where Learners solve a specific problem)
 Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
     
         public static string ActivitiesListB = @"
@@ -1486,8 +1486,8 @@ Keep the names in lowercase and use underscores (_) to separate words exactly as
 'non_written_material_analysis' (analysis of non-written material such as images, videos, or audio),
 'non_written_material_production' (production of non-written material such as images, videos, or audio),
 'case_study_analysis' (analysis of a specific case study),
-'project_based_learning' (activity where students work on a project to develope a real-world project),
-'problem_solving_activity' (activity where students solve a specific problem)
+'project_based_learning' (activity where Learners work on a project to develope a real-world project),
+'problem_solving_activity' (activity where Learners solve a specific problem)
 Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
     
     }
