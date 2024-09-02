@@ -3,10 +3,12 @@ namespace SK_API
     public class TextAnalyserPrompt {
         public static string TextAnalysisPrompt = @"
 Please write **everything** in your answer in English and organize the outputs in the following format (correct formatting is crucial for post-processing):{{$format}}
-Here are some valid examples: {{$examples}}
-Given the provided material: '{{$material}}', please analyze it and generate the output in the correct format like the provided examples.
-Ensure the topics are ordered by their appearance in the material and provide concise, two-line descriptions (in English) of how each topic is explained. Also the Title must be in English like in the examples.
-The type must be either 'theoretical', 'code' or 'problem_resolution', where 'code' has to be returned for all the topics that talk about programming,  'problem_resolution' for all scientific topics and 'theoretical' has to be returned only if neither 'code' nor 'problem_resolution' are applicable.
+Valid Examples: {{$examples}}
+Material: '{{$material}}'. Analyze it and generate the output in the correct format like the valid examples.
+Ensure the topics are ordered by their appearance in the material and provide appropriate titles and concise, two-line descriptions (in English) of how each topic is explained.
+The type must be either 'theoretical', 'code' or 'problem_resolution', where 'code' has to be returned for all the topics that talk specifically about programming,  'problem_resolution' for all scientific topics and 'theoretical' has to be returned only if neither 'code' nor 'problem_resolution' are applicable.
+The Bloom's level must be one of the following: ""Remembering"", ""Understanding"", ""Applying"", ""Analyzing"", ""Evaluating"", ""Creating"".
+The starting words MUST match exactly the beginning of the topic section in the material, it's crucial for the post-processing segmentation of the text.
 Provide **ONLY** the JSON."; 
     }
     public class ActivityGenerationPrompt {
@@ -86,6 +88,17 @@ Now, your objective is to assess the level of comprehension of your Learners abo
     }";
     }
     
+    public class SyllabusPrompts{
+      public static string SyllabusGenerator = @"You are an expert in educational content creation. Your task is to generate a syllabus for a {{$macro_subject}} course on {{$title}}.  
+The course will cover the following topics: {{$topics}}.  
+The syllabus must be formatted in JSON using the following structure: {{$format}}  
+Ensure that the content is clear, concise, and appropriate for a {{$level}} level of study.  
+
+Here are some valid examples for reference:
+{{$examples}}  
+
+Provide **ONLY** the JSON output.";
+    }
     public class PlanningPrompts{
       public static string LessonPlannerprompt = @"You're a {{$level}} {{$marco_subject}} skilled assistant-teacher. The main teacher asked you to plan the next lesson, which is about: ' {{$title}} '. The teacher defined the learning objective for the lesson to be: '{{$learning_objective}}' which reflect the {{$bloom_level}} level in Bloom's taxonomy. 
 You now need to define the lesson plan completely in English. From your previous lessons, you wrote down some notes about the class behaviour. Notes: '{{$context}}' (note that these notes are in {{$language}}, so you have to translate them into English to understand the context).
@@ -108,13 +121,20 @@ Here are the examples: {{$examples}}
 You should ensure that the plan is concise, that it covers only the necessary topics and thet each topic is properly linked to at least one Activity node serving as a assessment.
 Provide **ONLY** the JSON of the lesson plan, completely in English like the examples.";
     
-      public static string CoursePlanPrompt = @"You're a {{$language}} speaking {{$level}} {{$marco_subject}} skilled teacher. You have {{$number_of_lessons}} lessons ({{$lesson_duration}} minutes each) to teach your {{$level}} Learners about ' {{$topic}} '.{{$last_lesson}}
-As a highly organized teacher, you want to schedule the plan logically as a list of lessons, where each lesson has an explanatory title and a list of topics.
-To provide a clear and organized lesson plan, you decided to structure it in a JSON format. Format: {{$format}}
-Ensure that the sequence of topics in each lesson is logically scheduled and suitable for {{$level}} Learners.
-Ensure to spread the topics across all the {{$number_of_lessons}} lessons in a balanced way, considering that each lesson has a duration of {{$lesson_duration}} minutes.
-Provide **ONLY** the JSON of the lesson plan with keys in English and titles in {{$language}} like the example below: {{$example}}";
+      public static string CoursePlanPrompt = @"
+You are a skilled {{$macro_subject}} teacher at the {{$level}} level, tasked with designing a course titled '{{$title}}'. 
+This course must consist of exactly {{$number_of_lessons}} lessons, each lasting {{$lesson_duration}} minutes.
+Here is the list of the micro topics you need to include in the course: {{$topics}}
+Your goal is to develop a structured {{$level}} level course plan that effectively covers all the provided micro-topics in exactly {{$number_of_lessons}} lessons.
 
+Here's what you need to do:
+1. **Group and Sequence Topics**: Group and organize the provided micro-topics into {{$number_of_lessons}} lessons. Ensure the topics within each lesson are logically sequenced.
+2. **Balance Lesson Content**: Arrange and plan the {{$number_of_lessons}} lessons, making sure each lesson is balanced in terms of content and time allocation ({{$lesson_duration}} minutes per lesson). You must also consider the time needed for exercises and class discussion, thus the lessons should not be too dense. If you think it's appropriate, you can dedicate some entire lessons to testing, feedbacks or other activities that are not striclty teaching new topics.
+3. **Output Format**: Present the lesson plan in a JSON format, with keys in English and values in {{$language}}. The structure should align with the provided format: {{$format}}.
+
+**Important**:
+- Focus on logical progression and coherence in each lesson.
+- Provide **ONLY** the JSON output.";
     }
 
     public class ExerciseCorrectorPrompt{
@@ -215,7 +235,42 @@ Instructions for GPT:
   ""Evaluating"": [],
   ""Creating"": []
 }""";
-    
+        public static string SyllabusFormat = @"""{
+  ""CourseTitle"": ""Short and descriptive title of the course"",
+  ""CourseDescription"": ""Brief overview of the course, from where it starts to where it ends and what to expect"",
+  ""LearningOutcomes"": [ //List of all the most important learning outcomes
+    ""Learning outcome 1"",
+    ""Learning outcome 2"",
+    ...
+    ""Learning outcome n""
+  ],
+  ""CourseGoals"": [ //List of all the goals of the course
+    ""Course goal 1"",
+    ""Course goal 2"",
+    ...
+    ""Course goal n""
+  ],
+  ""CourseTopics"": [
+    {
+      ""Topic"": ""Topic 1 Title"",
+      ""Description"": ""Description of the topic 1""
+    },
+    {
+      ""Topic"": ""Topic 2 Title"",
+      ""Description"": ""Description of the topic 2""
+    },
+    ....
+    {
+      ""Topic"": ""Topic n Title"",
+      ""Description"": ""Description of the topic n""
+    }
+  ],
+  ""Prerequisites"": [ //List of all the non trivial prerequisites for the course
+    ""Pre-requisite 1"",
+    ...
+    ""Pre-requisite n""
+  ]
+}""";
         public static string ExerciseCorrectionsFormat = @"
 {
 ""Accuracy"": double value that represents the accuracy of the answer ,
@@ -224,26 +279,36 @@ Instructions for GPT:
     
         public static string AnalyserFormat = @"
 {
-  ""Language"": ""try to understand the language in which the material is written"",
-  ""MacroSubject"": ""extract the macro-subject of the material, such as history, math, literature, etc.."",
+  ""Language"": ""the language in which the material is written"",
+  ""MacroSubject"": ""macro-subject of the material, such as history, math, literature, etc.."",
   ""Title"": ""generate a title that best summarizes the material and reflects its main focus and content"",
   ""PerceivedDifficulty"": ""assess the perceived level of difficulty of the material and provide a rating or description indicating its complexity.The perceived level should fit one of the following categories: primary_school, middle_school, high_school, college, or academy"",
-  ""MainTopics"": [  extract all the N main micro-topics covered in the material, provide a list of triplets containing
+  ""MainTopics"": [  extract all the N main topics covered in the material, provide a list of objects with the following stucture:
     {
-      ""Topic"": ""first topic"",
+      ""Topic"": ""generate an explicative short title in English for the first topic"",
+      ""Description"": ""description of the first topic"",
       ""Type"": ""type of the first topic"",
-      ""Description"": ""description of the first topic""
+      ""Bloom"": ""Bloom's level associated with the first topic (""Remembering"", ""Understanding"", ""Applying"", ""Analyzing"", ""Evaluating"", ""Creating"")"",
+      ""Start"": ""index of the first char of the first topic"",
+      ""End"": ""first five words of the first topic"",
+      ""Keywords"": [""keyword1"", ""keyword2"", ...]  list of keywords related to the first topic
     },
     {
-      ""Topic"": ""second topic"",
+      ""Topic"": ""generate an explicative short title in English for the second topic"",
+      ""Description"": ""description of the second topic"",
       ""Type"": ""type of the second topic"",
-      ""Description"": ""description of the second topic""
+      ""Bloom"": ""Bloom's level associated with the second topic (""Remembering"", ""Understanding"", ""Applying"", ""Analyzing"", ""Evaluating"", ""Creating"")"",
+      ""Start"": ""first five words of the second topic"",
+      ""Keywords"": [""keyword1"", ""keyword2"", ...]  list of keywords related to the second topic
     },
     ....
     {
-      ""Topic"": ""nth topic"",
+      ""Topic"": ""generate an explicative short title in English for the third topic"",
+      ""Description"": ""description of the nth topic"",
       ""Type"": ""type of the nth topic"",
-      ""Description"": ""description of the nth topic""
+      ""Bloom"": ""Bloom's level associated with the nth topic (""Remembering"", ""Understanding"", ""Applying"", ""Analyzing"", ""Evaluating"", ""Creating"")"",
+      ""Start"": ""first five words of the nth topic"",
+      ""Keywords"": [""keyword1"", ""keyword2"", ...]  list of keywords related to the nth topic
     }
   ]
 }";
@@ -1039,6 +1104,137 @@ Example in Spanish:""{
   ]
 }""";
 
+        public static string SyllabusExamples = @"""{
+  ""CourseTitle"": ""Introduction to Organic Chemistry"",
+  ""CourseDescription"": ""This college-level course introduces students to the fundamental principles of organic chemistry. Topics include the structure, properties, and reactions of organic molecules, with a focus on understanding the mechanisms that govern chemical behavior. Laboratory sessions complement the theoretical knowledge gained in lectures."",
+  ""LearningOutcomes"": [
+    ""Understand the structure and bonding of organic molecules"",
+    ""Predict the reactivity of organic compounds based on functional groups"",
+    ""Analyze and interpret spectroscopic data to identify organic substances"",
+    ""Apply organic reaction mechanisms to synthesize target compounds"",
+    ""Demonstrate safe and effective laboratory techniques in organic chemistry experiments""
+  ],
+  ""CourseGoals"": [
+    ""Provide a solid foundation in organic chemistry principles"",
+    ""Prepare students for advanced chemistry courses and research"",
+    ""Develop problem-solving skills in the context of chemical reactions"",
+    ""Promote a hands-on understanding of organic synthesis through laboratory work""
+  ],
+  ""CourseTopics"": [
+    {
+      ""Topic"": ""Structure and Bonding"",
+      ""Description"": ""Introduction to atomic structure, molecular orbitals, and the types of bonds in organic molecules.""
+    },
+    {
+      ""Topic"": ""Functional Groups and Reactivity"",
+      ""Description"": ""Study of common organic functional groups and their influence on molecular reactivity.""
+    },
+    {
+      ""Topic"": ""Reaction Mechanisms"",
+      ""Description"": ""Detailed exploration of reaction types such as substitution, elimination, and addition, including their mechanisms.""
+    },
+    {
+      ""Topic"": ""Spectroscopy and Structure Determination"",
+      ""Description"": ""Use of IR, NMR, and Mass Spectrometry to determine the structure of organic molecules.""
+    },
+    {
+      ""Topic"": ""Organic Synthesis"",
+      ""Description"": ""Application of reaction mechanisms in the synthesis of complex organic compounds.""
+    }
+  ],
+  ""Prerequisites"": [
+    ""Completion of General Chemistry I and II"",
+    ""Basic understanding of chemical bonding and reactions""
+  ]
+}
+
+{
+  ""CourseTitle"": ""The Second World War: A Comprehensive Study"",
+  ""CourseDescription"": ""This high school course offers an in-depth analysis of the Second World War, covering its causes, major events, and global impact. Students will explore the political, social, and economic factors that shaped the war and examine its long-term consequences on the modern world."",
+  ""LearningOutcomes"": [
+    ""Identify the key causes and events leading up to the Second World War"",
+    ""Analyze the strategies and outcomes of major battles and campaigns"",
+    ""Evaluate the social and economic impact of the war on different countries"",
+    ""Understand the role of major world leaders and their decisions during the war"",
+    ""Critically assess the legacy of the Second World War on contemporary global politics""
+  ],
+  ""CourseGoals"": [
+    ""Develop a comprehensive understanding of the Second World War"",
+    ""Foster critical thinking about historical events and their causes"",
+    ""Encourage students to explore the human impact of global conflicts"",
+    ""Prepare students for advanced history courses and civic engagement""
+  ],
+  ""CourseTopics"": [
+    {
+      ""Topic"": ""Causes of the Second World War"",
+      ""Description"": ""Examination of the political and economic conditions that led to the outbreak of the war.""
+    },
+    {
+      ""Topic"": ""Major Battles and Campaigns"",
+      ""Description"": ""Detailed analysis of key battles, including Stalingrad, D-Day, and the Pacific Theater.""
+    },
+    {
+      ""Topic"": ""The Home Fronts"",
+      ""Description"": ""Study of the impact of the war on civilian life, including rationing, propaganda, and war production.""
+    },
+    {
+      ""Topic"": ""The Holocaust and War Crimes"",
+      ""Description"": ""Exploration of the Holocaust, genocide, and the war crimes committed during the conflict.""
+    },
+    {
+      ""Topic"": ""Post-War Consequences"",
+      ""Description"": ""Discussion of the outcomes of the war, including the establishment of the United Nations and the Cold War.""
+    }
+  ],
+  ""Prerequisites"": [
+    ""None; this course is open to all high school students""
+  ]
+}
+
+
+{
+  ""CourseTitle"": ""Advanced Prompt Engineering for AI Systems"",
+  ""CourseDescription"": ""This course provides an in-depth exploration of prompt engineering techniques used in AI systems. Students will learn how to design, optimize, and evaluate prompts to improve the performance of language models in various applications. The course covers key concepts such as prompt formulation, bias mitigation, and prompt tuning across different contexts."",
+  ""LearningOutcomes"": [
+    ""Design and evaluate prompts for AI models using best practices"",
+    ""Analyze the impact of different prompt structures on model outputs"",
+    ""Optimize prompts to minimize biases and improve fairness"",
+    ""Create custom prompts for specific tasks and applications""
+  ],
+  ""CourseGoals"": [
+    ""Equip students with advanced skills in prompt engineering"",
+    ""Prepare students for roles in AI development and research"",
+    ""Foster critical thinking in the ethical implications of AI prompts"",
+    ""Enable students to contribute to the development of fair and effective AI systems""
+  ],
+  ""CourseTopics"": [
+    {
+      ""Topic"": ""Introduction to Prompt Engineering"",
+      ""Description"": ""Overview of prompt engineering, its significance in AI, and the foundational principles.""
+    },
+    {
+      ""Topic"": ""Prompt Formulation and Structure"",
+      ""Description"": ""Detailed exploration of how to construct prompts and the impact of different structures on AI performance.""
+    },
+    {
+      ""Topic"": ""Bias Mitigation in Prompts"",
+      ""Description"": ""Techniques and strategies for identifying and reducing biases in AI prompts.""
+    },
+    {
+      ""Topic"": ""Advanced Prompt Optimization"",
+      ""Description"": ""Methods for fine-tuning and optimizing prompts to achieve specific outcomes.""
+    },
+    {
+      ""Topic"": ""Case Studies and Applications"",
+      ""Description"": ""Real-world applications of prompt engineering in various domains such as healthcare, finance, and education.""
+    }
+  ],
+  ""Prerequisites"": [
+    ""Basic understanding of AI and machine learning concepts"",
+    ""Experience with Python programming"",
+    ""Completion of introductory courses in natural language processing""
+  ]
+}""";
         public static string ExerciseCorrections = @"
 Question: What is quantum entanglement, and how does it impact the state description of particles?
 Answer: Quantum entanglement is a quantum mechanical phenomenon where particles, even when separated by distance, become interdependent in a manner that the state of one particle is inseparable from the state of another. 
@@ -1079,23 +1275,32 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
 {
   ""Language"": ""English"",
   ""MacroSubject"": ""History"",
-  ""Title"": ""The American Civil War"",
+  ""Title"": ""The American Civil War: Causes, Key Battles, and the Emancipation Proclamation"",
   ""PerceivedDifficulty"": ""high_school"",
   ""MainTopics"": [
     {
       ""Topic"": ""Causes of the Civil War"",
+      ""Description"": ""Explanation of the economic, social, and political factors that led to the conflict."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Explanation of the economic, social, and political factors that led to the conflict.""
+      ""Bloom"": ""Understanding"",
+      ""Start"": ""The first factor that contributed"",
+      ""Keywords"": [""economic factors"", ""social factors"", ""political factors"", ""conflict""]
     },
     {
       ""Topic"": ""Major Battles"",
+      ""Description"": ""Overview of key battles and their significance."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Overview of key battles and their significance.""
+      ""Bloom"": ""Remembering"",
+      ""Start"": ""In 1861 the first major"",
+      ""Keywords"": [""key battles"", ""significance"", ""military history""]
     },
     {
       ""Topic"": ""Emancipation Proclamation"",
+      ""Description"": ""Analysis of Lincoln's executive order and its impact."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Analysis of Lincoln's executive order and its impact""
+      ""Bloom"": ""Analyzing"",
+      ""Start"": ""The Emancipation Proclamation was issued"",
+      ""Keywords"": [""Emancipation Proclamation"", ""Lincoln"", ""executive order"", ""impact""]
     }
   ]
 }
@@ -1103,47 +1308,66 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
 {
   ""Language"": ""Italian"",
   ""MacroSubject"": ""History"",
-  ""Title"": ""Interesting facts you may not know about Gengis Khan"",
+  ""Title"": ""Interesting Facts About Genghis Khan: Strategic Marriages, Secret Tomb, and His Descendants"",
   ""PerceivedDifficulty"": ""high_school"",
   ""MainTopics"": [
     {
       ""Topic"": ""Strategic Marriages"",
+      ""Description"": ""Genghis Khan arranged strategic marriages for his daughters, often to allied rulers, and then assigned military missions to his sons-in-law."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Genghis Khan arranged strategic marriages for his daughters, often to allied rulers, and then assigned military missions to his sons-in-law.""
+      ""Bloom"": ""Understanding"",
+      ""Start"": ""In the 13th century, Genghis "",
+      ""Keywords"": [""strategic marriages"", ""daughters"", ""allied rulers"", ""military missions""]
     },
     {
       ""Topic"": ""Secret Tomb"",
+      ""Description"": ""Genghis Khan's tomb has never been found, as he ordered it to remain a secret. Thousands of people who attended his funeral were executed to keep the location hidden."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Genghis Khan's tomb has never been found, as he ordered it to remain a secret. Thousands of people who attended his funeral were executed to keep the location hidden.""
+      ""Bloom"": ""Evaluating"",
+      ""Start"": ""The location of Genghis Khan's"",
+      ""Keywords"": [""secret tomb"", ""Genghis Khan"", ""funeral"", ""hidden location""]
     },
     {
       ""Topic"": ""Descendants"",
+      ""Description"": ""Genghis Khan had so many children and wives that 1 in 200 people today are believed to be his descendants."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Genghis Khan had so many children and wives that 1 in 200 people today are believed to be his descendants.""
+      ""Bloom"": ""Applying"",
+      ""Start"": ""An interesting fact about Genghis"",
+      ""Keywords"": [""descendants"", ""Genghis Khan"", ""children"", ""wives"", ""genetics""]
     }
   ]
 }
 
+
 {
   ""Language"": ""Spanish"",
   ""MacroSubject"": ""Literature"",
-  ""Title"": ""Don Quixote"",
+  ""Title"": ""Don Quixote: Characters, Themes, and Narrative Style"",
   ""PerceivedDifficulty"": ""college"",
   ""MainTopics"": [
     {
       ""Topic"": ""Characters"",
+      ""Description"": ""Description of Don Quixote, Sancho Panza, and other key characters."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Description of Don Quixote, Sancho Panza, and other key characters.""
+      ""Bloom"": ""Remembering"",
+      ""Start"": ""The main characters in Don"",
+      ""Keywords"": [""Don Quixote"", ""Sancho Panza"", ""key characters""]
     },
     {
       ""Topic"": ""Themes"",
+      ""Description"": ""Exploration of themes such as chivalry, reality vs. illusion, and madness."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Exploration of themes such as chivalry, reality vs. illusion, and madness.""
+      ""Bloom"": ""Understanding"",
+      ""Start"": ""At that time chivalry was"",
+      ""Keywords"": [""themes"", ""chivalry"", ""reality"", ""illusion"", ""madness""]
     },
     {
       ""Topic"": ""Narrative Style"",
+      ""Description"": ""Analysis of Cervantes' narrative techniques and metafictional elements."",
       ""Type"": ""Theoretical"",
-      ""Description"": ""Analysis of Cervantes' narrative techniques and metafictional elements.""
+      ""Bloom"": ""Creating"",
+      ""Start"": ""The narrative style of Don"",
+      ""Keywords"": [""narrative style"", ""Cervantes"", ""techniques"", ""metafiction""]
     }
   ]
 }";

@@ -47,11 +47,20 @@ namespace SK_API.Controllers{
                 int n_o_w = input.NumberOfWords;
                 string level = input.Level.ToString().ToLower();
                 string info = input.LearningObjective;
+                
+                // fill the promptB with the input values
+                string promptB = InternalPrompts.MaterialGenerationPrompt;
+                promptB = promptB.Replace("{{$topic}}", topic);
+                promptB = promptB.Replace("{{$level}}", level);
+                promptB = promptB.Replace("{{$learning_objective}}", info);
+                promptB = promptB.Replace("{{$n_o_w}}", n_o_w.ToString());
+
                 var InternalFunctions = new InternalFunctions();
                 var translation = await InternalFunctions.GenerateMaterial(topic, info, level, kernel, n_o_w);
                 output = translation.ToString().Trim();
-                Console.WriteLine("Result: " + output);
-                return Ok(output);
+                string json = output;
+                string jsonplusprompt = InternalFunctions.InsertPromptIntoJSON(json, promptB);
+                return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the material generation
             catch (Exception ex){

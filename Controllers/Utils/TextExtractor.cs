@@ -8,6 +8,7 @@ using HtmlAgilityPack;
 using Xceed.Words.NET;
 using System.Text.RegularExpressions;
 using System.Net;
+using SK_API;
 
 public class TextExtractor
 {
@@ -275,17 +276,17 @@ public class TextExtractor
         }
     }
 
-    // This method divides the extracted text into chunks of 12000 characters.
+    // This method divides the extracted text into chunks.
     internal List<string> DivideText(string extractedText)
     {
-        // Split the text into chunks of 12000 characters
+        // Split the text into chunks
         List<string> extractedTexts = new();
-        for (int i = 0; i < extractedText.Length; i += 12000)
+        for (int i = 0; i < extractedText.Length; i += Globals.Split)
         {
-            if (i + 12000 < extractedText.Length)
-                extractedTexts.Add(extractedText.Substring(i, 12000));
-            else
-                extractedTexts.Add(extractedText.Substring(i));
+            if (i + Globals.Split < extractedText.Length)
+    extractedTexts.Add(extractedText.Substring(Math.Max(i - Globals.Overlap, 0), Globals.Split + Globals.Overlap));
+else
+    extractedTexts.Add(extractedText.Substring(Math.Max(i - Globals.Overlap, 0)));
         }
         return extractedTexts;
     }

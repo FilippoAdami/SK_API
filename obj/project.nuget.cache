@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/zI4E0rERqnLi2V9RKvIkCd1QzX72fh0uwLzS2aMt2BldedB7viTXjMn38oHYmLcUkzRdCLNWQdY5bIBT4Bp/A==",
+  "dgSpecHash": "6u+Q2seFEpVGvLE0RIyAvcJ0rWXxpjHdQTTTriniHFpyXrDLSfU4zh6EUF9b3nR8jFBGr680kkqCMbygQXoOaA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\elpip\\Desktop\\uni\\TESI\\SK_API\\SK_API.csproj",
+  "projectFilePath": "C:\\Users\\elpip\\Desktop\\filippo\\projects\\E4E\\src\\SK_API\\SK_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\elpip\\.nuget\\packages\\apache.arrow\\2.0.0\\apache.arrow.2.0.0.nupkg.sha512",
     "C:\\Users\\elpip\\.nuget\\packages\\aspnetcore.authentication.apikey\\7.0.0\\aspnetcore.authentication.apikey.7.0.0.nupkg.sha512",

@@ -1,72 +1,95 @@
-using System.Text.RegularExpressions;
-using System.Text.Json;
-using SK_API;
+using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using SK_API;
 
-public class MaterialAnalysis{
+public class MaterialAnalysis
+{
     public string Language { get; set; }
     public string MacroSubject { get; set; }
     public string Title { get; set; }
     public TextLevel PerceivedDifficulty { get; set; }
-    public List<(string Topic, TypeOfAssignment type, string Explanation)> MainTopics { get; set; }
+    public List<MainTopic> MainTopics { get; set; }
 
-    //constructor with all the fields
+    // Constructor that directly deserializes the response
     public MaterialAnalysis(string response)
     {
-        dynamic json = JsonConvert.DeserializeObject(response);
-        Console.WriteLine("Json: " + json);
+        // Deserialize the JSON directly into the object
+        var json = JsonConvert.DeserializeObject<MaterialAnalysis>(response);
 
-        // Assign properties if present, otherwise set them to default values
-        Language = json?["Language"] ?? "English";
-        MacroSubject = json?["MacroSubject"] ?? "null";
-        Title = json?["Title"] ?? "null";
-        string perceivedDifficultyString = json?["PerceivedDifficulty"]?.ToString() ?? "high_school";
-        TextLevel perceivedDifficulty;
-        if (!Enum.TryParse(perceivedDifficultyString, true, out perceivedDifficulty))
-        {
-            perceivedDifficulty = TextLevel.high_school; // Default value if parsing fails
-        }
-        PerceivedDifficulty = perceivedDifficulty;
-        MainTopics = new List<(string Topic, TypeOfAssignment Type, string Description)>();
-        if (json?["MainTopics"] != null)
-        {
-            foreach (var topic in json["MainTopics"])
-            {
-                string topicName = topic?["Topic"] ?? "null";
-                string typeString = topic?["Type"] ?? "theoretical";
-                TypeOfAssignment type;
-                Enum.TryParse(typeString, true, out type);
-                string description = topic?["Description"] ?? "null";
-                MainTopics.Add((topicName, type, description));
-                Console.WriteLine("Found: Topic: " + topicName + " Type: " + type + " Description: " + description);
-            }
-        }
+        // If any of the properties are missing, fallback to default values
+        Language = json?.Language ?? "English";
+        MacroSubject = json?.MacroSubject ?? "Unknown Subject";
+        Title = json?.Title ?? "Untitled Course";
+        PerceivedDifficulty = json?.PerceivedDifficulty ?? TextLevel.high_school;
+        MainTopics = json?.MainTopics ?? new List<MainTopic>();
     }
+
+    // Parameterless constructor for manual object creation
+    public MaterialAnalysis()
+    {
+        MainTopics = new List<MainTopic>();
+    }
+
+    public string BasicTopicsInfo()
+    {
+        string result = "";
+        foreach (var topic in MainTopics)
+        {
+            result += topic.BasicInfo() + "\n";
+        }
+        return result;
+    }
+
+    public string TopicsFullInfo()
+    {
+        string result = "";
+        foreach (var topic in MainTopics)
+        {
+            result += topic.ToString() + "\n";
+        }
+        return result;
+    }
+
     public string ToJson()
-{
-    var mainTopics = new List<Dictionary<string, object>>();
-
-    foreach (var item in MainTopics)
     {
-        var topicInfo = new Dictionary<string, object>
-        {
-            { "Topic", item.Topic },
-            { "Type", item.type },
-            { "Description", item.Explanation }
-        };
+        return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+}
 
-        mainTopics.Add(topicInfo);
+
+// Class to represent a Main Topic
+public class MainTopic
+{
+    public string Topic { get; set; }
+    public string Type { get; set; }
+    public string Description { get; set; }
+    public BloomLevel Bloom { get; set; }
+    public string Start { get; set; }
+    public List<string> Keywords { get; set; }
+
+    public MainTopic()
+    {
+        Keywords = new List<string>();
     }
 
-    var obj = new
+    public MainTopic(string topic, string type, string description, BloomLevel bloom, string start, List<string> keywords)
     {
-        Language,
-        MacroSubject,
-        Title,
-        PerceivedDifficulty,
-        MainTopics = mainTopics
-    };
+        Topic = topic;
+        Type = type;
+        Description = description;
+        Bloom = bloom;
+        Start = start;
+        Keywords = keywords ?? new List<string>();
+    }
 
-    return JsonConvert.SerializeObject(obj);
-}
+    public override string ToString()
+    {
+        return $"Topic: {Topic}, Type: {Type}, Description: {Description}, Bloom: {Bloom}, Start: {Start}, Keywords: {string.Join(", ", Keywords)};";
+    }
+
+    public string BasicInfo()
+    {
+        return $"Topic: {Topic}, Description: {Description}, Bloom Level: {Bloom}";
+    }
 }

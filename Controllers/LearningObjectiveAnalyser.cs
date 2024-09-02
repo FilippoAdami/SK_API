@@ -50,13 +50,21 @@ namespace SK_API.Controllers{
                 context["examples"] = ExamplesStrings.LearningObjective;
                 Console.WriteLine("Learning Objective: " + input.LearningObjective);
 
+                // fill the promptB with the input values
+                string promptB = prompt;
+                promptB = promptB.Replace("{{learningObjective}}", input.LearningObjective);
+                promptB = promptB.Replace("{{examples}}", ExamplesStrings.LearningObjective);
+
 // Generate the output
                 var result = await generate.InvokeAsync(context);
                 Console.WriteLine("Result: " + result.ToString());
                 string trim_result = result.ToString().Trim();
                 LOAnalysis analysis = new(trim_result);
                 output = analysis.ToJSON();
-                return Ok(output);
+                string json = output;
+                var InternalFunctionsB = new InternalFunctions();
+                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the text extraction
             catch (Exception ex){

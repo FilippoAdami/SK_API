@@ -24,7 +24,7 @@ namespace SK_API.Controllers{
         // Define your Lesson POST action method here
         [HttpPost("generateActivity")]
         public async Task<IActionResult> ActivitysInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] ActivityInputModel input){
-            string output = "";
+            string json = "";
             try{
 // Authentication with the token
                 if (token == null)
@@ -147,6 +147,19 @@ namespace SK_API.Controllers{
                 context["number_of_distractors"] = number_of_distractors.ToString();
                 context["number_of_easily_discardable_distractors"] = number_of_easy_distractors.ToString();
 
+                // fill the promptB with the input values
+                string promptB = prompt;
+                promptB = promptB.Replace("{{$difficulty_level}}", difficulty_level.ToString());
+                promptB = promptB.Replace("{{$domain_of_expertise}}", domain_of_expertise);
+                promptB = promptB.Replace("{{$lesson_title}}", title);
+                promptB = promptB.Replace("{{$material}}", extractedText);
+                promptB = promptB.Replace("{{$type_of_Activity}}", type_of_Activity.ToString());
+                promptB = promptB.Replace("{{$learning_objective}}", learning_objective);
+                promptB = promptB.Replace("{{$type_of_assignment}}", final_type.ToString());
+                promptB = promptB.Replace("{{$bloom_level}}", bloom_level.ToString());
+                promptB = promptB.Replace("{{$topic}}", final_topic.ToString());
+                promptB = promptB.Replace("{{$number_of_distractors}}", number_of_distractors.ToString());
+                promptB = promptB.Replace("{{$number_of_easily_discardable_distractors}}", number_of_easy_distractors.ToString());
 
 // Generate the output
                 var result = await generate.InvokeAsync(context);
@@ -164,13 +177,15 @@ namespace SK_API.Controllers{
                 if (type_of_Activity == TypeOfActivity.information_search){
                     Activity = ActivityFinalModel.ProcessActivity(Activity);
                 }
-                output = Activity.ToJSON();
-                return Ok(output);
+                json = Activity.ToJSON();
+                var InternalFunctionsB = new InternalFunctions();
+                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the Activitys generation
             catch (Exception ex){
                 _logger.LogError(ex, "Error during Activitys generation");
-                return StatusCode(500, "Internal Server Error\n" + output);
+                return StatusCode(500, "Internal Server Error\n" + json);
             }
         }
     }

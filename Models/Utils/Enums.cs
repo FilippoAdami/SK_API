@@ -69,4 +69,10 @@ namespace SK_API
         Evaluating,
         Creating
     }
+
+    public static class Globals{
+        public static int MaxTextLength = 360000;
+        public static int Split = 120000;
+        public static int Overlap = 1500;
+    }
 }

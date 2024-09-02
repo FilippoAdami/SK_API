@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 using Newtonsoft.Json;
 
-// Declare the namespace for the SummarizerController
+// Declare the namespace
 namespace SK_API.Controllers{
     [ApiController]
     [Route("[controller]")]
-    public partial class LearningObjectiveGeneratorController : ControllerBase
+    public partial class SyllabusGeneratorController : ControllerBase
     {
-        private readonly ILogger<LearningObjectiveGeneratorController> _logger;
+        private readonly ILogger<SyllabusGeneratorController> _logger;
         private readonly IConfiguration _configuration;
         private readonly Auth _auth;
 
-        public LearningObjectiveGeneratorController(ILogger<LearningObjectiveGeneratorController> logger, IConfiguration configuration, Auth auth)
+        public SyllabusGeneratorController(ILogger<SyllabusGeneratorController> logger, IConfiguration configuration, Auth auth)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -21,8 +21,8 @@ namespace SK_API.Controllers{
         }
 
         // Define your Lesson POST action method here
-        [HttpPost("generateLearningObjective")]
-        public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] LORM input){
+        [HttpPost("generateSyllabus")]
+        public async Task<IActionResult> LOAnaliserInputAsync([FromHeader(Name = "ApiKey")] string token, [FromHeader(Name = "SetupModel")] string setupModel, [FromBody] SyllabusRM input){
             string output = "";
             try{
 // Authentication with the token
@@ -43,32 +43,36 @@ namespace SK_API.Controllers{
                 IKernel kernel = LLM.Validate();
 
 // Define the TextAnalysis Semantic Function
-                string prompt = LearningObjectivePrompts.LearningObjectiveGenerator;
-                var generate = kernel.CreateSemanticFunction(prompt, "LearningObjectiveGenerator" ,"LOGenerator", "generates a learning objective starting from a given 'analysis'");
+                string prompt = SyllabusPrompts.SyllabusGenerator;
+                var generate = kernel.CreateSemanticFunction(prompt, "SyllabusGenerator" ,"SyllabusGenerator", "generates a syllabus starting from a given 'analysis'");
                 var context = kernel.CreateNewContext();
-                context["level"] = input.Level.ToString();
-                context["topic"] = input.Topic;
-                if(input.Context == null || input.Context == "" || input.Context == " " || input.Context == "null" || input.Context == "NULL"  || input.Context == "Null" || input.Context == "string"){
-                    input.Context = "";
-                } else{ context["context"] = "Consider that : '"+input.Context+"'.";}
-                context["format"] = FormatStrings.LO_Format;
-                context["examples"] = ExamplesStrings.LearningObjectives;
+                context["macro_subject"] = input.Analysis.MacroSubject;
+                context["title"] = input.Analysis.Title;
+                context["level"] = input.Analysis.PerceivedDifficulty.ToString();
+                context["topics"] = input.Analysis.BasicTopicsInfo() ?? "you need to generate the main topics for this course";
+                context["format"] = FormatStrings.SyllabusFormat;
+                context["examples"] = ExamplesStrings.SyllabusExamples;
 
                 // fill the promptB with the input values
                 string promptB = prompt;
-                promptB = promptB.Replace("{{level}}", input.Level.ToString());
-                promptB = promptB.Replace("{{topic}}", input.Topic);
-                promptB = promptB.Replace("{{context}}", input.Context);
-                promptB = promptB.Replace("{{format}}", FormatStrings.LO_Format);
-                promptB = promptB.Replace("{{examples}}", ExamplesStrings.LearningObjectives);
+                promptB = promptB.Replace("{{macro_subject}}", input.Analysis.MacroSubject);
+                promptB = promptB.Replace("{{title}}", input.Analysis.Title);
+                promptB = promptB.Replace("{{level}}", input.Analysis.PerceivedDifficulty.ToString());
+                promptB = promptB.Replace("{{topics}}", input.Analysis.BasicTopicsInfo());
+                promptB = promptB.Replace("{{format}}", FormatStrings.SyllabusFormat);
+                promptB = promptB.Replace("{{examples}}", ExamplesStrings.SyllabusExamples);
 
 // Generate the output
                 var result = await generate.InvokeAsync(context);
                 string final = result.ToString().Trim();
                 final = final.Substring(1, final.Length - 2);
-                Console.WriteLine("Result: " + final);
-                LOFM learningObjective = new(final);
-                output = learningObjective.ToJSON();
+               Console.WriteLine("Result: " + final);
+               // remove eventual ``json at the beginning and `` at the end of the string
+                final = final.Replace("``json", "");
+                final = final.Replace("``", "");
+                final = final.Trim();
+                Syllabus syllabus = new(final);
+                output = syllabus.ToJson();
                 string json = output;
                 var InternalFunctionsB = new InternalFunctions();
                 string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);

@@ -75,4 +75,9 @@ public class InternalFunctions
         }
     }
 
+    public string InsertPromptIntoJSON(string json, string prompt){
+        // inject a new 'Prompt' string element as first element of the JSON string
+        string newJson = json.Insert(1, $"\"Prompt\": \"{prompt}\",");
+        return newJson;
+    }
 }

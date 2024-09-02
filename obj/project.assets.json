@@ -7176,11 +7176,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\elpip\\Desktop\\uni\\TESI\\SK_API\\SK_API.csproj",
+      "projectUniqueName": "C:\\Users\\elpip\\Desktop\\filippo\\projects\\E4E\\src\\SK_API\\SK_API.csproj",
       "projectName": "SK_API",
-      "projectPath": "C:\\Users\\elpip\\Desktop\\uni\\TESI\\SK_API\\SK_API.csproj",
+      "projectPath": "C:\\Users\\elpip\\Desktop\\filippo\\projects\\E4E\\src\\SK_API\\SK_API.csproj",
       "packagesPath": "C:\\Users\\elpip\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\elpip\\Desktop\\uni\\TESI\\SK_API\\obj\\",
+      "outputPath": "C:\\Users\\elpip\\Desktop\\filippo\\projects\\E4E\\src\\SK_API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

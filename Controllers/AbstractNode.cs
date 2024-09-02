@@ -56,6 +56,17 @@ namespace SK_API.Controllers{
                 context["activities"] = UtilsStrings.ActivitiesListB;
                 context["examples"] = ExamplesStrings.CustomPlanExamples;
 
+                // fill the promptB with the input values
+                string promptB = prompt;
+                promptB = promptB.Replace("{{$level}}", input.Level.ToString());
+                promptB = promptB.Replace("{{$marco_subject}}", input.MacroSubject);
+                promptB = promptB.Replace("{{$title}}", input.Title);
+                promptB = promptB.Replace("{{$language}}", input.Language);
+                promptB = promptB.Replace("{{$correction}}", input.Correction);
+                promptB = promptB.Replace("{{$activities}}", UtilsStrings.ActivitiesListB);
+                promptB = promptB.Replace("{{$examples}}", ExamplesStrings.CustomPlanExamples);
+                promptB = promptB.Replace("{{$format}}", FormatStrings.LessonPlanFormat);
+
                 var result = await generate.InvokeAsync(context);
                 output = result.ToString();
                 if (output.StartsWith("```json")){
@@ -90,7 +101,9 @@ namespace SK_API.Controllers{
                     // remove all nelines and tabulation
                     json = json.Replace("\n", "").Replace("\t", "").Trim();
                 }
-                return Ok(json.ToString());
+                var InternalFunctionsB = new InternalFunctions();
+                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the material generation
             catch (Exception ex){

@@ -51,12 +51,26 @@ namespace SK_API.Controllers{
                 context["expected_answer"] = input.ExpectedAnswer;
                 context["format"] = FormatStrings.ExerciseCorrectionsFormat;
                 context["examples"] = ExamplesStrings.ExerciseCorrections;
+
+                // fill the promptB with the input values
+                string promptB = prompt;
+                promptB = promptB.Replace("{{question}}", input.Question);
+                promptB = promptB.Replace("{{answer}}", input.Answer);
+                promptB = promptB.Replace("{{expected_answer}}", input.ExpectedAnswer);
+                promptB = promptB.Replace("{{format}}", FormatStrings.ExerciseCorrectionsFormat);
+                promptB = promptB.Replace("{{examples}}", ExamplesStrings.ExerciseCorrections);
+
+
 // Generate the output
                 var result = await generate.InvokeAsync(context);
                 final = result.ToString().Trim();
                 Console.WriteLine("Result: " + final);
                 CorrectedAnswer correctedAnswer = new(final);
-                return Ok(correctedAnswer.ToJSON());
+                final = correctedAnswer.ToJSON();
+                string json = final;
+                var InternalFunctionsB = new InternalFunctions();
+                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the text extraction
             catch (Exception ex){

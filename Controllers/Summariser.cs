@@ -51,11 +51,19 @@ namespace SK_API.Controllers{
                 string material = extractedText;
                 int n_o_w = input.NumberOfWords;
                 string level = input.Level.ToString().ToLower();
+
+// fill the promptB with the input values
+                string promptB = InternalPrompts.MaterialGenerationPrompt;
+                promptB = promptB.Replace("{{$material}}", extractedText);
+                promptB = promptB.Replace("{{$level}}", level);
+                promptB = promptB.Replace("{{$n_o_w}}", n_o_w.ToString());
+
                 var InternalFunctions = new InternalFunctions();
                 var translation = await InternalFunctions.Summarize(extractedText, level, kernel, n_o_w);
                 output = translation.ToString().Trim();
-                Console.WriteLine("Result: " + output);
-                return Ok(output);
+                string json = output;
+                string jsonplusprompt = InternalFunctions.InsertPromptIntoJSON(json, promptB);
+                return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the text extraction
             catch (Exception ex){
