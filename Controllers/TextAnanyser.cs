@@ -110,7 +110,7 @@ namespace SK_API.Controllers
                 foutput = finalAnalysis.ToJson();
                 string json = foutput;
                 string promptB = prompt;
-                promptB = promptB.Replace("{{$material}}", input.Material.Substring(0, 1000) + "...(text continues)...");
+                promptB = promptB.Replace("{{$material}}", "material placeholder");
                 promptB = promptB.Replace("{{$examples}}", ExamplesStrings.MaterialAnalysisExamples);
                 promptB = promptB.Replace("{{$format}}", FormatStrings.AnalyserFormat);
                 string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
