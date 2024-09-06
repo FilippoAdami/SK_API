@@ -163,23 +163,22 @@ namespace SK_API.Controllers{
 
 // Generate the output
                 var result = await generate.InvokeAsync(context);
-                string resultString = result.ToString();
-                Console.WriteLine(result.ToString());
+                var intf = new InternalFunctions();
+                string output = intf.CheckResponse(result.ToString());
+                Console.WriteLine(output);
 // Translate the result
                 if (language != "english"){
-                    var InternalFunctions = new InternalFunctions();
-                    var translation = await InternalFunctions.Translate(kernel, resultString, language);
-                    resultString = translation;
+                    var translation = await intf.Translate(kernel, output, language);
+                    output = intf.CheckResponse(translation);
                 }
-                Console.WriteLine(resultString);
+                Console.WriteLine(output);
 // Map the result to the ActivitysOutputModel
-                ActivityFinalModel Activity = new(resultString);
+                ActivityFinalModel Activity = new(output);
                 if (type_of_Activity == TypeOfActivity.information_search){
                     Activity = ActivityFinalModel.ProcessActivity(Activity);
                 }
                 json = Activity.ToJSON();
-                var InternalFunctionsB = new InternalFunctions();
-                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the Activitys generation

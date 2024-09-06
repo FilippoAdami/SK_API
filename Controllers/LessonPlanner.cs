@@ -76,15 +76,8 @@ namespace SK_API.Controllers{
 
 
                 var result = await generate.InvokeAsync(context);
-                output = result.ToString();
-                if (output.StartsWith("```json")){
-                    output = output[7..];
-                    if (output.EndsWith("```")){
-                        output = output[..^3];
-                    }
-                    output = output.TrimStart('\n').TrimEnd('\n');
-                    output = output.TrimStart(' ').TrimEnd(' ');
-                }
+                var intf = new InternalFunctions();
+                output = intf.CheckResponse(result.ToString());
                 Console.WriteLine("Result: "+ output);
                 LessonPlan lessonPlan = new(output);
                 foreach (var node in lessonPlan.Nodes){
@@ -97,20 +90,10 @@ namespace SK_API.Controllers{
                 string json = lessonPlan.ToJson();
 
                 if (input.Language.ToLower() != "english"){
-                    var InternalFunctions = new InternalFunctions();
-                    var translation = await InternalFunctions.Translate(kernel, json, input.Language);
-                    json = translation;
+                    var translation = await intf.Translate(kernel, json, input.Language);
+                    json = intf.CheckResponse(translation);
                 }
-                if (json.StartsWith("```json")){
-                    json = json[7..];
-                    if (json.EndsWith("```")){
-                        json = json[..^3];
-                    }
-                    // remove all nelines and tabulation
-                    json = json.Replace("\n", "").Replace("\t", "").Trim();
-                }
-                var InternalFunctionsB = new InternalFunctions();
-                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the material generation

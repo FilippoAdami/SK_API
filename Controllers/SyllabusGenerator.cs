@@ -50,32 +50,36 @@ namespace SK_API.Controllers{
                 context["title"] = input.Analysis.Title;
                 context["level"] = input.Analysis.PerceivedDifficulty.ToString();
                 context["topics"] = input.Analysis.BasicTopicsInfo() ?? "you need to generate the main topics for this course";
+                // create a string bloom_levels with the concatenated values that are equal or less than the input.BloomLevel
+                string bloom_levels = "";
+                for (int i = 1; i <= (int)input.BloomLevel; i++){
+                    bloom_levels += i.ToString();
+                    if (i < (int)input.BloomLevel){
+                        bloom_levels += ",\n-";
+                    }
+                }
+                context["bloom_levels"] = input.BloomLevel.ToString();
                 context["format"] = FormatStrings.SyllabusFormat;
                 context["examples"] = ExamplesStrings.SyllabusExamples;
 
                 // fill the promptB with the input values
                 string promptB = prompt;
-                promptB = promptB.Replace("{{macro_subject}}", input.Analysis.MacroSubject);
-                promptB = promptB.Replace("{{title}}", input.Analysis.Title);
-                promptB = promptB.Replace("{{level}}", input.Analysis.PerceivedDifficulty.ToString());
-                promptB = promptB.Replace("{{topics}}", input.Analysis.BasicTopicsInfo());
-                promptB = promptB.Replace("{{format}}", FormatStrings.SyllabusFormat);
-                promptB = promptB.Replace("{{examples}}", ExamplesStrings.SyllabusExamples);
-
+                promptB = promptB.Replace("{{$macro_subject}}", input.Analysis.MacroSubject);
+                promptB = promptB.Replace("{{$title}}", input.Analysis.Title);
+                promptB = promptB.Replace("{{$level}}", input.Analysis.PerceivedDifficulty.ToString());
+                promptB = promptB.Replace("{{$topics}}", input.Analysis.BasicTopicsInfo());
+                promptB = promptB.Replace("{{$bloomlevel}}", input.BloomLevel.ToString());
+                promptB = promptB.Replace("{{$format}}", FormatStrings.SyllabusFormat);
+                promptB = promptB.Replace("{{$examples}}", ExamplesStrings.SyllabusExamples);
+                Console.WriteLine("Prompt: " + promptB);
 // Generate the output
                 var result = await generate.InvokeAsync(context);
-                string final = result.ToString().Trim();
-                final = final.Substring(1, final.Length - 2);
-               Console.WriteLine("Result: " + final);
-               // remove eventual ``json at the beginning and `` at the end of the string
-                final = final.Replace("``json", "");
-                final = final.Replace("``", "");
-                final = final.Trim();
-                Syllabus syllabus = new(final);
+                var intf = new InternalFunctions();
+                output = intf.CheckResponse(result.ToString());
+                Syllabus syllabus = new(output);
                 output = syllabus.ToJson();
                 string json = output;
-                var InternalFunctionsB = new InternalFunctions();
-                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the text extraction

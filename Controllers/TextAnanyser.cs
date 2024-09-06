@@ -75,7 +75,7 @@ namespace SK_API.Controllers
                 var generate = kernel.CreateSemanticFunction(prompt, "materialAnalyser", "MaterialAnalyser", "analyses the given material");
                 Microsoft.SemanticKernel.Orchestration.SKContext result;
                 List<MaterialAnalysis> analysis = new();
-                
+                var intf = new InternalFunctions();
                 // Run the TextAnalysis function for each part of the extracted text
                 foreach (string text in extractedTexts)
                 {
@@ -84,9 +84,7 @@ namespace SK_API.Controllers
                     context["examples"] = ExamplesStrings.MaterialAnalysisExamples;
                     context["format"] = FormatStrings.AnalyserFormat;
                     result = await generate.InvokeAsync(context);
-                    string output = result.ToString().Trim();
-                    //clean the output
-                    output = CleanJsonText(output);
+                    string output = intf.CheckResponse(result.ToString());
                     Console.WriteLine("Result: " + output);
                     MaterialAnalysis analysisPart = new(output);
                     analysis.Add(analysisPart);
@@ -102,15 +100,8 @@ namespace SK_API.Controllers
                 // Translate the output to the user's language if needed
                 if (finalAnalysis.Language.ToLower() != "english")
                 {
-                    Console.WriteLine("Translating the analysis to " + finalAnalysis.Language);
-                    Console.WriteLine("\n\nAnalysis: \n" + finalAnalysis.ToJson().ToString().Trim());
-                    var InternalFunctions = new InternalFunctions();
-                    var translation = await InternalFunctions.Translate(kernel, finalAnalysis.ToJson().ToString().Trim(), finalAnalysis.Language);
-                    //if the translation starts with ```json and ends with ``` then remove them
-                    if (translation.StartsWith("```json") && translation.EndsWith("```"))
-                    {
-                        translation = translation.Substring(7, translation.Length - 10);
-                    }
+                    var translation = await intf.Translate(kernel, finalAnalysis.ToJson().ToString().Trim(), finalAnalysis.Language);
+                    translation = intf.CheckResponse(translation);
                     Console.WriteLine("Translation: \n" + translation);
                     MaterialAnalysis translatedAnalysis = new(translation);
                     finalAnalysis.MainTopics.AddRange(translatedAnalysis.MainTopics);
@@ -118,9 +109,11 @@ namespace SK_API.Controllers
 
                 foutput = finalAnalysis.ToJson();
                 string json = foutput;
-                string promptB = "materialAnalyzerPrompBHere";
-                var InternalFunctionsB = new InternalFunctions();
-                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                string promptB = prompt;
+                promptB = promptB.Replace("{{$material}}", input.Material.Substring(0, 1000) + "...(text continues)...");
+                promptB = promptB.Replace("{{$examples}}", ExamplesStrings.MaterialAnalysisExamples);
+                promptB = promptB.Replace("{{$format}}", FormatStrings.AnalyserFormat);
+                string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());
             }
             // Handle exceptions if something goes wrong during the text extraction
@@ -129,20 +122,6 @@ namespace SK_API.Controllers
                 _logger.LogError(ex, "Error during text analysis");
                 return StatusCode(500, "Internal Server Error\n" + foutput);
             }
-        }
-
-        // Method to clean JSON text
-        private string CleanJsonText(string text)
-        {
-            int startIndex = text.IndexOf('{');
-            int endIndex = text.LastIndexOf('}');
-
-            if (startIndex == -1 || endIndex == -1)
-            {
-                throw new ArgumentException("The provided text does not contain valid JSON.");
-            }
-
-            return text.Substring(startIndex, endIndex - startIndex + 1);
         }
     }
 }

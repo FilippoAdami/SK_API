@@ -55,11 +55,11 @@ namespace SK_API.Controllers{
                 promptB = promptB.Replace("{{$learning_objective}}", info);
                 promptB = promptB.Replace("{{$n_o_w}}", n_o_w.ToString());
 
-                var InternalFunctions = new InternalFunctions();
-                var translation = await InternalFunctions.GenerateMaterial(topic, info, level, kernel, n_o_w);
-                output = translation.ToString().Trim();
+                var intf = new InternalFunctions();
+                var result = await intf.GenerateMaterial(topic, info, level, kernel, n_o_w);
+                output = intf.CheckResponse(result.ToString());
                 string json = output;
-                string jsonplusprompt = InternalFunctions.InsertPromptIntoJSON(json, promptB);
+                string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the material generation

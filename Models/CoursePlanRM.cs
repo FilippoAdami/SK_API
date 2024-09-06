@@ -1,20 +1,12 @@
 namespace SK_API{
     public class CoursePlanRequestModel{
-        public string Language { get; set; }
-        public string MacroSubject { get; set; }
-        public string Title { get; set; }
-        public TextLevel Level { get; set; }
-        public List<MainTopic> Topic { get; set; }
+        public MaterialAnalysis Analysis { get; set; }
         public int NumberOfLessons { get; set; }
         public int LessonDuration { get; set; }
         public double Temperature { get; set; }
     
-        public CoursePlanRequestModel(string language, string macroSubject, string title, TextLevel level, List<MainTopic> topic, int nol, int duration, double temperature){
-            Language = language;
-            MacroSubject = macroSubject;
-            Title = title;
-            Level = level;
-            Topic = topic;
+        public CoursePlanRequestModel(MaterialAnalysis analysis, int nol, int duration, double temperature){
+            Analysis = analysis;
             NumberOfLessons = nol;
             LessonDuration = duration;
             Temperature = temperature;
@@ -22,7 +14,7 @@ namespace SK_API{
 
         public string TopicsBasicInfo(){
             string result = "";
-            foreach (var topic in Topic)
+            foreach (var topic in Analysis.MainTopics)
             {
                 result += topic.BasicInfo() + "\n";
             }

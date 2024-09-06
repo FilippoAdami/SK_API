@@ -56,22 +56,21 @@ namespace SK_API.Controllers{
 
                 // fill the promptB with the input values
                 string promptB = prompt;
-                promptB = promptB.Replace("{{level}}", input.Level.ToString());
-                promptB = promptB.Replace("{{topic}}", input.Topic);
-                promptB = promptB.Replace("{{context}}", input.Context);
-                promptB = promptB.Replace("{{format}}", FormatStrings.LO_Format);
-                promptB = promptB.Replace("{{examples}}", ExamplesStrings.LearningObjectives);
+                promptB = promptB.Replace("{{$level}}", input.Level.ToString());
+                promptB = promptB.Replace("{{$topic}}", input.Topic);
+                promptB = promptB.Replace("{{$context}}", input.Context);
+                promptB = promptB.Replace("{{$format}}", FormatStrings.LO_Format);
+                promptB = promptB.Replace("{{$examples}}", ExamplesStrings.LearningObjectives);
 
 // Generate the output
                 var result = await generate.InvokeAsync(context);
-                string final = result.ToString().Trim();
-                final = final.Substring(1, final.Length - 2);
-                Console.WriteLine("Result: " + final);
-                LOFM learningObjective = new(final);
+                var intf = new InternalFunctions();
+                output = intf.CheckResponse(result.ToString());
+                Console.WriteLine("Output:" + output);
+                LOFM learningObjective = new(output);
                 output = learningObjective.ToJSON();
                 string json = output;
-                var InternalFunctionsB = new InternalFunctions();
-                string jsonplusprompt = InternalFunctionsB.InsertPromptIntoJSON(json, promptB);
+                string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the text extraction

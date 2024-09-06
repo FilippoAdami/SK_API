@@ -89,15 +89,20 @@ Now, your objective is to assess the level of comprehension of your Learners abo
     }
     
     public class SyllabusPrompts{
-      public static string SyllabusGenerator = @"You are an expert in educational content creation. Your task is to generate a syllabus for a {{$macro_subject}} course on {{$title}}.  
-The course will cover the following topics: {{$topics}}.  
-The syllabus must be formatted in JSON using the following structure: {{$format}}  
-Ensure that the content is clear, concise, and appropriate for a {{$level}} level of study.  
+      public static string SyllabusGenerator = @"You are an expert in educational content creation. Your task is to generate a syllabus for a {{$macro_subject}} course on {{$title}}.
+The course will cover the following topics: {{$topics}}.
+The course aims to achieve a specific level of Bloom's taxonomy. **ALL** the 'Learning Outcomes' and **ALL** the 'Course Goals' **MUST** be aligned with **ONLY** one of the following Bloom's Taxonomy levels:
+-{{$bloom_levels}}Avoid using verbs that belong to higher-order Bloom's taxonomy levels than requested.
+
+The syllabus must be formatted in JSON using the following structure: {{$format}}.
+Ensure that the content is clear, concise, and appropriate for a {{$level}} level of study.
+
+The structure of the output should adhere to this JSON format: {{$format}}.
 
 Here are some valid examples for reference:
-{{$examples}}  
+{{$examples}}
 
-Provide **ONLY** the JSON output.";
+**Provide ONLY the JSON output.**";
     }
     public class PlanningPrompts{
       public static string LessonPlannerprompt = @"You're a {{$level}} {{$marco_subject}} skilled assistant-teacher. The main teacher asked you to plan the next lesson, which is about: ' {{$title}} '. The teacher defined the learning objective for the lesson to be: '{{$learning_objective}}' which reflect the {{$bloom_level}} level in Bloom's taxonomy. 
@@ -1112,12 +1117,14 @@ Example in Spanish:""{
     ""Predict the reactivity of organic compounds based on functional groups"",
     ""Analyze and interpret spectroscopic data to identify organic substances"",
     ""Apply organic reaction mechanisms to synthesize target compounds"",
+    ...,
     ""Demonstrate safe and effective laboratory techniques in organic chemistry experiments""
   ],
   ""CourseGoals"": [
     ""Provide a solid foundation in organic chemistry principles"",
     ""Prepare students for advanced chemistry courses and research"",
     ""Develop problem-solving skills in the context of chemical reactions"",
+    ...,
     ""Promote a hands-on understanding of organic synthesis through laboratory work""
   ],
   ""CourseTopics"": [
@@ -1144,7 +1151,9 @@ Example in Spanish:""{
   ],
   ""Prerequisites"": [
     ""Completion of General Chemistry I and II"",
-    ""Basic understanding of chemical bonding and reactions""
+    ""Basic understanding of chemical bonding and reactions"",
+    ...,
+    ""Familiarity with laboratory safety procedures and equipment""
   ]
 }
 
@@ -1153,16 +1162,17 @@ Example in Spanish:""{
   ""CourseDescription"": ""This high school course offers an in-depth analysis of the Second World War, covering its causes, major events, and global impact. Students will explore the political, social, and economic factors that shaped the war and examine its long-term consequences on the modern world."",
   ""LearningOutcomes"": [
     ""Identify the key causes and events leading up to the Second World War"",
-    ""Analyze the strategies and outcomes of major battles and campaigns"",
-    ""Evaluate the social and economic impact of the war on different countries"",
-    ""Understand the role of major world leaders and their decisions during the war"",
-    ""Critically assess the legacy of the Second World War on contemporary global politics""
+    ""Remember the strategies and outcomes of major battles and campaigns"",
+    ""Understand the social and economic impact of the war on different countries"",
+    ...,
+    ""Understand the role of major world leaders and their decisions during the war""
   ],
   ""CourseGoals"": [
     ""Develop a comprehensive understanding of the Second World War"",
-    ""Foster critical thinking about historical events and their causes"",
+    ""Develop a detailed understanding about historical events and their causes"",
+    ...,
     ""Encourage students to explore the human impact of global conflicts"",
-    ""Prepare students for advanced history courses and civic engagement""
+    ""Prepare students for advanced history courses""
   ],
   ""CourseTopics"": [
     {
@@ -1196,16 +1206,16 @@ Example in Spanish:""{
   ""CourseTitle"": ""Advanced Prompt Engineering for AI Systems"",
   ""CourseDescription"": ""This course provides an in-depth exploration of prompt engineering techniques used in AI systems. Students will learn how to design, optimize, and evaluate prompts to improve the performance of language models in various applications. The course covers key concepts such as prompt formulation, bias mitigation, and prompt tuning across different contexts."",
   ""LearningOutcomes"": [
-    ""Design and evaluate prompts for AI models using best practices"",
-    ""Analyze the impact of different prompt structures on model outputs"",
-    ""Optimize prompts to minimize biases and improve fairness"",
-    ""Create custom prompts for specific tasks and applications""
+    ""Remember the best practices in prompt generation for AI systems"",
+    ""Understand the impact of different prompt structures on model outputs"",
+    ...,
+    ""Remember the major techniques used to minimize biases and improve fairness in prompts""
   ],
   ""CourseGoals"": [
-    ""Equip students with advanced skills in prompt engineering"",
-    ""Prepare students for roles in AI development and research"",
-    ""Foster critical thinking in the ethical implications of AI prompts"",
-    ""Enable students to contribute to the development of fair and effective AI systems""
+    ""Teach students some advanced skills in prompt engineering"",
+    ""Prepare students for laboratory sessions where they will design and evaluate prompts"",
+    ...,
+    ""Give a general overview about the ethical implications of AI prompts""
   ],
   ""CourseTopics"": [
     {
@@ -1232,6 +1242,7 @@ Example in Spanish:""{
   ""Prerequisites"": [
     ""Basic understanding of AI and machine learning concepts"",
     ""Experience with Python programming"",
+    ...,
     ""Completion of introductory courses in natural language processing""
   ]
 }""";

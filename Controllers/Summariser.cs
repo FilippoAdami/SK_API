@@ -58,11 +58,11 @@ namespace SK_API.Controllers{
                 promptB = promptB.Replace("{{$level}}", level);
                 promptB = promptB.Replace("{{$n_o_w}}", n_o_w.ToString());
 
-                var InternalFunctions = new InternalFunctions();
-                var translation = await InternalFunctions.Summarize(extractedText, level, kernel, n_o_w);
-                output = translation.ToString().Trim();
+                var intf = new InternalFunctions();
+                var result = await intf.Summarize(extractedText, level, kernel, n_o_w);
+                output = intf.CheckResponse(result.ToString());
                 string json = output;
-                string jsonplusprompt = InternalFunctions.InsertPromptIntoJSON(json, promptB);
+                string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());
             }
 // Handle exceptions if something goes wrong during the text extraction

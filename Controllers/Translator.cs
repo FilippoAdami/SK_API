@@ -45,9 +45,9 @@ namespace SK_API.Controllers{
 // Generate the output
                 string json = input.JSON;
                 string language = input.Language;
-                var InternalFunctions = new InternalFunctions();
-                var translation = await InternalFunctions.Translate(kernel, json, language);
-                output = translation.ToString().Trim();
+                var intf = new InternalFunctions();
+                var translation = await intf.Translate(kernel, json, language);
+                output = intf.CheckResponse(translation.ToString());
                 Console.WriteLine("Result: " + output);
                 return Ok(output);
             }
