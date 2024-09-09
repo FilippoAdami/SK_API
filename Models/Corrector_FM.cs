@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 
 namespace SK_API{
-    public class CorrectedAnswer{
+    public class CorrectedAnswer : IGeneralClass{
         public double Accuracy { get; set; }
         public string Correction { get; set; }
 

@@ -81,36 +81,44 @@ public class InternalFunctions
         return json;
     }
 
-    public string CheckResponse(string final){
-        Console.WriteLine("CheckResponse: " + final);
-        string edit = final;
-        // remove eventual ``json at the beginning and `` at the end of the string
-        if (final.StartsWith("```json"))
-        {
-            edit = final.Replace("```json", "");
-        } else if (final.StartsWith("``json"))
-        {
-            edit = final.Replace("``json", "");
-        }
-        final = edit;
-        if (final.EndsWith("```"))
-        {
-            edit = final.Replace("```", "");
-        } else if (final.EndsWith("``"))
-        {
-            edit = final.Replace("``", "");
-        }
-        edit = edit.Trim();
-        // if the result is not enclosed in curly brackets, add them
-        if (!edit.StartsWith("{"))
-        {
-            edit = "{" + edit;
-        }
-        if (!edit.EndsWith("}"))
-        {
-            edit = edit + "}";
-        }
-        
-        return edit;
+public string CheckResponse(string final)
+{
+    Console.WriteLine("Response: " + final);
+    string edit = final;
+
+    // Remove eventual `json at the beginning and ` at the end of the string
+    if (edit.StartsWith("```json", StringComparison.Ordinal))
+    {
+        edit = edit.Substring(7).TrimStart();  // Remove ```json and trim any leading whitespace
     }
+    else if (edit.StartsWith("``json", StringComparison.Ordinal))
+    {
+        edit = edit.Substring(6).TrimStart();  // Remove ``json and trim any leading whitespace
+    }
+
+    if (edit.EndsWith("```", StringComparison.Ordinal))
+    {
+        edit = edit.Substring(0, edit.Length - 3).TrimEnd();  // Remove ``` and trim any trailing whitespace
+    }
+    else if (edit.EndsWith("``", StringComparison.Ordinal))
+    {
+        edit = edit.Substring(0, edit.Length - 2).TrimEnd();  // Remove `` and trim any trailing whitespace
+    }
+
+    // Remove any new lines at the beginning or end
+    edit = edit.Trim('\n', '\r');
+
+    // If the result is not enclosed in curly brackets, add them
+    if (!edit.StartsWith("{", StringComparison.Ordinal) && !edit.StartsWith("[", StringComparison.Ordinal))
+    {
+        edit = "{" + edit;
+    }
+    if (!edit.EndsWith("}", StringComparison.Ordinal) && !edit.EndsWith("]", StringComparison.Ordinal))
+    {
+        edit = edit + "}";
+    }
+
+    Console.WriteLine("FinalCheckResponse: " + edit);
+    return edit;
+}
 }

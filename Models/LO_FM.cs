@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 
 namespace SK_API{
-    public class LOFM{
+    public class LOFM : IGeneralClass{
         public List<string> Remembering { get; set; }
         public List<string> Understanding { get; set; }
         public List<string> Applying { get; set; }

@@ -81,7 +81,7 @@ string ll = "";
                 output = intf.CheckResponse(result.ToString());
                 Console.WriteLine("Result: "+ output);
                 CoursePlan coursePlan = new(output);
-                string json = coursePlan.ToJson();
+                string json = coursePlan.ToJSON();
                 string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());
             }

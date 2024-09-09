@@ -77,7 +77,7 @@ namespace SK_API.Controllers{
                 var intf = new InternalFunctions();
                 output = intf.CheckResponse(result.ToString());
                 Syllabus syllabus = new(output);
-                output = syllabus.ToJson();
+                output = syllabus.ToJSON();
                 string json = output;
                 string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);
                 return Ok(jsonplusprompt.ToString());

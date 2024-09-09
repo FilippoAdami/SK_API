@@ -87,7 +87,7 @@ namespace SK_API.Controllers{
                         node.Details = Activity.ToString();
                     }
                 }
-                string json = lessonPlan.ToJson();
+                string json = lessonPlan.ToJSON();
 
                 if (input.Language.ToLower() != "english"){
                     var translation = await intf.Translate(kernel, json, input.Language);

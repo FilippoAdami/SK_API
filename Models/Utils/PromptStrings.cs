@@ -141,7 +141,69 @@ Here's what you need to do:
 - Focus on logical progression and coherence in each lesson.
 - Provide **ONLY** the JSON output.";
     }
+    public class EnhancerPrompts{
+      public static string RequestValidationPrompt = @"""JSON: {{$json}}
+REQUEST:{{$request}}
 
+### Instructions for the LLM:
+
+1. **Task**: You are given two inputs:
+   - A JSON object containing fixed keys with modifiable values.
+   - A free-text request asking for specific improvements to the **values** of the provided JSON, where **keys must remain unchanged**.
+
+2. **Validation**:
+   - **Check the request**: Ensure that the request asks for improvements to the values of the JSON and that it is related to enhancing or modifying the values.
+   - **Criteria for valid requests**:
+     - The request must ask for improvements or suggestions to modify **only the values**.
+     - The request should focus on aspects like clarity, appropriateness, relevance, or optimization of the values in a specific context (e.g., business, technical, etc.).
+   
+3. **Response Handling**:
+   - If the request is **valid**, return a **refined version** of the request in {{$language}} considering best practices for prompt engineering.
+   - If the request is **invalid** (e.g., it asks to change keys, or is unrelated to improving the values, it's not applicable to the json), return an error message in {{$language}}. The error message should always start with ""ERROR"" and clearly explain why the request is invalid.
+
+4. **Output**:
+    - Provide a JSON response with the key ""response"" containing the refined request or an error message.
+
+### Example Outputs:
+
+1. **Valid Example**:
+     JSON: {
+       ""name"": ""John Doe"",
+       ""role"": ""Manager"",
+       ""department"": ""Marketing""
+     }
+     REQUEST: ""Can you refine the values to be more suitable for an executive-level employee?""
+
+   **Expected response**:
+   {
+     ""response"": ""Please review the values in the provided JSON and suggest changes to make them more suitable for an executive-level employee, keeping the keys the same.""
+   }
+
+2. **Invalid Example**:
+     JSON: {
+       ""product"": ""Laptop"",
+       ""price"": ""$999"",
+       ""stock"": ""50 units""
+     REQUEST: ""Can you change the key names to something simpler?""
+   }
+
+   **Expected response**:
+   {
+     ""response"": ""ERROR: The request asks to modify the keys, which is not allowed. The request should focus on improving the values while keeping the keys unchanged.""
+   }
+""";
+      public static string EnhancerPrompt = @"JSON: {{$json}}
+REQUEST: {{$request}}
+
+### Instructions for the LLM:
+
+1. **Task**: You are provided with a JSON object and a REQUEST asking for improvements or enhancements to the **values** in the JSON.
+   - The **keys in the JSON** must remain unchanged.
+   - Focus on refining the **values** according to the context provided in the request and to the language of the values, which is {{$language}}.
+
+2. **Output**:
+   - Return only the **refined JSON** with the updated values in {{$language}}, based on the request. It's crucial for post processing that the key remain unchanged and that you return only a code section containing the final refined JSON.";
+    }
     public class ExerciseCorrectorPrompt{
       public static string ExerciseCorrector = @"The output should fit the format: {{$format}}
 Here are some examples: {{$examples}}

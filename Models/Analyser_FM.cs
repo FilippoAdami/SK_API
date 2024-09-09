@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using SK_API;
 
-public class MaterialAnalysis
+public class MaterialAnalysis : IGeneralClass
 {
     public string Language { get; set; }
     public string MacroSubject { get; set; }
@@ -51,7 +51,7 @@ public class MaterialAnalysis
         return result;
     }
 
-    public string ToJson()
+    public string ToJSON()
     {
         return JsonConvert.SerializeObject(this, Formatting.Indented);
     }

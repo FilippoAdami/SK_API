@@ -100,17 +100,17 @@ namespace SK_API.Controllers
                 // Translate the output to the user's language if needed
                 if (finalAnalysis.Language.ToLower() != "english")
                 {
-                    var translation = await intf.Translate(kernel, finalAnalysis.ToJson().ToString().Trim(), finalAnalysis.Language);
+                    var translation = await intf.Translate(kernel, finalAnalysis.ToJSON().ToString().Trim(), finalAnalysis.Language);
                     translation = intf.CheckResponse(translation);
                     Console.WriteLine("Translation: \n" + translation);
                     MaterialAnalysis translatedAnalysis = new(translation);
                     finalAnalysis.MainTopics.AddRange(translatedAnalysis.MainTopics);
                 }
 
-                foutput = finalAnalysis.ToJson();
+                foutput = finalAnalysis.ToJSON();
                 string json = foutput;
                 string promptB = prompt;
-                promptB = promptB.Replace("{{$material}}", "material placeholder");
+                promptB = promptB.Replace("{{$material}}", "placeholder");
                 promptB = promptB.Replace("{{$examples}}", ExamplesStrings.MaterialAnalysisExamples);
                 promptB = promptB.Replace("{{$format}}", FormatStrings.AnalyserFormat);
                 string jsonplusprompt = intf.InsertPromptIntoJSON(json, promptB);

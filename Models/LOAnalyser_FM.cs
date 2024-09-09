@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 
 namespace SK_API{
-    public class LOAnalysis{
+    public class LOAnalysis : IGeneralClass{
         public BloomLevel BloomLevel { get; set; }
         public string MacroSubject { get; set; }
         public TextLevel Level { get; set; }

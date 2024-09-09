@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace SK_API
 {
-    public class Syllabus
+    public class Syllabus : IGeneralClass
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -15,24 +15,18 @@ namespace SK_API
         public List<string> Prerequisites { get; set; }
 
         // Constructor to create a Syllabus object from JSON
-        public Syllabus(string json)
-        {
+        public Syllabus(string json){
+            Console.WriteLine("json: " + json);
             try
             {
-                // Parse the JSON into a JObject
                 var jsonObject = JObject.Parse(json);
 
-                // Map the properties
                 Title = jsonObject["CourseTitle"]?.ToString() ?? "Title";
                 Description = jsonObject["CourseDescription"]?.ToString() ?? "Description";
                 
-                // Map learning outcomes as objectives
                 Objectives = jsonObject["LearningOutcomes"]?.ToObject<List<string>>() ?? new List<string>();
-
-                // Map course goals
                 Goals = jsonObject["CourseGoals"]?.ToObject<List<string>>() ?? new List<string>();
 
-                // Map topics (as a list of tuples)
                 Topics = new List<Tuple<string, string>>();
                 var topicsArray = jsonObject["CourseTopics"]?.ToArray();
                 if (topicsArray != null)
@@ -45,7 +39,6 @@ namespace SK_API
                     }
                 }
 
-                // Map prerequisites
                 Prerequisites = jsonObject["Prerequisites"]?.ToObject<List<string>>() ?? new List<string>();
             }
             catch (JsonException ex)
@@ -64,7 +57,7 @@ namespace SK_API
         }
 
         // Method to serialize the Syllabus object to JSON, the tuples must be printed as Topic and Description
-        public string ToJson()
+        public string ToJSON()
         {
             var jsonObject = new JObject
             {

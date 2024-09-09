@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace SK_API{
-    public class ActivityFinalModel{
+    public class ActivityFinalModel : IGeneralClass{
         public string Assignment {get;set;}
         public string Plus {get;set;}
         public List<string> Solutions {get;set;}

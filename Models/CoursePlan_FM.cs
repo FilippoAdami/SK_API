@@ -1,6 +1,6 @@
 namespace SK_API
 {
-    public class CoursePlan
+    public class CoursePlan : IGeneralClass
     {
         public List<Lesson> Plan { get; set; }
 
@@ -17,7 +17,7 @@ namespace SK_API
             }
         }
 
-        public string ToJson()
+        public string ToJSON()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }

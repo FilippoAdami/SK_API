@@ -75,4 +75,16 @@ namespace SK_API
         public static int Split = 120000;
         public static int Overlap = 1500;
     }
+
+    public enum TypeOfResponse
+    {
+        ActivityFinalModel,
+        MaterialAnalysis,
+        CorrectedAnswer,
+        CoursePlan,
+        LessonPlan,
+        LOFM,
+        Syllabus,
+        SimpleText
+    }
 }

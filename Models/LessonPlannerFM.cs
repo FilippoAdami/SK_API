@@ -1,5 +1,5 @@
 namespace SK_API{
-    public class LessonPlan{
+    public class LessonPlan : IGeneralClass{
         public List<Nodes> Nodes { get; set; }
 
         public LessonPlan(string json)
@@ -8,7 +8,7 @@ namespace SK_API{
             Nodes = lessonPlan.lesson_plan.Select(x => new Nodes(x.type == "Activity", x.topic, x.description, x.duration)).ToList();
         }
 
-        public string ToJson(){
+        public string ToJSON(){
             return Newtonsoft.Json.JsonConvert.SerializeObject(Nodes);
         }
     }
