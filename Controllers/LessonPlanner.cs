@@ -57,6 +57,31 @@ namespace SK_API.Controllers{
                 context["context"] = input.Context;
                 context["format"] = FormatStrings.LessonPlanFormat;
                 context["topics"] = string.Join("",input.MainTopics);
+                string activities = "";
+                //switch the value of activities based on the bloom level
+                switch (input.BloomLevel){
+                    case BloomLevel.Remembering:
+                        activities = UtilsStrings.ActivitiesListRemembering;
+                        break;
+                    case BloomLevel.Understanding:
+                        activities = UtilsStrings.ActivitiesListUnderstanding;
+                        break;
+                    case BloomLevel.Applying:
+                        activities = UtilsStrings.ActivitiesListApplying;
+                        break;
+                    case BloomLevel.Analyzing:
+                        activities = UtilsStrings.ActivitiesListAnalyzing;
+                        break;
+                    case BloomLevel.Evaluating:
+                        activities = UtilsStrings.ActivitiesListEvaluating;
+                        break;
+                    case BloomLevel.Creating:
+                        activities = UtilsStrings.ActivitiesListCreating;
+                        break;
+                    default:
+                        activities = UtilsStrings.ActivitiesList;
+                        break;
+                }
                 context["activities"] = UtilsStrings.ActivitiesList;
                 context["examples"] = ExamplesStrings.LessonPlanExamples;
 

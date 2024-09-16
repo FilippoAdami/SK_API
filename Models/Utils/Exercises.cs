@@ -16,7 +16,6 @@ namespace SK_API{
             {
                 (TypeOfActivity.open_question, new List<BloomLevel>
                 {
-                    BloomLevel.Remembering,
                     BloomLevel.Understanding,
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
@@ -65,7 +64,6 @@ namespace SK_API{
                 }),
                 (TypeOfActivity.knoledge_exposition, new List<BloomLevel>
                 {
-                    BloomLevel.Remembering,
                     BloomLevel.Understanding,
                     BloomLevel.Applying,
                     BloomLevel.Analyzing,
@@ -81,14 +79,12 @@ namespace SK_API{
                 }),
                 (TypeOfActivity.brainstorming, new List<BloomLevel>
                 {
-                    BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
                 }),
                 (TypeOfActivity.group_discussion, new List<BloomLevel>
                 {
-                    BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,
@@ -121,13 +117,11 @@ namespace SK_API{
                 }),
                 (TypeOfActivity.case_study_analysis, new List<BloomLevel>
                 {
-                    BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                 }),
                 (TypeOfActivity.project_based_learning, new List<BloomLevel>
                 {
-                    BloomLevel.Applying,
                     BloomLevel.Analyzing,
                     BloomLevel.Evaluating,
                     BloomLevel.Creating,

@@ -107,7 +107,16 @@ Here are some valid examples for reference:
     public class PlanningPrompts{
       public static string LessonPlannerprompt = @"You're a {{$level}} {{$marco_subject}} skilled assistant-teacher. The main teacher asked you to plan the next lesson, which is about: ' {{$title}} '. The teacher defined the learning objective for the lesson to be: '{{$learning_objective}}' which reflect the {{$bloom_level}} level in Bloom's taxonomy. 
 You now need to define the lesson plan completely in English. From your previous lessons, you wrote down some notes about the class behaviour. Notes: '{{$context}}' (note that these notes are in {{$language}}, so you have to translate them into English to understand the context).
-Since you're a very organized person, you want to structure the lesson plan in a logical sequence of nodes. A node is an element that consists of: Type (either 'Lesson' or 'Activity'), Topic (chosen from the list provided from the teacher), Description (either an activity category from the list or a suggestion of how to explain the lesson node to the Learners considering your Notes), Duration (which is the time in minutes that you expect to spend on that node). 
+Since you're a very organized person, you want to structure the lesson plan in a logical sequence of nodes. A node is an element that consists of: Type (either 'Lesson' or 'Activity'), Topic (chosen from the list provided from the teacher), Description (either an activity category from the list or a suggestion of how to explain the lesson node to the Learners considering your Notes), Duration (which is the time in minutes that you expect to spend on that node).
+To stick to the required Bloom level, consider the following verbs-level association:
+### Specific Restrictions Based on the Bloom's Taxonomy Level:
+- **Remembering**: Define, List, Recall, Identify, Recognize, Retrieve
+- **Understanding**: Illustrate, Explain, Summarize, Describe, Classify, Categorize
+- **Applying**: Respond, Provide, Use, Demonstrate, Solve, Apply, Implement
+- **Analyzing**: Select, Distinguish, Analyze, Differentiate, Compare, Contrast, Integrate, Deconstruct, Structure
+- **Evaluating**: Judge, Critique, Justify, Determine, Monitor, Detect, Reflect
+- **Creating**: Design, Create, Formulate, Hypothesize, Assemble, Construct
+
 To provide the teacher a clear and organized lesson plan, you decided to structure it in a JSON format as it follows. Format: {{$format}}
 To help you in this job, the teacher provided you with a list of topics and a list of activities categories to use in the lesson plan and some examples of valid lesson plans.
 Here are the topics: {{$topics}}
@@ -1770,7 +1779,85 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
 'project_based_learning' (activity where Learners work on a project to develope a real-world project),
 'problem_solving_activity' (activity where Learners solve a specific problem)
 Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
-    
+        public static string ActivitiesListRemembering = @"
+'true_or_false' (true or false question, it may or may not require an explanation),
+'information_search' (fill in the blanks exercise),
+'multiple_choice' (multiple choice question with one correct answer),
+'multiple_select' (multiple choice question with multiple correct answers),
+'short_answer_question' (open question exercise that expects a short exact answer)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+        public static string ActivitiesListUnderstanding = @"
+'true_or_false' (true or false question, it may or may not require an explanation),
+'information_search' (fill in the blanks exercise),
+'multiple_choice' (multiple choice question with one correct answer),
+'multiple_select' (multiple choice question with multiple correct answers),
+'short_answer_question' (open question exercise that expects a short exact answer),
+'open_question' (open question exercise that expects a free-form elaborated answer),
+'essay' (open ended assignment that expects a full essay as answer),
+'knoledge_exposition' (presentation or dissertation of a specific topic),
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+        public static string ActivitiesListApplying = @"
+'true_or_false' (true or false question, it may or may not require an explanation),
+'multiple_choice' (multiple choice question with one correct answer),
+'multiple_select' (multiple choice question with multiple correct answers),
+'short_answer_question' (open question exercise that expects a short exact answer),
+'open_question' (open question exercise that expects a free-form elaborated answer),
+'essay' (open ended assignment that expects a full essay as answer),
+'knoledge_exposition' (presentation or dissertation of a specific topic),
+'simulation' (role-playing activity to simulate a situation about a specific topic),
+'problem_solving_activity' (activity where Learners solve a specific problem),
+'debate' (oral debate between groups of Learners)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+        public static string ActivitiesListAnalyzing = @"
+'true_or_false' (true or false question, it may or may not require an explanation),
+'information_search' (fill in the blanks exercise),
+'multiple_choice' (multiple choice question with one correct answer),
+'multiple_select' (multiple choice question with multiple correct answers),
+'short_answer_question' (open question exercise that expects a short exact answer),
+'open_question' (open question exercise that expects a free-form elaborated answer),
+'essay' (open ended assignment that expects a full essay as answer),
+'knoledge_exposition' (presentation or dissertation of a specific topic),
+'simulation' (role-playing activity to simulate a situation about a specific topic),
+'problem_solving_activity' (activity where Learners solve a specific problem),
+'debate' (oral debate between groups of Learners),
+'brainstorming' (group activity to generate ideas or solutions about a specifc topic),
+'group_discussion' (group activity to discuss a specific topic),
+'case_study_analysis' (analysis of a specific case study),
+'project_based_learning' (activity where Learners work on a project to develope a real-world project),
+'non_written_material_analysis' (analysis of non-written material such as images, videos, or audio),
+'inquiry_based_learning' (activity where Learners explore a topic through inquiry and research)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+        public static string ActivitiesListEvaluating = @"
+'short_answer_question' (open question exercise that expects a short exact answer),
+'open_question' (open question exercise that expects a free-form elaborated answer),
+'essay' (open ended assignment that expects a full essay as answer),
+'knoledge_exposition' (presentation or dissertation of a specific topic),
+'simulation' (role-playing activity to simulate a situation about a specific topic),
+'problem_solving_activity' (activity where Learners solve a specific problem),
+'debate' (oral debate between groups of Learners),
+'brainstorming' (group activity to generate ideas or solutions about a specifc topic),
+'group_discussion' (group activity to discuss a specific topic),
+'case_study_analysis' (analysis of a specific case study),
+'project_based_learning' (activity where Learners work on a project to develope a real-world project),
+'non_written_material_analysis' (analysis of non-written material such as images, videos, or audio),
+'inquiry_based_learning' (activity where Learners explore a topic through inquiry and research)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+        public static string ActivitiesListCreating = @"
+'short_answer_question' (open question exercise that expects a short exact answer),
+'open_question' (open question exercise that expects a free-form elaborated answer),
+'essay' (open ended assignment that expects a full essay as answer),
+'knoledge_exposition' (presentation or dissertation of a specific topic),
+'simulation' (role-playing activity to simulate a situation about a specific topic),
+'problem_solving_activity' (activity where Learners solve a specific problem),
+'debate' (oral debate between groups of Learners),
+'brainstorming' (group activity to generate ideas or solutions about a specifc topic),
+'group_discussion' (group activity to discuss a specific topic),
+'case_study_analysis' (analysis of a specific case study),
+'project_based_learning' (activity where Learners work on a project to develope a real-world project),
+'non_written_material_analysis' (analysis of non-written material such as images, videos, or audio),
+'inquiry_based_learning' (activity where Learners explore a topic through inquiry and research),
+'non_written_material_production' (production of non-written material such as images, videos, or audio)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string ActivitiesListB = @"
 'open_question' (open question exercise that expects a free-form elaborated answer),
 'short_answer_question' (open question exercise that expects a short exact answer),
