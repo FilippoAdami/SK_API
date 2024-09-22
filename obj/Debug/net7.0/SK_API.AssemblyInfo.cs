@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SK_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60983ad37f834d08c9cecb0945af3cc8dfa7cd09")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0d8623fae5df80458308480449927996100bf3d")]
 [assembly: System.Reflection.AssemblyProductAttribute("SK_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SK_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
