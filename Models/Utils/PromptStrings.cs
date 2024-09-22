@@ -1780,33 +1780,33 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
 
 // TODO: edit the AssessmentsLists to match the table, fill the LearningLists
         public static string LearningListRemembering = @"
-        'Listening to a lecture' (the teacher gives a lecture on a certain topic, explaining key concepts),
-        'Identifying keywords' (the teacher provides a passage or text related to a topic. Students are tasked with identifying key terms and phrases that capture the main ideas of the text),
-        'Watching material' (students watch a video or presentation on a topic, where key concepts are demonstrated or explained. They are encouraged to pay close attention to visual aids and explanations provided),
-        'Making lists' (students are asked to create a list of important items related to a certain topic. This activity helps in organizing thoughts and prioritizing key points),
-        'Reading materials' (Students read assigned materials on a topic, covering key areas and concepts. They are encouraged to actively engage with the text by underlining or highlighting important information),
-        'Memory activity' (The teacher introduces a memory-based activity where students must recall and apply information related to a topic with certains topics. This activity might include flashcards, quizzes, or recalling facts after a timed session)
-        Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+'Listening to a lecture' (the teacher gives a lecture on a certain topic, explaining key concepts),
+'Identifying keywords' (the teacher provides a passage or text related to a topic. Students are tasked with identifying key terms and phrases that capture the main ideas of the text),
+'Watching material' (students watch a video or presentation on a topic, where key concepts are demonstrated or explained. They are encouraged to pay close attention to visual aids and explanations provided),
+'Making lists' (students are asked to create a list of important items related to a certain topic. This activity helps in organizing thoughts and prioritizing key points),
+'Reading materials' (Students read assigned materials on a topic, covering key areas and concepts. They are encouraged to actively engage with the text by underlining or highlighting important information),
+'Memory activity' (The teacher introduces a memory-based activity where students must recall and apply information related to a topic with certains topics. This activity might include flashcards, quizzes, or recalling facts after a timed session)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string AssessmentsListRemembering = @"
 'true_or_false' (the teacher provides a series of statements related to a topic. Students must evaluate each statement and determine whether it is true or false based on their understanding of key concepts),
 'fill in the blanks' (students are given sentences related to a topic with missing words or phrases. They must complete the sentences by filling in the blanks with appropriate terms, covering a set of concepts.),
 'matching exercises' (the teacher provides two lists: one with terms or concepts and the other with definitions or examples. Students must match each item in the first list with its corresponding pair from the second, focusing on topics)
 Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string LearningListUnderstanding = @"
-        'summaries' (after studying a section on a certain topic, students are asked to write concise summaries that highlight the key concepts and main ideas),
-        'concept map' (students create a visual diagram that organizes and illustrates relationships between key ideas, concepts, or themes),
-        'exemplifications' (the teacher provides key concepts from a topic. Students are asked to provide real-life examples or applications of each concept to demonstrate understanding)
-        Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+'summaries' (after studying a section on a certain topic, students are asked to write concise summaries that highlight the key concepts and main ideas),
+'concept map' (students create a visual diagram that organizes and illustrates relationships between key ideas, concepts, or themes),
+'exemplifications' (the teacher provides key concepts from a topic. Students are asked to provide real-life examples or applications of each concept to demonstrate understanding)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string AssessmentsListUnderstanding = @"
-        'multiple choice' (students are presented with questions related to a topic, each accompanied by several possible answers. They must choose the correct one, considering important concepts),
-         'write an essay' (students are tasked with writing a detailed essay on a topic, discussing major concepts, and supporting their arguments with evidence and examples),
-         'create a summary' (students review information on a topic and write a condensed version, highlighting the main points and central concepts) 
-          Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+'multiple choice' (students are presented with questions related to a topic, each accompanied by several possible answers. They must choose the correct one, considering important concepts),
+'write an essay' (students are tasked with writing a detailed essay on a topic, discussing major concepts, and supporting their arguments with evidence and examples),
+'create a summary' (students review information on a topic and write a condensed version, highlighting the main points and central concepts) 
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string LearningListApplying = @"
-        'exercises' (the teacher provides practice exercises on a topic, where students apply their knowledge of key concepts through problem-solving or hands-on tasks),
-        'role-playing' (students are assigned roles related to a scenario in a topic and act out their parts to explore key concepts in a real-world or simulated context)
-        'case studies' (students analyze a detailed case related to a topic, applying their understanding of key concepts to evaluate issues, make recommendations, or propose solutions)
-         Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+'exercises' (the teacher provides practice exercises on a topic, where students apply their knowledge of key concepts through problem-solving or hands-on tasks),
+'role-playing' (students are assigned roles related to a scenario in a topic and act out their parts to explore key concepts in a real-world or simulated context)
+'case studies' (students analyze a detailed case related to a topic, applying their understanding of key concepts to evaluate issues, make recommendations, or propose solutions)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string AssessmentsListApplying = @"
 'simulations' (students participate in a simulated scenario based on a topic, where they must apply concepts to make decisions or respond to challenges in a controlled environment),
 'problem-solving task' (the teacher presents a specific problem related to a topic. Students must apply their understanding of key concepts to solve it),
@@ -1814,10 +1814,9 @@ Keep the names in lowercase and use underscores (_) to separate words exactly as
 Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         
         public static string LearningListAnalyzing = @"
-        'problem-solving analysis' (students are given a complex issue or scenario related to a topic and are asked to break it down into components. They must analyze the problem using key concepts, identify possible solutions, and evaluate the effectiveness of each approach),
-        'debates' (students are divided into groups and debate on a specific issue related to a topic, using key concepts such to support their arguments),
-        'projects' (students work individually or in groups to complete a project on a topic, where they research and apply key concepts to create a final product)
-         explaining key ideas and concepts to their peers.)
+'problem-solving analysis' (students are given a complex issue or scenario related to a topic and are asked to break it down into components. They must analyze the problem using key concepts, identify possible solutions, and evaluate the effectiveness of each approach),
+'debates' (students are divided into groups and debate on a specific issue related to a topic, using key concepts such to support their arguments),
+'projects' (students work individually or in groups to complete a project on a topic, where they research and apply key concepts to create a final product)
 Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string AssessmentsListAnalyzing = @"
 'Analyse a case study' (Students closely examine a case related to a topic, identifying how key concepts are applied, and they provide critical analysis or recommendations),
@@ -1826,20 +1825,20 @@ Keep the names in lowercase and use underscores (_) to separate words exactly as
 Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         
         public static string LearningListEvaluating = @"
-        'decision-making tasks' (students are placed in a scenario where they must make a decision related to a topic, using key concepts to evaluate options and justify their choice),
-        'peer review' (students review and provide feedback on their classmates work related to a topic, using key concepts as criteria for evaluation),
-        'pros and cons lists' (students create a list of pros and cons for a decision or issue related to a topic, analyzing the benefits and drawbacks based on key concepts),
-        'SWOT analysis' (students conduct a SWOT (Strengths, Weaknesses, Opportunities, Threats) analysis on a topic, applying key concepts to evaluate different factors)
-        Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+'decision-making tasks' (students are placed in a scenario where they must make a decision related to a topic, using key concepts to evaluate options and justify their choice),
+'peer review' (students review and provide feedback on their classmates work related to a topic, using key concepts as criteria for evaluation),
+'pros and cons lists' (students create a list of pros and cons for a decision or issue related to a topic, analyzing the benefits and drawbacks based on key concepts),
+'SWOT analysis' (students conduct a SWOT (Strengths, Weaknesses, Opportunities, Threats) analysis on a topic, applying key concepts to evaluate different factors)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string AssessmentsListEvaluating = @"
-        'argumentative essay' (students write an essay on a debatable issue related to a topic, supporting their stance with arguments and evidence based on key concepts),
-        'peer assessment' (students assess each other’s work on a topic, providing constructive feedback based on understanding of key concepts)
-         Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+'argumentative essay' (students write an essay on a debatable issue related to a topic, supporting their stance with arguments and evidence based on key concepts),
+'peer assessment' (students assess each other’s work on a topic, providing constructive feedback based on understanding of key concepts)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string LearningListCreating = @"
-        'creative writing' (students write a creative piece related to a topic, using imaginative scenarios while incorporating key concepts),
-        'brainstorming' (students engage in a group brainstorming session on a topic, generating ideas and exploring key concepts in an open-ended discussion),
-        'student presentations' (each student prepares a presentation on an assigned aspect of a topic, explaining key concepts  to the rest of the class)
-         Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
+'creative writing' (students write a creative piece related to a topic, using imaginative scenarios while incorporating key concepts),
+'brainstorming' (students engage in a group brainstorming session on a topic, generating ideas and exploring key concepts in an open-ended discussion),
+'student presentations' (each student prepares a presentation on an assigned aspect of a topic, explaining key concepts  to the rest of the class)
+Keep the names in lowercase and use underscores (_) to separate words exactly as shown, it's crucial for post processing of the answer.";
         public static string AssessmentsListCreating = @"
 'business plan analysis' (students analyze a business plan related to a topic, examining key concepts and making recommendations for improvement),
 'authentic assessment' (students complete an assessment that simulates real-world tasks related to a topic, demonstrating their understanding of key concepts through practical application)
