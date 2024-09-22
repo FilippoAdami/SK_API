@@ -385,34 +385,34 @@ Instructions for GPT:
   ]
 }";
     
-    // TODO: change te format to match the LessonPlannerFM
+   // TODO: here's the correct format for the LessonPlanner
         public static string LessonPlanFormat = @"
 {
   ""lesson_plan"": [
     {
       ""type"": ""either Lesson or Activity"", 
       ""topic"": ""topic of the node 1"",
-      ""description"": ""either suggestion on how to explain the lesson node or value of activity-category"",
-      ""duration"": int
+      ""details"": ""the exact name of the activity you want to perform, either from the Learning list of from the Assessment list"",
+      ""description"": ""the specific learning outcome of the activity, in the format 'Ask the students to ...'""
     },
     {
       ""type"": ""either Lesson or Activity"", 
       ""topic"": ""topic of the node 2"",
-      ""description"": ""either suggestion on how to explain the lesson node or value of activity-category"",
-      ""duration"": int
+      ""details"": ""the exact name of the activity you want to perform, either from the Learning list of from the Assessment list"",
+      ""description"": ""the specific learning outcome of the activity, in the format 'Ask the students to ...'""
     },
     ...
     {
       ""type"": ""either Lesson or Activity"", 
       ""topic"": ""topic of the node n"",
-      ""description"": ""either suggestion on how to explain the lesson node or value of activity-category"",
-      ""duration"": int
+      ""details"": ""the exact name of the activity you want to perform, either from the Learning list of from the Assessment list"",
+      ""description"": ""the specific learning outcome of the activity, in the format 'Ask the students to ...'""
     },
     {
       ""type"": ""Activity"",
       ""topic"": ""topic of final activity"",
-      ""description"": ""value of activity category"",
-      ""duration"": int
+      ""details"": ""the exact name of the activity you want to perform, either from the Learning list of from the Assessment list"",
+      ""description"": ""the specific learning outcome of the activity, in the format 'Ask the students to ...'""
     }
   ]
 }";
