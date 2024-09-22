@@ -1451,128 +1451,106 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
   ]
 }";
     // TODO: change the examples to match the format and adjust the content
-        public static string LessonPlanExamples = @"
-""{
-  ""lesson_plan"": [
-    {
-      ""type"": ""Lesson"",
-      ""topic"": ""Introduction to the rise of the Napoleon empire"",
-      ""description"": ""Use a slide presentation to introduce the Learners to the lesson topics by providing an overview of the lesson plan."",
-      ""duration"": 10
-    },
-    {
-      ""type"": ""Activity"",
-      ""topic"": ""Context of the historical situation before the rise of the Napoleon empire"",
-      ""description"": ""group_discussion"",
-      ""duration"": 15
-    },
-    {
-      ""type"": ""Lesson"",
-      ""topic"": ""Timeline of key events"",
-      ""description"": ""Create a visually engaging timeline of key events leading to the rise of the Napoleon empire."",
-      ""duration"": 20
-    },
-    {
-      ""type"": ""Activity"",
-      ""topic"": ""The rise of Napoleon, the two coups d'état"",
-      ""description"": ""simulation"",
-      ""duration"": 25
-    },
-    {
-      ""type"": ""Activity"",
-      ""topic"": ""The rise of the Napoleon empire"",
-      ""description"": ""multiple_choice"",
-      ""duration"": 10
-    },
-    {
-      ""type"": ""Activity"",
-      ""topic"": ""Assessment: perspective of a common citizen living during the rise of the Napoleon empire"",
-      ""description"": ""essay"",
-      ""duration"": 40
-    },
-    
-  ]
-}
+       public static string LessonPlanExamples = @"
 {
   ""lesson_plan"": [
     {
-      ""type"": ""Lesson"",
-      ""topic"": ""Introduction to Linear Algebra"",
-      ""description"": ""Provide an overview of the basic concepts of linear algebra, including vectors, matrices, and linear transformations."",
-      ""duration"": 15
+      ""type"": ""Learning"",
+      ""topic"": ""Introduction to Python Syntax"",
+      ""description"": ""Ask the students to listen to a lecture on basic Python syntax, explaining key concepts such as variables, data types, and simple I/O functions.""
     },
     {
-      ""type"": ""Lesson"",
-      ""topic"": ""Matrix Operations"",
-      ""description"": ""Demonstrate basic matrix operations such as addition, subtraction, scalar multiplication, and matrix multiplication."",
-      ""duration"": 20
+      ""type"": ""Assessment"",
+      ""topic"": ""Basic Python Syntax"",
+      ""description"": ""Ask the students to identify key Python syntax elements from a passage of code, such as variables, data types, and operators.""
     },
     {
-      ""type"": ""Lesson"",
-      ""topic"": ""Systems of Linear Equations"",
-      ""description"": ""Using real life cases, introduce the concept of systems of linear equations and methods for solving them."",
-      ""duration"": 25
+      ""type"": ""Learning"",
+      ""topic"": ""Conditional Statements"",
+      ""description"": ""Ask the students to watch a video on conditional statements in Python, demonstrating if-else structures and Boolean logic.""
     },
     {
-      ""type"": ""Activiy"",
-      ""topic"": ""Systems of Linear Equations"",
-      ""description"": ""open_question"",
-      ""duration"": 15
+      ""type"": ""Assessment"",
+      ""topic"": ""Conditional Statements"",
+      ""description"": ""Ask the students to determine whether given statements about Python conditional logic are true or false.""
     },
     {
-      ""type"": ""Lesson"",
-      ""topic"": ""Vector Spaces"",
-      ""description"": ""Explore the properties of vector spaces, including basis, dimension, and linear independence."",
-      ""duration"": 30
+      ""type"": ""Learning"",
+      ""topic"": ""Loops in Python"",
+      ""description"": ""Ask the students to create a list of different types of loops in Python (e.g., for, while) and the appropriate situations for their usage, helping them organize key concepts.""
     },
     {
-      ""type"": ""Activity"",
-      ""topic"": ""Assessment: vector spaces and linear transformations"",
-      ""description"": ""short_answer_question"",
-      ""duration"": 25
+      ""type"": ""Assessment"",
+      ""topic"": ""Loops in Python"",
+      ""description"": ""Ask the students to fill in the missing loop structures in partially completed code examples, reinforcing loop syntax.""
+    },
+    {
+      ""type"": ""Learning"",
+      ""topic"": ""Functions in Python"",
+      ""description"": ""Ask the students to read a chapter on Python functions, covering key concepts like defining functions, parameters, and return values.""
+    },
+    {
+      ""type"": ""Assessment"",
+      ""topic"": ""Functions in Python"",
+      ""description"": ""Ask the students to recall and write down key Python function syntax (e.g., def function_name(), parameters) from memory.""
+    },
+    {
+      ""type"": ""Learning"",
+      ""topic"": ""Python Functions"",
+      ""description"": ""Ask the students to summarize the key concepts of functions in Python, including return values and scope.""
+    },
+    {
+      ""type"": ""Assessment"",
+      ""topic"": ""Functions in Python"",
+      ""description"": ""Ask the students to match function names with their appropriate outputs or descriptions of what they do.""
+    },
+    {
+      ""type"": ""Assessment"",
+      ""topic"": ""Python Programming Review"",
+      ""description"": ""Ask the students to complete a capstone project where they develop a Python-based solution to a real-world problem, integrating everything learned throughout the course.""
     }
   ]
 }
 {
   ""lesson_plan"": [
     {
-      ""type"": ""Lesson"",
-      ""topic"": ""Introduction to Parabolic Motion"",
-      ""description"": ""Introduce the concept of parabolic motion using videos and real-life examples."",
-      ""duration"": 20
+      ""type"": ""Learning"",
+      ""topic"": ""Introduction to Sustainability and Renewable Energy"",
+      ""description"": ""Ask the students to listen to a lecture on the basics of sustainability, focusing on key concepts such as renewable energy sources, carbon footprint, and environmental impact.""
     },
     {
-      ""type"": ""Lesson"",
-      ""topic"": ""Experiment on Projectile Motion"",
-      ""description"": ""Perform an experiment to investigate the factors that affect the range and height of a projectile's trajectory."",
-      ""duration"": 30
+      ""type"": ""Assessment"",
+      ""topic"": ""Renewable Energy Sources"",
+      ""description"": ""Ask the students to identify key terms from a text on renewable energy, such as solar, wind, geothermal, and hydropower.""
     },
     {
-      ""type"": ""Lesson"",
-      ""topic"": ""Mathematical Modeling of Parabolic Motion"",
-      ""description"": ""Teach Learners how to create mathematical models to describe parabolic motion using equations and graphs."",
-      ""duration"": 15
+      ""type"": ""Learning"",
+      ""topic"": ""Impact of Fossil Fuels vs. Renewable Energy"",
+      ""description"": ""Ask the students to watch a video comparing the environmental impacts of fossil fuels and renewable energy sources, focusing on pollution, greenhouse gases, and sustainability.""
     },
     {
-      ""type"": ""Activity"",
-      ""topic"": ""Analyzing Real-life Data"",
-      ""description"": ""non_written_material_analysis"",
-      ""duration"": 30
+      ""type"": ""Assessment"",
+      ""topic"": ""Energy and Environmental Impact"",
+      ""description"": ""Ask the students to determine whether given statements about the environmental impact of different energy sources are true or false.""
     },
     {
-      ""type"": ""Activity"",
-      ""topic"": ""Significance of parabolic motion in various fields, including physics, engineering, and mathematics."",
-      ""description"": ""group_discussion"",
-      ""duration"": 15
+      ""type"": ""Learning"",
+      ""topic"": ""Advantages and Disadvantages of Renewable Energy"",
+      ""description"": ""Ask the students to create a list of the advantages and disadvantages of different renewable energy sources such as solar, wind, and hydropower.""
     },
     {
-      ""type"": ""Activity"",
-      ""topic"": ""Assessment: Parabolic Motion Problem"",
-      ""description"": ""open_question"",
-      ""duration"": 15
+      ""type"": ""Assessment"",
+      ""topic"": ""Solar Power Implementation"",
+      ""description"": ""Ask the students to match different regions or countries with the most appropriate renewable energy source based on their geographical and environmental conditions.""
+    },
+    {
+      ""type"": ""Assessment"",
+      ""topic"": ""Sustainability Review"",
+      ""description"": ""Ask the students to complete a project where they develop a sustainability plan for their school or local community, incorporating renewable energy, waste reduction, and sustainable practices.""
     }
   ]
-}""";
+}";
+
         public static string CustomPlanExamples = @"
 ""{
   ""lesson_plan"": [
