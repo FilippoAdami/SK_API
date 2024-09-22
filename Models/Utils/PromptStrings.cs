@@ -1451,62 +1451,67 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
   ]
 }";
     // TODO: change the examples to match the format and adjust the content
-       public static string LessonPlanExamples = @"
+      public static string LessonPlanExamples = @"
 {
   ""lesson_plan"": [
     {
       ""type"": ""Learning"",
       ""topic"": ""Introduction to Python Syntax"",
+      ""details"": ""Listening to a lecture"",
       ""description"": ""Ask the students to listen to a lecture on basic Python syntax, explaining key concepts such as variables, data types, and simple I/O functions.""
+    },
+    {
+      ""type"": ""Learning"",
+      ""topic"": ""Functions in Python"",
+      ""details"": ""Reading materials"",
+      ""description"": ""Ask the students to read a chapter on Python functions, covering key concepts like defining functions, parameters, and return values.""
+    },
+    {
+      ""type"": ""Learning"",
+      ""topic"": ""Python Functions"",
+      ""details"": ""Summaries"",
+      ""description"": ""Ask the students to summarize the key concepts of functions in Python, including return values and scope.""
+    },
+    {
+      ""type"": ""Assessment"",
+      ""topic"": ""Conditional Statements"",
+      ""details"": ""True or False"",
+      ""description"": ""Ask the students to determine whether given statements about Python conditional logic are true or false.""
     },
     {
       ""type"": ""Assessment"",
       ""topic"": ""Basic Python Syntax"",
+      ""details"": ""Identifying keywords"",
       ""description"": ""Ask the students to identify key Python syntax elements from a passage of code, such as variables, data types, and operators.""
+    },
+    {
+      ""type"": ""Assessment"",
+      ""topic"": ""Functions in Python"",
+      ""details"": ""Matching exercises"",
+      ""description"": ""Ask the students to match function names with their appropriate outputs or descriptions of what they do.""
     },
     {
       ""type"": ""Learning"",
       ""topic"": ""Conditional Statements"",
+      ""details"": ""Watching material"",
       ""description"": ""Ask the students to watch a video on conditional statements in Python, demonstrating if-else structures and Boolean logic.""
-    },
-    {
-      ""type"": ""Assessment"",
-      ""topic"": ""Conditional Statements"",
-      ""description"": ""Ask the students to determine whether given statements about Python conditional logic are true or false.""
     },
     {
       ""type"": ""Learning"",
       ""topic"": ""Loops in Python"",
+      ""details"": ""Making lists"",
       ""description"": ""Ask the students to create a list of different types of loops in Python (e.g., for, while) and the appropriate situations for their usage, helping them organize key concepts.""
     },
     {
       ""type"": ""Assessment"",
       ""topic"": ""Loops in Python"",
+      ""details"": ""Fill In The Blanks"",
       ""description"": ""Ask the students to fill in the missing loop structures in partially completed code examples, reinforcing loop syntax.""
-    },
-    {
-      ""type"": ""Learning"",
-      ""topic"": ""Functions in Python"",
-      ""description"": ""Ask the students to read a chapter on Python functions, covering key concepts like defining functions, parameters, and return values.""
-    },
-    {
-      ""type"": ""Assessment"",
-      ""topic"": ""Functions in Python"",
-      ""description"": ""Ask the students to recall and write down key Python function syntax (e.g., def function_name(), parameters) from memory.""
-    },
-    {
-      ""type"": ""Learning"",
-      ""topic"": ""Python Functions"",
-      ""description"": ""Ask the students to summarize the key concepts of functions in Python, including return values and scope.""
-    },
-    {
-      ""type"": ""Assessment"",
-      ""topic"": ""Functions in Python"",
-      ""description"": ""Ask the students to match function names with their appropriate outputs or descriptions of what they do.""
     },
     {
       ""type"": ""Assessment"",
       ""topic"": ""Python Programming Review"",
+      ""details"": ""Authentic assessment"",
       ""description"": ""Ask the students to complete a capstone project where they develop a Python-based solution to a real-world problem, integrating everything learned throughout the course.""
     }
   ]
@@ -1516,40 +1521,60 @@ Answer: Quantenverschränkung ist eine einfache Interaktion zwischen Teilchen, d
     {
       ""type"": ""Learning"",
       ""topic"": ""Introduction to Sustainability and Renewable Energy"",
+      ""details"": ""Listening to a lecture"",
       ""description"": ""Ask the students to listen to a lecture on the basics of sustainability, focusing on key concepts such as renewable energy sources, carbon footprint, and environmental impact.""
-    },
-    {
-      ""type"": ""Assessment"",
-      ""topic"": ""Renewable Energy Sources"",
-      ""description"": ""Ask the students to identify key terms from a text on renewable energy, such as solar, wind, geothermal, and hydropower.""
     },
     {
       ""type"": ""Learning"",
       ""topic"": ""Impact of Fossil Fuels vs. Renewable Energy"",
+      ""details"": ""Watching material"",
       ""description"": ""Ask the students to watch a video comparing the environmental impacts of fossil fuels and renewable energy sources, focusing on pollution, greenhouse gases, and sustainability.""
     },
     {
       ""type"": ""Assessment"",
       ""topic"": ""Energy and Environmental Impact"",
+      ""details"": ""True or False"",
       ""description"": ""Ask the students to determine whether given statements about the environmental impact of different energy sources are true or false.""
+    },
+    {
+      ""type"": ""Assessment"",
+      ""topic"": ""Renewable Energy Sources"",
+      ""details"": ""Identifying keywords"",
+      ""description"": ""Ask the students to identify key terms from a text on renewable energy, such as solar, wind, geothermal, and hydropower.""
     },
     {
       ""type"": ""Learning"",
       ""topic"": ""Advantages and Disadvantages of Renewable Energy"",
+      ""details"": ""Making lists"",
       ""description"": ""Ask the students to create a list of the advantages and disadvantages of different renewable energy sources such as solar, wind, and hydropower.""
+    },
+    {
+      ""type"": ""Learning"",
+      ""topic"": ""Sustainability Practices in Companies"",
+      ""details"": ""Exemplifications"",
+      ""description"": ""Ask the students to provide real-life examples of companies that have successfully implemented sustainability practices such as using renewable energy or reducing waste.""
     },
     {
       ""type"": ""Assessment"",
       ""topic"": ""Solar Power Implementation"",
+      ""details"": ""Matching exercises"",
       ""description"": ""Ask the students to match different regions or countries with the most appropriate renewable energy source based on their geographical and environmental conditions.""
+    },
+    {
+      ""type"": ""Learning"",
+      ""topic"": ""Sustainable Business Practices"",
+      ""details"": ""Reading materials"",
+      ""description"": ""Ask the students to read an article on how businesses can integrate sustainable practices, focusing on reducing energy consumption and waste.""
     },
     {
       ""type"": ""Assessment"",
       ""topic"": ""Sustainability Review"",
+      ""details"": ""Authentic assessment"",
       ""description"": ""Ask the students to complete a project where they develop a sustainability plan for their school or local community, incorporating renewable energy, waste reduction, and sustainable practices.""
     }
   ]
 }";
+
 
         public static string CustomPlanExamples = @"
 ""{
