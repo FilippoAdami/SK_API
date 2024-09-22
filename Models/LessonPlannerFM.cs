@@ -4,8 +4,8 @@ namespace SK_API{
 
         public LessonPlan(string json)
         {
-            var lessonPlan = Newtonsoft.Json.JsonConvert.DeserializeObject<LessonPlanJson>(json);
-            Nodes = lessonPlan.lesson_plan.Select(x => new Nodes(x.type == "Activity", x.topic, x.description, x.duration)).ToList();
+            var lessonPlan = Newtonsoft.Json.JsonConvert.DeserializeObject<LessonPlan>(json);
+            Nodes = lessonPlan?.Nodes != null ? new List<Nodes>(lessonPlan.Nodes) : new List<Nodes>();
         }
 
         public string ToJSON(){
@@ -17,26 +17,13 @@ namespace SK_API{
         public bool Type { get; set; }
         public string Topic { get; set; }
         public string Details { get; set; }
-        public int Duration { get; set; }
+        public string Description { get; set; }
 
-        public Nodes(bool type, string topic, string details, int duration){
+        public Nodes(bool type, string topic, string details, string description){
             Type = type;
             Topic = topic;
             Details = details;
-            Duration = duration;
+            Description = description;
         }
-    }
-
-    public class LessonPlanJson
-    {
-        public List<NodeJson> lesson_plan { get; set; }
-    }
-
-    public class NodeJson
-    {
-        public string type { get; set; }
-        public string topic { get; set; }
-        public string description { get; set; }
-        public int duration { get; set; }
     }
 }

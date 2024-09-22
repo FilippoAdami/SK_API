@@ -57,32 +57,42 @@ namespace SK_API.Controllers{
                 context["context"] = input.Context;
                 context["format"] = FormatStrings.LessonPlanFormat;
                 context["topics"] = string.Join("",input.MainTopics);
-                string activities = "";
+                string assessments = "";
+                string learning = "";
                 //switch the value of activities based on the bloom level
                 switch (input.BloomLevel){
                     case BloomLevel.Remembering:
-                        activities = UtilsStrings.ActivitiesListRemembering;
+                        assessments = UtilsStrings.AssessmentsListRemembering;
+                        learning = UtilsStrings.LearningListRemembering;
                         break;
                     case BloomLevel.Understanding:
-                        activities = UtilsStrings.ActivitiesListUnderstanding;
+                        assessments = UtilsStrings.AssessmentsListUnderstanding;
+                        learning = UtilsStrings.LearningListUnderstanding;
                         break;
                     case BloomLevel.Applying:
-                        activities = UtilsStrings.ActivitiesListApplying;
+                        assessments = UtilsStrings.AssessmentsListApplying;
+                        learning = UtilsStrings.LearningListApplying;
                         break;
                     case BloomLevel.Analyzing:
-                        activities = UtilsStrings.ActivitiesListAnalyzing;
+                        assessments = UtilsStrings.AssessmentsListAnalyzing;
+                        learning = UtilsStrings.LearningListAnalyzing;
                         break;
                     case BloomLevel.Evaluating:
-                        activities = UtilsStrings.ActivitiesListEvaluating;
+                        assessments = UtilsStrings.AssessmentsListEvaluating;
+                        learning = UtilsStrings.LearningListEvaluating;
                         break;
                     case BloomLevel.Creating:
-                        activities = UtilsStrings.ActivitiesListCreating;
+                        assessments = UtilsStrings.AssessmentsListCreating;
+                        learning = UtilsStrings.LearningListCreating;
                         break;
                     default:
-                        activities = UtilsStrings.ActivitiesList;
+                        assessments = UtilsStrings.AssessmentsList;
+                        learning = UtilsStrings.LearningList;
                         break;
                 }
-                context["activities"] = UtilsStrings.ActivitiesList;
+                context["activities"] = assessments;
+                context["learning"] = learning;
+                context["verbs_list"] = UtilsStrings.VerbsList;
                 context["examples"] = ExamplesStrings.LessonPlanExamples;
 
                 // fill the promptB with the input values
@@ -97,6 +107,8 @@ namespace SK_API.Controllers{
                 promptB = promptB.Replace("{{$format}}", FormatStrings.LessonPlanFormat);
                 promptB = promptB.Replace("{{$topics}}", string.Join("",input.MainTopics));
                 promptB = promptB.Replace("{{$activities}}", UtilsStrings.ActivitiesList);
+                promptB = promptB.Replace("{{$learning}}", UtilsStrings.LearningList);
+                promptB = promptB.Replace("{{$verbs_list}}", UtilsStrings.VerbsList);
                 promptB = promptB.Replace("{{$examples}}", ExamplesStrings.LessonPlanExamples);
 
 
@@ -105,13 +117,13 @@ namespace SK_API.Controllers{
                 output = intf.CheckResponse(result.ToString());
                 Console.WriteLine("Result: "+ output);
                 LessonPlan lessonPlan = new(output);
-                foreach (var node in lessonPlan.Nodes){
+                /*foreach (var node in lessonPlan.Nodes){
                     if(node.Type){
                         //map the value into TypeOfActivity enum
                         int Activity = (int)Enum.Parse<TypeOfActivity>(node.Details);
                         node.Details = Activity.ToString();
                     }
-                }
+                } */
                 string json = lessonPlan.ToJSON();
 
                 if (input.Language.ToLower() != "english"){
