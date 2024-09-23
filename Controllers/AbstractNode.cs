@@ -72,8 +72,8 @@ namespace SK_API.Controllers{
                 output = intf.CheckResponse(result.ToString());
                 Console.WriteLine("Result: "+ output);
                 LessonPlan lessonPlan = new(output);
-                foreach (var node in lessonPlan.Nodes){
-                    if(node.Type){
+                foreach (var node in lessonPlan.LessonPlanNodes){
+                    if(node.Type == "Learning"){
                         //map the value into TypeOfActivity enum
                         int exercise = (int)Enum.Parse<TypeOfActivity>(node.Details);
                         node.Details = exercise.ToString();
