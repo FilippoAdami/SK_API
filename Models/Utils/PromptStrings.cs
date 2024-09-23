@@ -390,29 +390,23 @@ Instructions for GPT:
 {
   ""lesson_plan"": [
     {
-      ""type"": ""either Lesson or Activity"", 
-      ""topic"": ""topic of the node 1"",
-      ""details"": ""the exact name of the activity you want to perform, either from the Learning list of from the Assessment list"",
+      ""type"": ""either Learning or Assessment"", 
+      ""topic"": ""topic of the first node"",
+      ""details"": ""the exact name of the first activity you want to perform, either from the Learning list of from the Assessment list"",
       ""description"": ""the specific learning outcome of the activity, in the format 'Ask the students to ...'""
     },
     {
-      ""type"": ""either Lesson or Activity"", 
-      ""topic"": ""topic of the node 2"",
-      ""details"": ""the exact name of the activity you want to perform, either from the Learning list of from the Assessment list"",
+      ""type"": ""either Learning or Assessment"", 
+      ""topic"": ""topic of the second node"",
+      ""details"": ""the exact name of the second activity you want to perform, either from the Learning list of from the Assessment list"",
       ""description"": ""the specific learning outcome of the activity, in the format 'Ask the students to ...'""
     },
     ...
     {
-      ""type"": ""either Lesson or Activity"", 
-      ""topic"": ""topic of the node n"",
-      ""details"": ""the exact name of the activity you want to perform, either from the Learning list of from the Assessment list"",
-      ""description"": ""the specific learning outcome of the activity, in the format 'Ask the students to ...'""
-    },
-    {
-      ""type"": ""Activity"",
-      ""topic"": ""topic of final activity"",
-      ""details"": ""the exact name of the activity you want to perform, either from the Learning list of from the Assessment list"",
-      ""description"": ""the specific learning outcome of the activity, in the format 'Ask the students to ...'""
+      ""type"": ""either Learning or Assessment"", 
+      ""topic"": ""topic of the last node"",
+      ""details"": ""the exact name of the last activity you want to perform, either from the Learning list of from the Assessment list"",
+      ""description"": ""the specific learning outcome of the last activity, in the format 'Ask the students to ...'""
     }
   ]
 }";
